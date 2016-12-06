@@ -375,7 +375,8 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: VRTK_SDK_HEADSET_STEAMVR;VRTK_SDK_BOUNDARIES_STEAMVR;VRTK_SDK_CONTROLLER_STEAMVR;VRTK_SDK_SYSTEM_STEAMVR
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
