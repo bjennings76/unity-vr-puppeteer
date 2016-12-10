@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: a3abaf4521bf2344ea21ed3020b98eb2
-timeCreated: 1461583046
-licenseType: Free
+timeCreated: 1481402051
+licenseType: Pro
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - grabAttachMechanicScript: {fileID: 114423574997461632, guid: 60cea8aca99698747b43a85eee2c5f80,
+      type: 2}
+  - secondaryGrabActionScript: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
