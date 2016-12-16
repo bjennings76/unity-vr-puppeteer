@@ -25,6 +25,8 @@ namespace VRTK
 
         private IEnumerator AutoGrab()
         {
+            yield return new WaitForEndOfFrame();
+
             var controllerGrab = GetComponent<VRTK_InteractGrab>();
             var controllerTouch = GetComponent<VRTK_InteractTouch>();
 
@@ -42,30 +44,33 @@ namespace VRTK
             VRTK_InteractableObject grabbableObject = objectToGrab;
             VRTK_InteractableObject previousClonedObject = null;
 
-            if (cloneGrabbedObject)
+            if (!controllerGrab.GetGrabbedObject())
             {
-                if (previousClonedObject == null)
+                if (cloneGrabbedObject)
                 {
-                    grabbableObject = Instantiate(objectToGrab);
-                    previousClonedObject = grabbableObject;
-                }
-                else
-                {
-                    grabbableObject = previousClonedObject;
-                }
-            }
-
-            if (grabbableObject.isGrabbable && !grabbableObject.IsGrabbed())
-            {
-                if (grabbableObject.grabAttachMechanicScript && grabbableObject.grabAttachMechanicScript.IsKinematic())
-                {
-                    grabbableObject.isKinematic = true;
+                    if (previousClonedObject == null)
+                    {
+                        grabbableObject = Instantiate(objectToGrab);
+                        previousClonedObject = grabbableObject;
+                    }
+                    else
+                    {
+                        grabbableObject = previousClonedObject;
+                    }
                 }
 
-                grabbableObject.transform.position = transform.position;
-                controllerTouch.ForceStopTouching();
-                controllerTouch.ForceTouch(grabbableObject.gameObject);
-                controllerGrab.AttemptGrab();
+                if (grabbableObject.isGrabbable && !grabbableObject.IsGrabbed())
+                {
+                    if (grabbableObject.grabAttachMechanicScript && grabbableObject.grabAttachMechanicScript.IsKinematic())
+                    {
+                        grabbableObject.isKinematic = true;
+                    }
+
+                    grabbableObject.transform.position = transform.position;
+                    controllerTouch.ForceStopTouching();
+                    controllerTouch.ForceTouch(grabbableObject.gameObject);
+                    controllerGrab.AttemptGrab();
+                }
             }
         }
     }

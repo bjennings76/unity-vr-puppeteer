@@ -1,6 +1,7 @@
-﻿// SteamVR Headset|SDK|002
+﻿// SteamVR Headset|SDK_SteamVR|002
 namespace VRTK
 {
+#if VRTK_SDK_STEAMVR
     using UnityEngine;
 
     /// <summary>
@@ -8,13 +9,13 @@ namespace VRTK
     /// </summary>
     public class SDK_SteamVRHeadset : SDK_BaseHeadset
     {
-#if VRTK_SDK_HEADSET_STEAMVR
         /// <summary>
         /// The GetHeadset method returns the Transform of the object that is used to represent the headset in the scene.
         /// </summary>
         /// <returns>A transform of the object representing the headset in the scene.</returns>
         public override Transform GetHeadset()
         {
+            cachedHeadset = base.GetHeadset();
             if (cachedHeadset == null)
             {
 #if (UNITY_5_4_OR_NEWER)
@@ -27,11 +28,12 @@ namespace VRTK
         }
 
         /// <summary>
-        /// The GetHeadsetCamera/0 method returns the Transform of the object that is used to hold the headset camera in the scene.
+        /// The GetHeadsetCamera method returns the Transform of the object that is used to hold the headset camera in the scene.
         /// </summary>
         /// <returns>A transform of the object holding the headset camera in the scene.</returns>
         public override Transform GetHeadsetCamera()
         {
+            cachedHeadsetCamera = base.GetHeadsetCamera();
             if (cachedHeadsetCamera == null)
             {
                 cachedHeadsetCamera = FindObjectOfType<SteamVR_Camera>().transform;
@@ -75,6 +77,10 @@ namespace VRTK
                 camera.gameObject.AddComponent<SteamVR_Fade>();
             }
         }
-#endif
     }
+#else
+    public class SDK_SteamVRHeadset : SDK_FallbackHeadset
+    {
+    }
+#endif
 }

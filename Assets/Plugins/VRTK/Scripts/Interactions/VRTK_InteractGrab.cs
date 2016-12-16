@@ -4,9 +4,11 @@ namespace VRTK
     using UnityEngine;
 
     /// <summary>
-    /// The Interact Grab script is attached to a Controller object within the `[CameraRig]` prefab and the Controller object requires the `VRTK_ControllerEvents` script to be attached as it uses this for listening to the controller button events for grabbing and releasing interactable game objects. It listens for the `AliasGrabOn` and `AliasGrabOff` events to determine when an object should be grabbed and should be released.
+    /// The Interact Grab script is attached to a Controller object and requires the `VRTK_ControllerEvents` script to be attached as it uses this for listening to the controller button events for grabbing and releasing interactable game objects.
     /// </summary>
     /// <remarks>
+    /// It listens for the `AliasGrabOn` and `AliasGrabOff` events to determine when an object should be grabbed and should be released.
+    ///
     /// The Controller object also requires the `VRTK_InteractTouch` script to be attached to it as this is used to determine when an interactable object is being touched. Only valid touched objects can be grabbed.
     ///
     /// An object can be grabbed if the Controller touches a game object which contains the `VRTK_InteractableObject` script and has the flag `isGrabbable` set to `true`.
@@ -31,7 +33,7 @@ namespace VRTK
         public Rigidbody controllerAttachPoint = null;
         [Tooltip("An amount of time between when the grab button is pressed to when the controller is touching something to grab it. For example, if an object is falling at a fast rate, then it is very hard to press the grab button in time to catch the object due to human reaction times. A higher number here will mean the grab button can be pressed before the controller touches the object and when the collision takes place, if the grab button is still being held down then the grab action will be successful.")]
         public float grabPrecognition = 0f;
-        [Tooltip("An amount to multiply the velocity of any objects being thrown. This can be useful when scaling up the `[CameraRig]` to simulate being able to throw items further.")]
+        [Tooltip("An amount to multiply the velocity of any objects being thrown. This can be useful when scaling up the play area to simulate being able to throw items further.")]
         public float throwMultiplier = 1f;
         [Tooltip("If this is checked and the controller is not touching an Interactable Object when the grab button is pressed then a rigid body is added to the controller to allow the controller to push other rigid body objects around.")]
         public bool createRigidBodyWhenNotTouching = false;
@@ -48,7 +50,6 @@ namespace VRTK
         private GameObject grabbedObject = null;
         private bool influencingGrabbedObject = false;
         private VRTK_InteractTouch interactTouch;
-        private VRTK_ControllerMapper controllerMapper;
         private VRTK_ControllerActions controllerActions;
         private VRTK_ControllerEvents controllerEvents;
         private int grabEnabledState = 0;
@@ -102,7 +103,6 @@ namespace VRTK
             interactTouch = GetComponent<VRTK_InteractTouch>();
             controllerActions = GetComponent<VRTK_ControllerActions>();
             controllerEvents = GetComponent<VRTK_ControllerEvents>();
-            controllerMapper = GetComponent<VRTK_ControllerMapper>();
         }
 
         private void OnEnable()
@@ -154,11 +154,12 @@ namespace VRTK
 
         private void SetControllerAttachPoint()
         {
+            var actualController = VRTK_DeviceFinder.GetActualController(gameObject);
             //If no attach point has been specified then just use the tip of the controller
-            if (controllerAttachPoint == null && controllerMapper && controllerMapper.markedController)
+            if (actualController && controllerAttachPoint == null)
             {
                 //attempt to find the attach point on the controller
-                var defaultAttachPoint = controllerMapper.markedController.transform.Find(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.AttachPoint, VRTK_DeviceFinder.GetControllerHand(gameObject)));
+                var defaultAttachPoint = actualController.transform.Find(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.AttachPoint, VRTK_DeviceFinder.GetControllerHand(gameObject)));
                 if (defaultAttachPoint != null)
                 {
                     controllerAttachPoint = defaultAttachPoint.GetComponent<Rigidbody>();

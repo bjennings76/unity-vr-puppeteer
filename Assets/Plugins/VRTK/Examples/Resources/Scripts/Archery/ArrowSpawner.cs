@@ -22,7 +22,7 @@
             {
                 GameObject newArrow = Instantiate(arrowPrefab);
                 newArrow.name = "ArrowClone";
-                grabbingController.gameObject.GetComponent<VRTK_InteractTouch>().ForceTouch(newArrow);
+                grabbingController.GetComponent<VRTK_InteractTouch>().ForceTouch(newArrow);
                 grabbingController.AttemptGrab();
                 spawnDelayTimer = Time.time + spawnDelay;
             }

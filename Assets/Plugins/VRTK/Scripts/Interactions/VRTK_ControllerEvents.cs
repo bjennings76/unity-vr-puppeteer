@@ -38,7 +38,6 @@ namespace VRTK
     /// <example>
     /// `VRTK/Examples/002_Controller_Events` shows how the events are utilised and listened to. The accompanying example script can be viewed in `VRTK/Examples/Resources/Scripts/VRTK_ControllerEvents_ListenerExample.cs`.
     /// </example>
-    [RequireComponent(typeof(VRTK_ControllerMapper))]
     public class VRTK_ControllerEvents : MonoBehaviour
     {
         /// <summary>
@@ -299,8 +298,11 @@ namespace VRTK
         /// Emitted when the controller is disabled.
         /// </summary>
         public event ControllerInteractionEventHandler ControllerDisabled;
+        /// <summary>
+        /// Emitted when the controller index changed.
+        /// </summary>
+        public event ControllerInteractionEventHandler ControllerIndexChanged;
 
-        private VRTK_ControllerMapper controllerMapper;
         private Vector2 touchpadAxis = Vector2.zero;
         private Vector2 triggerAxis = Vector2.zero;
         private float hairTriggerDelta;
@@ -555,6 +557,14 @@ namespace VRTK
             }
         }
 
+        public virtual void OnControllerIndexChanged(ControllerInteractionEventArgs e)
+        {
+            if (ControllerIndexChanged != null)
+            {
+                ControllerIndexChanged(this, e);
+            }
+        }
+
         /// <summary>
         /// The GetVelocity method is useful for getting the current velocity of the physical game controller. This can be useful to determine the speed at which the controller is being swung or the direction it is being moved in.
         /// </summary>
@@ -663,27 +673,56 @@ namespace VRTK
 
         private void Awake()
         {
-            controllerMapper = GetComponent<VRTK_ControllerMapper>();
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
 
         private void OnEnable()
         {
-            if (controllerMapper && controllerMapper.markedController)
+            var actualController = VRTK_DeviceFinder.GetActualController(gameObject);
+            if (actualController)
             {
-                controllerMapper.markedController.ControllerEnabled += MarkedControllerEnabled;
-                controllerMapper.markedController.ControllerDisabled += MarkedControllerDisabled;
+                var controllerTracker = actualController.GetComponent<VRTK_TrackedController>();
+                if (controllerTracker)
+                {
+                    controllerTracker.ControllerEnabled += TrackedControllerEnabled;
+                    controllerTracker.ControllerDisabled += TrackedControllerDisabled;
+                    controllerTracker.ControllerIndexChanged += TrackedControllerIndexChanged;
+                }
             }
         }
 
         private void OnDisable()
         {
             Invoke("DisableEvents", 0f);
-            if (controllerMapper && controllerMapper.markedController)
+            var actualController = VRTK_DeviceFinder.GetActualController(gameObject);
+            if (actualController)
             {
-                controllerMapper.markedController.ControllerEnabled -= MarkedControllerEnabled;
-                controllerMapper.markedController.ControllerDisabled -= MarkedControllerDisabled;
+                var controllerTracker = actualController.GetComponent<VRTK_TrackedController>();
+                if (controllerTracker)
+                {
+                    controllerTracker.ControllerEnabled -= TrackedControllerEnabled;
+                    controllerTracker.ControllerDisabled -= TrackedControllerDisabled;
+                }
             }
+        }
+
+        private void TrackedControllerEnabled(object sender, VRTKTrackedControllerEventArgs e)
+        {
+            var nullBool = false;
+            OnControllerEnabled(SetButtonEvent(ref nullBool, true, 0f));
+        }
+
+        private void TrackedControllerDisabled(object sender, VRTKTrackedControllerEventArgs e)
+        {
+            DisableEvents();
+            var nullBool = false;
+            OnControllerDisabled(SetButtonEvent(ref nullBool, false, 0f));
+        }
+
+        private void TrackedControllerIndexChanged(object sender, VRTKTrackedControllerEventArgs e)
+        {
+            var nullBool = false;
+            OnControllerIndexChanged(SetButtonEvent(ref nullBool, false, 0f));
         }
 
         private float CalculateTouchpadAxisAngle(Vector2 axis)
@@ -695,19 +734,6 @@ namespace VRTK
                 angle += 360.0f;
             }
             return angle;
-        }
-
-        private void MarkedControllerEnabled(object sender, ControllerMarkerEventArgs e)
-        {
-            var nullBool = false;
-            OnControllerEnabled(SetButtonEvent(ref nullBool, true, 0f));
-        }
-
-        private void MarkedControllerDisabled(object sender, ControllerMarkerEventArgs e)
-        {
-            DisableEvents();
-            var nullBool = false;
-            OnControllerDisabled(SetButtonEvent(ref nullBool, false, 0f));
         }
 
         private void EmitAlias(ButtonAlias type, bool touchDown, float buttonPressure, ref bool buttonBool)
@@ -850,10 +876,6 @@ namespace VRTK
             triggerAxisChanged = false;
             touchpadAxisChanged = false;
 
-            if (controllerMapper)
-            {
-                controllerMapper.markedController.RefreshCache();
-            }
             var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(gameObject);
 
             if (controllerIndex < uint.MaxValue)
@@ -870,10 +892,6 @@ namespace VRTK
 
         private void Update()
         {
-            if (controllerMapper)
-            {
-                controllerMapper.markedController.RefreshCache();
-            }
             var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(gameObject);
 
             //Only continue if the controller index has been set to a sensible number
@@ -1010,8 +1028,8 @@ namespace VRTK
         private void SetVelocity()
         {
             var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(gameObject);
-            controllerVelocity = VRTK_SDK_Bridge.GetVelocityOnIndex(controllerIndex); ;
-            controllerAngularVelocity = VRTK_SDK_Bridge.GetAngularVelocityOnIndex(controllerIndex); ;
+            controllerVelocity = VRTK_SDK_Bridge.GetVelocityOnIndex(controllerIndex);
+            controllerAngularVelocity = VRTK_SDK_Bridge.GetAngularVelocityOnIndex(controllerIndex);
         }
     }
 }

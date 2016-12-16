@@ -304,7 +304,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 213614887}
   - 114: {fileID: 213614886}
-  - 114: {fileID: 213614884}
   m_Layer: 0
   m_Name: Controller (left)
   m_TagString: Untagged
@@ -312,18 +311,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &213614884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 213614883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c24f07754b088264db4eeb2664af4f39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mappedController: {fileID: 0}
 --- !u!114 &213614886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,50 +419,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1907973909}
   m_RootOrder: 6
---- !u!1 &641213278
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 641213279}
-  - 114: {fileID: 641213280}
-  m_Layer: 0
-  m_Name: '##SDKManager##'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &641213279
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 641213278}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.6496954, y: 0.30320716, z: 15.385033}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1973428717}
-  m_RootOrder: 0
---- !u!114 &641213280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 641213278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5837af0260a118e4d808bfe0405429a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  systemSDK: 1
-  headsetSDK: 1
-  controllerSDK: 1
-  boundariesSDK: 1
 --- !u!1 &716897211
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +506,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 759740581}
-  - 114: {fileID: 759740584}
   - 114: {fileID: 759740583}
   - 114: {fileID: 759740582}
   m_Layer: 0
@@ -585,7 +527,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1973428717}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!114 &759740582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,18 +593,6 @@ MonoBehaviour:
   usePressed: 0
   uiClickPressed: 0
   menuPressed: 0
---- !u!114 &759740584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 759740580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d8138ed0b2729c4bbc01f54a9b80709, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markedController: {fileID: 1115860552}
 --- !u!1 &923606336
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,7 +700,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1973428717}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!114 &973526614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -787,7 +717,7 @@ MonoBehaviour:
   headsetPositionCompensation: 1
   targetTagOrScriptListPolicy: {fileID: 0}
   navMeshLimitDistance: 0
---- !u!43 &1028289359
+--- !u!43 &1066800589
 Mesh:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -915,6 +845,35 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!21 &1097628983
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Default
+  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+    - first:
+        name: _MainTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - first:
+        name: PixelSnap
+      second: 0
+    m_Colors:
+    - first:
+        name: _Color
+      second: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1115860551
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,7 +883,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1115860555}
   - 114: {fileID: 1115860554}
-  - 114: {fileID: 1115860552}
   m_Layer: 0
   m_Name: Controller (right)
   m_TagString: Untagged
@@ -932,18 +890,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1115860552
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1115860551}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c24f07754b088264db4eeb2664af4f39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mappedController: {fileID: 0}
 --- !u!114 &1115860554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1260,7 +1206,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1248022599}
-  m_Mesh: {fileID: 1028289359}
+  m_Mesh: {fileID: 1066800589}
 --- !u!23 &1248022603
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1275,7 +1221,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2132514242}
+  - {fileID: 1097628983}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -1350,7 +1296,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1973428717}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!114 &1323122619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1528,7 +1474,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1485499906}
-  - 114: {fileID: 1485499909}
   - 114: {fileID: 1485499908}
   - 114: {fileID: 1485499907}
   m_Layer: 0
@@ -1550,7 +1495,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1973428717}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!114 &1485499907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1616,18 +1561,6 @@ MonoBehaviour:
   usePressed: 0
   uiClickPressed: 0
   menuPressed: 0
---- !u!114 &1485499909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1485499905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d8138ed0b2729c4bbc01f54a9b80709, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markedController: {fileID: 213614884}
 --- !u!1 &1696492060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1887,8 +1820,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1973428717}
+  - 114: {fileID: 1973428718}
   m_Layer: 0
-  m_Name: '[VRTK_Scripts]'
+  m_Name: '[VRTK]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1901,17 +1835,38 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1973428716}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.472064, y: -0.7111728, z: -8.260281}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 641213279}
   - {fileID: 1323122618}
   - {fileID: 973526613}
   - {fileID: 1485499906}
   - {fileID: 759740581}
   m_Father: {fileID: 0}
   m_RootOrder: 5
+--- !u!114 &1973428718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1973428716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5837af0260a118e4d808bfe0405429a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  persistOnLoad: 0
+  systemSDK: 1
+  boundariesSDK: 1
+  headsetSDK: 1
+  controllerSDK: 1
+  actualBoundaries: {fileID: 1248022599}
+  actualHeadset: {fileID: 1696492060}
+  actualLeftController: {fileID: 213614883}
+  actualRightController: {fileID: 1115860551}
+  scriptAliasLeftController: {fileID: 1485499905}
+  scriptAliasRightController: {fileID: 759740580}
 --- !u!1 &2123877843
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,32 +1930,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!21 &2132514242
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Default
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-    - first:
-        name: _MainTex
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - first:
-        name: PixelSnap
-      second: 0
-    m_Colors:
-    - first:
-        name: _Color
-      second: {r: 1, g: 1, b: 1, a: 1}

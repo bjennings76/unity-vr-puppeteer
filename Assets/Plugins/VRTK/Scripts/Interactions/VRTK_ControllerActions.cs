@@ -57,10 +57,9 @@ namespace VRTK
     ///
     /// `VRTK/Examples/035_Controller_OpacityAndHighlighting` demonstrates the ability to change the opacity of a controller model and to highlight specific elements of a controller such as the buttons or even the entire controller model.
     /// </example>
-    [RequireComponent(typeof(VRTK_ControllerMapper))]
     public class VRTK_ControllerActions : MonoBehaviour
     {
-        [Tooltip("The GameObject that contains the actual renderers for the controller model. Will default to the Controller Mapper GameObject if none is provided.")]
+        [Tooltip("The GameObject that contains the actual renderers for the controller model. Will default to the actual controller GameObject if none is provided.")]
         public GameObject modelContainer;
 
         [Tooltip("A collection of strings that determine the path to the controller model sub elements for identifying the model parts at runtime. If the paths are left empty they will default to the model element paths of the selected SDK Bridge.\n\n"
@@ -95,7 +94,6 @@ namespace VRTK
         /// </summary>
         public event ControllerActionsEventHandler ControllerModelInvisible;
 
-        private VRTK_ControllerMapper controllerMapper;
         private bool controllerVisible = true;
         private ushort hapticPulseStrength;
         private ushort maxHapticVibration = 3999;
@@ -135,7 +133,7 @@ namespace VRTK
         /// <param name="grabbedChildObject">If an object is being held by the controller then this can be passed through to prevent hiding the grabbed game object as well.</param>
         public void ToggleControllerModel(bool state, GameObject grabbedChildObject)
         {
-            if (!enabled || !controllerMapper || !controllerMapper.markedController)
+            if (!enabled)
             {
                 return;
             }
@@ -160,7 +158,7 @@ namespace VRTK
         /// <param name="alpha">The alpha level to apply to opacity of the controller object. `0f` to `1f`.</param>
         public void SetControllerOpacity(float alpha)
         {
-            if (!enabled || !controllerMapper || !controllerMapper.markedController)
+            if (!enabled)
             {
                 return;
             }
@@ -359,11 +357,6 @@ namespace VRTK
         /// </summary>
         public void InitaliseHighlighters()
         {
-            if (!controllerMapper)
-            {
-                return;
-            }
-
             highlighterOptions = new Dictionary<string, object>();
             highlighterOptions.Add("resetMainTexture", true);
             VRTK_BaseHighlighter objectHighlighter = VRTK_BaseHighlighter.GetActiveHighlighter(gameObject);
@@ -374,59 +367,55 @@ namespace VRTK
             }
 
             objectHighlighter.Initialise(null, highlighterOptions);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.ApplicationMenu)), objectHighlighter, elementHighlighterOverrides.appMenu);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.Body)), objectHighlighter, elementHighlighterOverrides.body);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.GripLeft)), objectHighlighter, elementHighlighterOverrides.gripLeft);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.GripRight)), objectHighlighter, elementHighlighterOverrides.gripRight);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.SystemMenu)), objectHighlighter, elementHighlighterOverrides.systemMenu);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.Touchpad)), objectHighlighter, elementHighlighterOverrides.touchpad);
-            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.Trigger)), objectHighlighter, elementHighlighterOverrides.trigger);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.ApplicationMenu)), objectHighlighter, elementHighlighterOverrides.appMenu);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.Body)), objectHighlighter, elementHighlighterOverrides.body);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.GripLeft)), objectHighlighter, elementHighlighterOverrides.gripLeft);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.GripRight)), objectHighlighter, elementHighlighterOverrides.gripRight);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.SystemMenu)), objectHighlighter, elementHighlighterOverrides.systemMenu);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.Touchpad)), objectHighlighter, elementHighlighterOverrides.touchpad);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.Trigger)), objectHighlighter, elementHighlighterOverrides.trigger);
         }
 
         private void Awake()
         {
             cachedElements = new Dictionary<string, Transform>();
-            controllerMapper = GetComponent<VRTK_ControllerMapper>();
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 
-            if (controllerMapper && controllerMapper.markedController)
-            {
-                var controllerHand = controllerMapper.markedController.GetControllerHand();
+            var controllerHand = VRTK_DeviceFinder.GetControllerHand(gameObject);
 
-                if (modelElementPaths.bodyModelPath.Trim() == "")
-                {
-                    modelElementPaths.bodyModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.Body, controllerHand);
-                }
-                if (modelElementPaths.triggerModelPath.Trim() == "")
-                {
-                    modelElementPaths.triggerModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.Trigger, controllerHand);
-                }
-                if (modelElementPaths.leftGripModelPath.Trim() == "")
-                {
-                    modelElementPaths.leftGripModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.GripLeft, controllerHand);
-                }
-                if (modelElementPaths.rightGripModelPath.Trim() == "")
-                {
-                    modelElementPaths.rightGripModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.GripRight, controllerHand);
-                }
-                if (modelElementPaths.touchpadModelPath.Trim() == "")
-                {
-                    modelElementPaths.touchpadModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.Touchpad, controllerHand);
-                }
-                if (modelElementPaths.appMenuModelPath.Trim() == "")
-                {
-                    modelElementPaths.appMenuModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.ApplicationMenu, controllerHand);
-                }
-                if (modelElementPaths.systemMenuModelPath.Trim() == "")
-                {
-                    modelElementPaths.systemMenuModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_InterfaceController.ControllerElelements.SystemMenu, controllerHand);
-                }
+            if (modelElementPaths.bodyModelPath.Trim() == "")
+            {
+                modelElementPaths.bodyModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.Body, controllerHand);
+            }
+            if (modelElementPaths.triggerModelPath.Trim() == "")
+            {
+                modelElementPaths.triggerModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.Trigger, controllerHand);
+            }
+            if (modelElementPaths.leftGripModelPath.Trim() == "")
+            {
+                modelElementPaths.leftGripModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.GripLeft, controllerHand);
+            }
+            if (modelElementPaths.rightGripModelPath.Trim() == "")
+            {
+                modelElementPaths.rightGripModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.GripRight, controllerHand);
+            }
+            if (modelElementPaths.touchpadModelPath.Trim() == "")
+            {
+                modelElementPaths.touchpadModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.Touchpad, controllerHand);
+            }
+            if (modelElementPaths.appMenuModelPath.Trim() == "")
+            {
+                modelElementPaths.appMenuModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.ApplicationMenu, controllerHand);
+            }
+            if (modelElementPaths.systemMenuModelPath.Trim() == "")
+            {
+                modelElementPaths.systemMenuModelPath = VRTK_SDK_Bridge.GetControllerElementPath(VRTK_ControllerElements.SystemMenu, controllerHand);
             }
         }
 
         private void OnEnable()
         {
-            modelContainer = (!modelContainer ? (controllerMapper && controllerMapper.markedController ? controllerMapper.markedController.gameObject : null) : modelContainer);
+            modelContainer = (!modelContainer ? VRTK_DeviceFinder.GetActualController(gameObject) : modelContainer);
             StartCoroutine(WaitForModel());
         }
 
@@ -481,14 +470,14 @@ namespace VRTK
 
         private Transform GetElementTransform(string path)
         {
-            if (cachedElements == null || !controllerMapper || !controllerMapper.markedController)
+            if (cachedElements == null)
             {
                 return null;
             }
 
             if (!cachedElements.ContainsKey(path) || cachedElements[path] == null)
             {
-                cachedElements[path] = controllerMapper.markedController.transform.Find(path);
+                cachedElements[path] = modelContainer.transform.Find(path);
             }
             return cachedElements[path];
         }
@@ -511,43 +500,49 @@ namespace VRTK
 
         private void ToggleModelRenderers(GameObject obj, bool state, GameObject grabbedChildObject)
         {
-            foreach (var renderer in obj.GetComponentsInChildren<Renderer>())
+            if (obj)
             {
-                if (renderer.gameObject != grabbedChildObject && (grabbedChildObject == null || !renderer.transform.IsChildOf(grabbedChildObject.transform)))
+                foreach (var renderer in obj.GetComponentsInChildren<Renderer>())
                 {
-                    renderer.enabled = state;
+                    if (renderer.gameObject != grabbedChildObject && (grabbedChildObject == null || !renderer.transform.IsChildOf(grabbedChildObject.transform)))
+                    {
+                        renderer.enabled = state;
+                    }
                 }
             }
         }
 
         private void SetModelOpacity(GameObject obj, float alpha)
         {
-            foreach (var renderer in obj.GetComponentsInChildren<Renderer>())
+            if (obj)
             {
-                if (alpha < 1f)
+                foreach (var renderer in obj.GetComponentsInChildren<Renderer>())
                 {
-                    renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    renderer.material.SetInt("_ZWrite", 0);
-                    renderer.material.DisableKeyword("_ALPHATEST_ON");
-                    renderer.material.DisableKeyword("_ALPHABLEND_ON");
-                    renderer.material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                    renderer.material.renderQueue = 3000;
-                }
-                else
-                {
-                    renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                    renderer.material.SetInt("_ZWrite", 1);
-                    renderer.material.DisableKeyword("_ALPHATEST_ON");
-                    renderer.material.DisableKeyword("_ALPHABLEND_ON");
-                    renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                    renderer.material.renderQueue = -1;
-                }
+                    if (alpha < 1f)
+                    {
+                        renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                        renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                        renderer.material.SetInt("_ZWrite", 0);
+                        renderer.material.DisableKeyword("_ALPHATEST_ON");
+                        renderer.material.DisableKeyword("_ALPHABLEND_ON");
+                        renderer.material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+                        renderer.material.renderQueue = 3000;
+                    }
+                    else
+                    {
+                        renderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                        renderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                        renderer.material.SetInt("_ZWrite", 1);
+                        renderer.material.DisableKeyword("_ALPHATEST_ON");
+                        renderer.material.DisableKeyword("_ALPHABLEND_ON");
+                        renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                        renderer.material.renderQueue = -1;
+                    }
 
-                if (renderer.material.HasProperty("_Color"))
-                {
-                    renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, alpha);
+                    if (renderer.material.HasProperty("_Color"))
+                    {
+                        renderer.material.color = new Color(renderer.material.color.r, renderer.material.color.g, renderer.material.color.b, alpha);
+                    }
                 }
             }
         }

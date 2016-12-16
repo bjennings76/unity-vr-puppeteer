@@ -44,7 +44,7 @@
             GetComponent<VRTK_ControllerEvents>().ControllerEnabled += new ControllerInteractionEventHandler(DoControllerEnabled);
             GetComponent<VRTK_ControllerEvents>().ControllerDisabled += new ControllerInteractionEventHandler(DoControllerDisabled);
 
-            GetComponent<VRTK_ControllerMapper>().markedController.ControllerIndexChanged += MarkedController_ControllerIndexChanged;
+            GetComponent<VRTK_ControllerEvents>().ControllerIndexChanged += new ControllerInteractionEventHandler(DoControllerIndexChanged);
         }
 
         private void DebugLogger(uint index, string button, string action, ControllerInteractionEventArgs e)
@@ -153,10 +153,9 @@
             DebugLogger(e.controllerIndex, "CONTROLLER STATE", "DISABLED", e);
         }
 
-        private void MarkedController_ControllerIndexChanged(object sender, ControllerMarkerEventArgs e)
+        private void DoControllerIndexChanged(object sender, ControllerInteractionEventArgs e)
         {
-            var obj = (VRTK_ControllerMarker)sender;
-            Debug.Log("Controller Index Changed to '" + e.controllerIndex + "' from '" + e.previousIndex + "' on GameObject: " + obj.name);
+            DebugLogger(e.controllerIndex, "CONTROLLER STATE", "INDEX CHANGED", e);
         }
     }
 }

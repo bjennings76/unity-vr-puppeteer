@@ -27,17 +27,17 @@ namespace VRTK
 
         [Tooltip("This determines the type of movement used by the extender.")]
         public MovementFunction movementFunction = MovementFunction.LinearDirect;
-        [Tooltip("This is the a public variable to enable the additional movement. This can be used in other scripts to toggle the `[CameraRig]` movement.")]
+        [Tooltip("This is the a public variable to enable the additional movement. This can be used in other scripts to toggle the play area movement.")]
         public bool additionalMovementEnabled = true;
         [Tooltip("This configures the controls of the RoomExtender. If this is true then the touchpad needs to be pressed to enable it. If this is false then it is disabled by pressing the touchpad.")]
         public bool additionalMovementEnabledOnButtonPress = true;
-        [Tooltip("This is the factor by which movement at the edge of the circle is amplified. 0 is no movement of the `[CameraRig]`. Higher values simulate a bigger play area but may be too uncomfortable.")]
+        [Tooltip("This is the factor by which movement at the edge of the circle is amplified. 0 is no movement of the play area. Higher values simulate a bigger play area but may be too uncomfortable.")]
         [Range(0, 10)]
         public float additionalMovementMultiplier = 1.0f;
         [Tooltip("This is the size of the circle in which the playArea is not moved and everything is normal. If it is to low it becomes uncomfortable when crouching.")]
         [Range(0, 5)]
         public float headZoneRadius = 0.25f;
-        [Tooltip("This transform visualises the circle around the user where the `[CameraRig]` is not moved. In the demo scene this is a cylinder at floor level. Remember to turn of collisions.")]
+        [Tooltip("This transform visualises the circle around the user where the play area is not moved. In the demo scene this is a cylinder at floor level. Remember to turn of collisions.")]
         public Transform debugTransform;
 
         [HideInInspector]
@@ -92,7 +92,7 @@ namespace VRTK
             headCirclePosition += movement;
             if (debugTransform)
             {
-                debugTransform.localPosition = headCirclePosition;
+                debugTransform.localPosition = new Vector3(headCirclePosition.x, debugTransform.localPosition.y, headCirclePosition.z);
             }
             if (additionalMovementEnabled)
             {

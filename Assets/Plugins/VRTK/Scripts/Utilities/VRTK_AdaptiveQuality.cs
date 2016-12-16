@@ -1,4 +1,4 @@
-// Adaptive Quality|Utilities|90070
+// Adaptive Quality|Utilities|90050
 
 // Adapted from The Lab Renderer's ValveCamera.cs, available at
 // https://github.com/ValveSoftware/the_lab_renderer/blob/ae64c48a8ccbe5406aba1e39b160d4f2f7156c2c/Assets/TheLabRenderer/Scripts/ValveCamera.cs
@@ -21,8 +21,6 @@ namespace VRTK
     /// </summary>
     /// <remarks>
     ///   > **Only Compatible With Unity 5.4 and above**
-    ///
-    /// The Adaptive Quality script is attached to the `[CameraRig]` game object.
     ///
     /// There are two goals:
     /// <list type="bullet">
@@ -686,7 +684,7 @@ namespace VRTK
                         },
                     triangles = new[] { 0, 1, 2, 0, 2, 3 }
                 };
-                ;
+                mesh.Optimize();
                 mesh.UploadMeshData(true);
 
                 debugVisualizationQuad = new GameObject("AdaptiveQualityDebugVisualizationQuad");

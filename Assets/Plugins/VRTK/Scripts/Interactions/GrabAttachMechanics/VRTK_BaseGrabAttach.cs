@@ -206,7 +206,7 @@ namespace VRTK.GrabAttachMechanics
 
                     var grabbingObjectThrowMultiplier = grabbingObjectScript.throwMultiplier;
 
-                    var origin = VRTK_DeviceFinder.TrackedObjectOrigin(grabbingObject);
+                    var origin = VRTK_DeviceFinder.GetControllerOrigin(grabbingObject);
 
                     var velocity = (controllerEvents ? controllerEvents.GetVelocity() : Vector3.zero);
                     var angularVelocity = (controllerEvents ? controllerEvents.GetAngularVelocity() : Vector3.zero);

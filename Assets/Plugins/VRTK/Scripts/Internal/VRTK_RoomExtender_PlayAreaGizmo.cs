@@ -12,7 +12,7 @@
         private Transform playArea;
         private VRTK_RoomExtender roomExtender;
 
-        private void OnEnable()
+        private void Awake()
         {
             playArea = VRTK_DeviceFinder.PlayAreaTransform();
             roomExtender = FindObjectOfType<VRTK_RoomExtender>();

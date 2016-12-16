@@ -4,11 +4,13 @@ namespace VRTK
     using UnityEngine;
 
     /// <summary>
-    /// This adds a collection of Object Tooltips to the Controller that give information on what the main controller buttons may do. To add the prefab, it just needs to be added as a child of the relevant controller e.g. `[CameraRig]/Controller (right)` would add the controller tooltips to the right controller.
+    /// This adds a collection of Object Tooltips to the Controller that give information on what the main controller buttons may do. To add the prefab, it just needs to be added as a child of the relevant alias controller GameObject.
     /// </summary>
     /// <remarks>
-    /// If the transforms for the buttons are not provided, then the script will attempt to find the attach transforms on the default controller model in the `[CameraRig]` prefab.
+    /// If the transforms for the buttons are not provided, then the script will attempt to find the attach transforms on the default controller model.
+    ///
     /// If no text is provided for one of the elements then the tooltip for that element will be set to disabled.
+    ///
     /// There are a number of parameters that can be set on the Prefab which are provided by the `VRTK_ControllerTooltips` script which is applied to the prefab.
     /// </remarks>
     /// <example>
@@ -56,7 +58,6 @@ namespace VRTK
         private GameObject[] buttonTooltips;
         private bool[] tooltipStates;
         private VRTK_ControllerActions controllerActions;
-        private VRTK_ControllerMapper controllerMapper;
         private VRTK_HeadsetControllerAware headsetControllerAware;
 
         /// <summary>
@@ -118,7 +119,6 @@ namespace VRTK
         private void Awake()
         {
             controllerActions = GetComponentInParent<VRTK_ControllerActions>();
-            controllerMapper = GetComponentInParent<VRTK_ControllerMapper>();
             triggerInitialised = false;
             gripInitialised = false;
             touchpadInitialised = false;
@@ -195,7 +195,7 @@ namespace VRTK
 
         private void DoGlanceEnterController(object sender, HeadsetControllerAwareEventArgs e)
         {
-            var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(controllerMapper.gameObject);
+            var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(controllerActions.gameObject);
             if (controllerIndex == e.controllerIndex)
             {
                 ToggleTips(true);
@@ -204,7 +204,7 @@ namespace VRTK
 
         private void DoGlanceExitController(object sender, HeadsetControllerAwareEventArgs e)
         {
-            var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(controllerMapper.gameObject);
+            var controllerIndex = VRTK_DeviceFinder.GetControllerIndex(controllerActions.gameObject);
             if (controllerIndex == e.controllerIndex)
             {
                 ToggleTips(false);
@@ -222,7 +222,7 @@ namespace VRTK
                 {
                     case "trigger":
                         tipText = triggerText;
-                        tipTransform = GetTransform(trigger, SDK_InterfaceController.ControllerElelements.Trigger);
+                        tipTransform = GetTransform(trigger, VRTK_ControllerElements.Trigger);
                         if (tipTransform != null)
                         {
                             triggerInitialised = true;
@@ -230,7 +230,7 @@ namespace VRTK
                         break;
                     case "grip":
                         tipText = gripText;
-                        tipTransform = GetTransform(grip, SDK_InterfaceController.ControllerElelements.GripLeft); ;
+                        tipTransform = GetTransform(grip, VRTK_ControllerElements.GripLeft);
                         if (tipTransform != null)
                         {
                             gripInitialised = true;
@@ -238,7 +238,7 @@ namespace VRTK
                         break;
                     case "touchpad":
                         tipText = touchpadText;
-                        tipTransform = GetTransform(touchpad, SDK_InterfaceController.ControllerElelements.Touchpad); ;
+                        tipTransform = GetTransform(touchpad, VRTK_ControllerElements.Touchpad);
                         if (tipTransform != null)
                         {
                             touchpadInitialised = true;
@@ -246,7 +246,7 @@ namespace VRTK
                         break;
                     case "appmenu":
                         tipText = appMenuText;
-                        tipTransform = GetTransform(appMenu, SDK_InterfaceController.ControllerElelements.ApplicationMenu); ;
+                        tipTransform = GetTransform(appMenu, VRTK_ControllerElements.ApplicationMenu);
                         if (tipTransform != null)
                         {
                             appMenuInitialised = true;
@@ -275,7 +275,7 @@ namespace VRTK
             return (triggerInitialised && gripInitialised && touchpadInitialised && appMenuInitialised);
         }
 
-        private Transform GetTransform(Transform setTransform, SDK_InterfaceController.ControllerElelements findElement)
+        private Transform GetTransform(Transform setTransform, VRTK_ControllerElements findElement)
         {
             Transform returnTransform = null;
             if (setTransform)
@@ -284,11 +284,13 @@ namespace VRTK
             }
             else
             {
-                if (controllerMapper.markedController.gameObject.activeInHierarchy)
+                var actualController = VRTK_DeviceFinder.GetActualController(controllerActions.gameObject);
+
+                if (actualController && actualController.activeInHierarchy)
                 {
-                    var controllerHand = controllerMapper.markedController.GetControllerHand();
+                    var controllerHand = VRTK_DeviceFinder.GetControllerHand(controllerActions.gameObject);
                     var elementPath = VRTK_SDK_Bridge.GetControllerElementPath(findElement, controllerHand, true);
-                    returnTransform = controllerMapper.markedController.transform.FindChild(elementPath);
+                    returnTransform = actualController.transform.FindChild(elementPath);
                 }
             }
 
@@ -297,7 +299,8 @@ namespace VRTK
 
         private void Update()
         {
-            if (!TipsInitialised() && controllerMapper && controllerMapper.markedController && controllerMapper.markedController.gameObject.activeInHierarchy)
+            var actualController = VRTK_DeviceFinder.GetActualController(controllerActions.gameObject);
+            if (!TipsInitialised() && actualController && actualController.activeInHierarchy)
             {
                 InitialiseTips();
             }

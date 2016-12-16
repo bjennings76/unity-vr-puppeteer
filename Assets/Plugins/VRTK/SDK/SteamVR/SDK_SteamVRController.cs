@@ -1,18 +1,26 @@
-﻿// SteamVR Controller|SDK|003
+﻿// SteamVR Controller|SDK_SteamVR|003
 namespace VRTK
 {
+#if VRTK_SDK_STEAMVR
     using UnityEngine;
-#if VRTK_SDK_CONTROLLER_STEAMVR
     using Valve.VR;
-#endif
 
     /// <summary>
     /// The SteamVR Controller SDK script provides a bridge to SDK methods that deal with the input devices.
     /// </summary>
     public class SDK_SteamVRController : SDK_BaseController
     {
-#if VRTK_SDK_CONTROLLER_STEAMVR
-        private SteamVR_ControllerManager cachedControllerManager;
+        private SteamVR_TrackedObject cachedLeftTrackedObject;
+        private SteamVR_TrackedObject cachedRightTrackedObject;
+
+        /// <summary>
+        /// The GetControllerDefaultColliderPath returns the path to the prefab that contains the collider objects for the default controller of this SDK.
+        /// </summary>
+        /// <returns>A path to the resource that contains the collider GameObject.</returns>
+        public override string GetControllerDefaultColliderPath()
+        {
+            return "ControllerColliders/HTCVive";
+        }
 
         /// <summary>
         /// The GetControllerElementPath returns the path to the game object that the given controller element for the given hand resides in.
@@ -21,172 +29,81 @@ namespace VRTK
         /// <param name="hand">The controller hand to look up.</param>
         /// <param name="fullPath">Whether to get the initial path or the full path to the element.</param>
         /// <returns>A string containing the path to the game object that the controller element resides in.</returns>
-        public override string GetControllerElementPath(ControllerElelements element, VRTK_DeviceFinder.ControllerHand hand, bool fullPath = false)
+        public override string GetControllerElementPath(VRTK_ControllerElements element, VRTK_DeviceFinder.ControllerHand hand, bool fullPath = false)
         {
             var suffix = (fullPath ? "/attach" : "");
             switch (element)
             {
-                case ControllerElelements.AttachPoint:
+                case VRTK_ControllerElements.AttachPoint:
                     return "Model/tip/attach";
-                case ControllerElelements.Trigger:
+                case VRTK_ControllerElements.Trigger:
                     return "Model/trigger" + suffix;
-                case ControllerElelements.GripLeft:
+                case VRTK_ControllerElements.GripLeft:
                     return "Model/lgrip" + suffix;
-                case ControllerElelements.GripRight:
+                case VRTK_ControllerElements.GripRight:
                     return "Model/rgrip" + suffix;
-                case ControllerElelements.Touchpad:
+                case VRTK_ControllerElements.Touchpad:
                     return "Model/trackpad" + suffix;
-                case ControllerElelements.ApplicationMenu:
+                case VRTK_ControllerElements.ApplicationMenu:
                     return "Model/button" + suffix;
-                case ControllerElelements.SystemMenu:
+                case VRTK_ControllerElements.SystemMenu:
                     return "Model/sys_button" + suffix;
-                case ControllerElelements.Body:
+                case VRTK_ControllerElements.Body:
                     return "Model/body";
             }
             return null;
         }
 
         /// <summary>
-        /// The GetTrackedObject method checks to see if the given game object is a tracked object and returns the game object back if it is valid along with it's tracked index.
+        /// The GetControllerIndex method returns the index of the given controller.
         /// </summary>
-        /// <param name="obj">The GameObject to check on.</param>
-        /// <param name="index">The variable to store the tracked index in if one is found.</param>
-        /// <returns>A GameObject of the tracked object if one is found.</returns>
-        public override GameObject GetTrackedObject(GameObject obj, out uint index)
+        /// <param name="controller">The GameObject containing the controller.</param>
+        /// <returns>The index of the given controller.</returns>
+        public override uint GetControllerIndex(GameObject controller)
         {
-            var trackedObject = (obj ? obj.GetComponent<SteamVR_TrackedObject>() : null);
-            index = 0;
-            if (trackedObject)
-            {
-                index = (uint)trackedObject.index;
-                return trackedObject.gameObject;
-            }
-            return null;
+            var trackedObject = GetTrackedObject(controller);
+            return (trackedObject ? (uint)trackedObject.index : uint.MaxValue);
         }
 
         /// <summary>
-        /// The GetTrackedObjectByIndex method retrieves a tracked object game object by it's index.
+        /// The GetControllerByIndex method returns the GameObject of a controller with a specific index.
         /// </summary>
-        /// <param name="index">The index of the tracked object to look up.</param>
-        /// <returns>The GameObject of the found tracked object.</returns>
-        public override GameObject GetTrackedObjectByIndex(uint index)
+        /// <param name="index">The index of the controller to find.</param>
+        /// <param name="actual">If true it will return the actual controller, if false it will return the script alias controller GameObject.</param>
+        /// <returns></returns>
+        public override GameObject GetControllerByIndex(uint index, bool actual = false)
         {
-            //attempt to get from cache first
-            if (VRTK_ObjectCache.trackedControllers.ContainsKey(index))
+            SetTrackedControllerCaches();
+            var sdkManager = VRTK_SDKManager.instance;
+            if (sdkManager != null)
             {
-                return VRTK_ObjectCache.trackedControllers[index];
-            }
-
-            //if not found in cache then brute force check
-            foreach (SteamVR_TrackedObject trackedObject in FindObjectsOfType<SteamVR_TrackedObject>())
-            {
-                if ((uint)trackedObject.index == index)
+                if (cachedLeftTrackedObject != null && (uint)cachedLeftTrackedObject.index == index)
                 {
-                    return trackedObject.gameObject;
+                    return (actual ? sdkManager.actualLeftController : sdkManager.scriptAliasLeftController);
+                }
+
+                if (cachedRightTrackedObject != null && (uint)cachedRightTrackedObject.index == index)
+                {
+                    return (actual ? sdkManager.actualRightController : sdkManager.scriptAliasRightController);
                 }
             }
-
             return null;
         }
 
         /// <summary>
-        /// The GetIndexOfTrackedObject method returns the tracked index of the given tracked object.
+        /// The GetControllerOrigin method returns the origin of the given controller.
         /// </summary>
-        /// <param name="trackedObject">The GameObject containing the tracked object.</param>
-        /// <returns>The tracked index of the given tracked object.</returns>
-        public override uint GetIndexOfTrackedObject(GameObject trackedObject)
+        /// <param name="controller">The controller to retrieve the origin from.</param>
+        /// <returns>A Transform containing the origin of the controller.</returns>
+        public override Transform GetControllerOrigin(GameObject controller)
         {
-            uint index = uint.MaxValue;
-            GetTrackedObject(trackedObject, out index);
-            return index;
-        }
-
-        /// <summary>
-        /// The GetTrackedObjectOrigin method returns the origin of the given game object if it is a tracked object.
-        /// </summary>
-        /// <param name="obj">The GameObject to retrieve the origin from.</param>
-        /// <returns>A Transform containing the origin of the tracked object.</returns>
-        public override Transform GetTrackedObjectOrigin(GameObject obj)
-        {
-            var trackedObject = obj.GetComponent<SteamVR_TrackedObject>();
+            var trackedObject = GetTrackedObject(controller);
             if (trackedObject)
             {
                 return trackedObject.origin ? trackedObject.origin : trackedObject.transform.parent;
             }
+
             return null;
-        }
-
-        /// <summary>
-        /// The TrackedIndexIsController method is used to determine if the given tracked index is a controller.
-        /// </summary>
-        /// <param name="index">The tracked index to check for.</param>
-        /// <returns>Returns true if the tracked object found is a controller.</returns>
-        public override bool TrackedIndexIsController(uint index)
-        {
-            var system = OpenVR.System;
-            if (system != null && system.GetTrackedDeviceClass(index) == ETrackedDeviceClass.Controller)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// The GetControllerLeftHand method returns the game object containing the representation of the left hand controller.
-        /// </summary>
-        /// <returns>The GameObject containing the left hand controller.</returns>
-        public override GameObject GetControllerLeftHand()
-        {
-            var controllerManager = GetControllerManager();
-            if (controllerManager)
-            {
-                return controllerManager.left;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// The GetControllerRightHand method returns the game object containing the representation of the right hand controller.
-        /// </summary>
-        /// <returns>The GameObject containing the right hand controller.</returns>
-        public override GameObject GetControllerRightHand()
-        {
-            var controllerManager = GetControllerManager();
-            if (controllerManager)
-            {
-                return controllerManager.right;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// The IsControllerLeftHand method is used to check if the given game object is the game object containing the left hand controller.
-        /// </summary>
-        /// <param name="controller">The GameObject to check.</param>
-        /// <returns>Returns true if the given game object is the left hand controller.</returns>
-        public override bool IsControllerLeftHand(GameObject controller)
-        {
-            var controllerManager = GetControllerManager();
-            if (controllerManager && controller == controllerManager.left)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// The IsControllerRightHand method is used to check if the given game object is the game object containing the right hand controller.
-        /// </summary>
-        /// <param name="controller">The GameObject to check.</param>
-        /// <returns>Returns true if the given game object is the right hand controller.</returns>
-        public override bool IsControllerRightHand(GameObject controller)
-        {
-            var controllerManager = GetControllerManager();
-            if (controllerManager && controller == controllerManager.right)
-            {
-                return true;
-            }
-            return false;
         }
 
         /// <summary>
@@ -577,27 +494,68 @@ namespace VRTK
         private void Initialise()
         {
             SteamVR_Utils.Event.Listen("TrackedDeviceRoleChanged", OnTrackedDeviceRoleChanged);
+            SetTrackedControllerCaches(true);
         }
 
         private void OnTrackedDeviceRoleChanged(params object[] args)
         {
-            cachedControllerManager = null;
-            VRTK_ObjectCache.trackedControllers.Clear();
+            SetTrackedControllerCaches(true);
         }
 
-        private SteamVR_ControllerManager GetControllerManager()
+        private void SetTrackedControllerCaches(bool forceRefresh = false)
         {
-            if (cachedControllerManager == null || !cachedControllerManager.isActiveAndEnabled)
+            if (forceRefresh)
             {
-                foreach (var manager in FindObjectsOfType<SteamVR_ControllerManager>())
+                cachedLeftTrackedObject = null;
+                cachedRightTrackedObject = null;
+            }
+
+            var sdkManager = VRTK_SDKManager.instance;
+            if (sdkManager != null)
+            {
+                if (cachedLeftTrackedObject == null && sdkManager.actualLeftController)
                 {
-                    if (manager.left && manager.right)
-                    {
-                        cachedControllerManager = manager;
-                    }
+                    cachedLeftTrackedObject = sdkManager.actualLeftController.GetComponent<SteamVR_TrackedObject>();
+                }
+                if (cachedRightTrackedObject == null && sdkManager.actualRightController)
+                {
+                    cachedRightTrackedObject = sdkManager.actualRightController.GetComponent<SteamVR_TrackedObject>();
                 }
             }
-            return cachedControllerManager;
+        }
+
+        private SteamVR_TrackedObject GetTrackedObject(GameObject controller)
+        {
+            SetTrackedControllerCaches();
+            SteamVR_TrackedObject trackedObject = null;
+
+            if (IsControllerLeftHand(controller, true) || IsControllerLeftHand(controller, false))
+            {
+                trackedObject = cachedLeftTrackedObject;
+            }
+            else if (IsControllerRightHand(controller, true) || IsControllerRightHand(controller, false))
+            {
+                trackedObject = cachedRightTrackedObject;
+            }
+            return trackedObject;
+        }
+
+        private GameObject GetActualController(GameObject controller)
+        {
+            GameObject returnController = null;
+            var sdkManager = VRTK_SDKManager.instance;
+            if (sdkManager != null)
+            {
+                if (IsControllerLeftHand(controller, true) || IsControllerLeftHand(controller, false))
+                {
+                    returnController = sdkManager.actualLeftController;
+                }
+                else if (IsControllerRightHand(controller, true) || IsControllerRightHand(controller, false))
+                {
+                    returnController = sdkManager.actualRightController;
+                }
+            }
+            return returnController;
         }
 
         private static bool IsButtonPressed(uint index, ButtonPressTypes type, ulong button)
@@ -626,6 +584,10 @@ namespace VRTK
 
             return false;
         }
-#endif
     }
+#else
+    public class SDK_SteamVRController : SDK_FallbackController
+    {
+    }
+#endif
 }

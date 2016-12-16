@@ -362,14 +362,14 @@ namespace VRTK
             bool validNavMeshLocation = false;
             if (target)
             {
-                UnityEngine.AI.NavMeshHit hit;
-                validNavMeshLocation = UnityEngine.AI.NavMesh.SamplePosition(destinationPosition, out hit, navMeshCheckDistance, UnityEngine.AI.NavMesh.AllAreas);
+                NavMeshHit hit;
+                validNavMeshLocation = NavMesh.SamplePosition(destinationPosition, out hit, navMeshCheckDistance, NavMesh.AllAreas);
             }
             if (navMeshCheckDistance == 0f)
             {
                 validNavMeshLocation = true;
             }
-            return (validNavMeshLocation && target && !(VRTK_TagOrScriptPolicyList.TagOrScriptCheck(target.gameObject, invalidTagOrScriptListPolicy)));
+            return (validNavMeshLocation && target && !(VRTK_PolicyList.Check(target.gameObject, invalidListPolicy)));
         }
 
         protected virtual void CreateObjectInteractor()
