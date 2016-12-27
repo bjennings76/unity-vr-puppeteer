@@ -511,14 +511,14 @@ PlayerSettings:
   cloudServicesEnabled:
     Analytics: 0
     Build: 0
-    Collab: 1
+    Collab: 0
     ErrorHub: 0
     Game_Performance: 0
     Hub: 0
     Purchasing: 0
-    UNet: 1
+    UNet: 0
     Unity_Ads: 0
-  cloudProjectId: 75e358ff-8377-44f0-9a33-fb815e17546d
-  projectName: unity-vr-puppeteer
-  organizationId: unspeakable-productions
+  cloudProjectId: 
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
