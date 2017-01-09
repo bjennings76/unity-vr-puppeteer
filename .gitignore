@@ -18,7 +18,6 @@
 .svn/
 .idea/
 .tmp*
-*.DotSettings
 latest.ini
 
 # OS Files
