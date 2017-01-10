@@ -25,7 +25,7 @@ public class Jukebox : MonoBehaviour {
 
   private void OnLoaded() {
     var first = m_FeedReader.Entries.LastOrDefault();
-    if (first == null) return;
+    if (first == null) { return; }
     LoadAudio(first.Url);
     //var www = new WWW(first.Url);
     //m_AudioSource.clip = www.GetAudioClip(true, true);
@@ -34,8 +34,8 @@ public class Jukebox : MonoBehaviour {
 
   private void LoadAudio(string url) {
     var filePath = GetCachedFilePath(url);
-    if (!File.Exists(filePath)) StartCoroutine(DownloadAndPlay(url, filePath));
-    else LoadCachedFile(filePath);
+    if (!File.Exists(filePath)) { StartCoroutine(DownloadAndPlay(url, filePath)); }
+    else { LoadCachedFile(filePath); }
   }
 
   private static string GetCachedFilePath(string url) {
@@ -48,11 +48,11 @@ public class Jukebox : MonoBehaviour {
     var www = new WWW(url);
     yield return www;
 
-    if (!www.error.IsNullOrEmpty()) Debug.LogError("Error! Cannot open file: " + url + ": " + www.error, this);
+    if (!www.error.IsNullOrEmpty()) { Debug.LogError("Error! Cannot open file: " + url + ": " + www.error, this); }
     else {
       var directory = Path.GetDirectoryName(filePath);
-      if (directory == null) throw new ArgumentException("filePath");
-      if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+      if (directory == null) { throw new ArgumentException("filePath"); }
+      if (!Directory.Exists(directory)) { Directory.CreateDirectory(directory); }
       File.WriteAllBytes(filePath, www.bytes);
       Debug.Log("Downloaded " + url + " to " + filePath, this);
       LoadAudioData(www.bytes, filePath);
@@ -92,7 +92,7 @@ public class Jukebox : MonoBehaviour {
   }
 
   private void UnloadAudio() {
-    if (m_WaveOutDevice != null) m_WaveOutDevice.Stop();
+    if (m_WaveOutDevice != null) { m_WaveOutDevice.Stop(); }
     if (m_MainOutputStream != null) {
       // this one really closes the file and ACM conversion
       m_VolumeStream.Close();

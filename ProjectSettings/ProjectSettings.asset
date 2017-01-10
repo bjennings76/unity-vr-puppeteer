@@ -4,14 +4,14 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  productGUID: 85927aca17172b445a9e6b8633cebfec
+  productGUID: 6ea45b9b246c18941b60bbb4ca5d7bf2
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: unity-vr-puppeteer
+  productName: 100-days-of-code
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21176471, a: 1}
@@ -76,7 +76,7 @@ PlayerSettings:
   forceSingleInstance: 0
   resizableWindow: 1
   useMacAppStoreValidation: 0
-  gpuSkinning: 1
+  gpuSkinning: 0
   graphicsJobs: 0
   xboxPIXTextureCapture: 0
   xboxEnableAvatar: 0
@@ -129,7 +129,7 @@ PlayerSettings:
   AndroidMinSdkVersion: 9
   AndroidPreferredInstallLocation: 1
   aotOptions: 
-  apiCompatibilityLevel: 1
+  apiCompatibilityLevel: 2
   stripEngineCode: 1
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
@@ -144,10 +144,10 @@ PlayerSettings:
     serializedVersion: 2
     m_Bits: 238
   iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 7.0
+  iOSTargetOSVersionString: 
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
-  tvOSTargetOSVersionString: 9.0
+  tvOSTargetOSVersionString: 
   uIPrerenderedIcon: 0
   uIRequiresPersistentWiFi: 0
   uIRequiresFullScreen: 1
@@ -209,60 +209,10 @@ PlayerSettings:
   m_BuildTargetBatching: []
   m_BuildTargetGraphicsAPIs: []
   m_BuildTargetVRSettings:
-  - m_BuildTarget: Android
-    m_Enabled: 0
-    m_Devices:
-    - Oculus
-  - m_BuildTarget: Metro
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: N3DS
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: PS3
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: PS4
-    m_Enabled: 0
-    m_Devices:
-    - PlayStationVR
-  - m_BuildTarget: PSM
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: PSP2
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: SamsungTV
-    m_Enabled: 0
-    m_Devices: []
   - m_BuildTarget: Standalone
     m_Enabled: 1
     m_Devices:
     - OpenVR
-  - m_BuildTarget: Tizen
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: WebGL
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: WebPlayer
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: WiiU
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: Xbox360
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: XboxOne
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: iOS
-    m_Enabled: 0
-    m_Devices: []
-  - m_BuildTarget: tvOS
-    m_Enabled: 0
-    m_Devices: []
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   webPlayerTemplate: APPLICATION:Default
@@ -413,7 +363,7 @@ PlayerSettings:
   psmSplashimage: {fileID: 0}
   splashScreenBackgroundSourceLandscape: {fileID: 0}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
-  spritePackerPolicy: DefaultPackerPolicy
+  spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
   webGLDataCaching: 0
@@ -426,22 +376,21 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: VRTK_SDK_HEADSET_STEAMVR;VRTK_SDK_BOUNDARIES_STEAMVR;VRTK_SDK_CONTROLLER_STEAMVR;VRTK_SDK_SYSTEM_STEAMVR;VRTK_SDK_STEAMVR
+    1: VRTK_SDK_STEAMVR;XDEBUG
   platformArchitecture: {}
-  scriptingBackend:
-    Standalone: 0
+  scriptingBackend: {}
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: unity-vr-puppeteer
+  metroPackageName: 100-days-of-code
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: unity-vr-puppeteer
+  metroApplicationDescription: 100-days-of-code
   wsaImages: {}
   metroTileShortName: 
   metroCommandLineArgsFile: 
@@ -466,7 +415,7 @@ PlayerSettings:
   tizenGPSPermissions: 0
   tizenMicrophonePermissions: 0
   tizenDeploymentTarget: 
-  tizenDeploymentTargetType: 46
+  tizenDeploymentTargetType: 0
   tizenMinOSVersion: 0
   n3dsUseExtSaveData: 0
   n3dsCompressStaticMem: 1
@@ -508,16 +457,7 @@ PlayerSettings:
   XboxOneAllowedProductIds: []
   XboxOnePersistentLocalStorageSize: 0
   vrEditorSettings: {}
-  cloudServicesEnabled:
-    Analytics: 0
-    Build: 0
-    Collab: 0
-    ErrorHub: 0
-    Game_Performance: 0
-    Hub: 0
-    Purchasing: 0
-    UNet: 0
-    Unity_Ads: 0
+  cloudServicesEnabled: {}
   cloudProjectId: 
   projectName: 
   organizationId: 

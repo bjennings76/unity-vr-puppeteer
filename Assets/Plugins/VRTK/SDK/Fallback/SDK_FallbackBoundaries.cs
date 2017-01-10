@@ -12,12 +12,19 @@ namespace VRTK
     public class SDK_FallbackBoundaries : SDK_BaseBoundaries
     {
         /// <summary>
+        /// The InitBoundaries method is run on start of scene and can be used to initialse anything on game start.
+        /// </summary>
+        public override void InitBoundaries()
+        {
+        }
+
+        /// <summary>
         /// The GetPlayArea method returns the Transform of the object that is used to represent the play area in the scene.
         /// </summary>
         /// <returns>A transform of the object representing the play area in the scene.</returns>
         public override Transform GetPlayArea()
         {
-            return base.GetPlayArea();
+            return null;
         }
 
         /// <summary>
@@ -58,6 +65,11 @@ namespace VRTK
         public override bool IsPlayAreaSizeCalibrated(GameObject playArea)
         {
             return false;
+        }
+
+        private void Awake()
+        {
+            Debug.LogError("Fallback Boundaries SDK is being used. Have you selected a valid Boundaries SDK in the SDK Manager? If you are unsure, then click the GameObject with the `VRTK_SDKManager` script attached to it in Edit Mode and select a Boundaries SDK from the dropdown.");
         }
     }
 }

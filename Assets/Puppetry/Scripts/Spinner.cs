@@ -1,0 +1,111 @@
+﻿// ---------------------------------------------------------------------
+// Copyright (c) 2016 Magic Leap. All Rights Reserved.
+// Magic Leap Confidential and Proprietary
+// ---------------------------------------------------------------------
+
+using System.Collections.Generic;
+using UnityEngine;
+using Utils;
+
+namespace Invaders.Map {
+  public class Spinner : MonoBehaviour {
+    [SerializeField] private float m_Push = 1.2f;
+    [SerializeField] private Rigidbody m_Rigidbody;
+
+    private readonly List<Transform> m_Targets = new List<Transform>();
+    private float m_LastRotation;
+    private float m_RotationDelta;
+    private float m_RotationTimeDelta;
+    private Vector3 m_Axis;
+
+    private Vector3 m_LookPos;
+    private Vector3 m_LookDir;
+    private Transform m_Transform;
+
+    public List<Transform> Targets { get { return m_Targets; } }
+
+    private Transform Target { get { return m_Targets.GetFirst(); } }
+
+    private void Awake() { m_Transform = transform; }
+
+    private void OnTriggerEnter(Collider other) {
+      m_Targets.Add(other.transform);
+
+      if (!enabled) { return; }
+
+      m_Rigidbody.isKinematic = true;
+      m_Axis = m_Transform.up;
+      InitNewTarget();
+    }
+
+    private void InitNewTarget() {
+      m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
+      m_LookDir = m_LookPos - m_Transform.position;
+    }
+
+    private void LateUpdate() {
+      m_RotationDelta = m_Transform.rotation.eulerAngles.y - m_LastRotation;
+      m_RotationTimeDelta = Time.deltaTime;
+      m_LastRotation = m_Transform.rotation.eulerAngles.y;
+
+      if (!Target) { return; }
+
+      m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
+      var lastLook = m_LookDir;
+      m_LookDir = m_LookPos - m_Transform.position;
+      var angle = SignedAngleBetween(lastLook, m_LookDir, m_Axis);
+      m_Transform.Rotate(m_Axis, angle, Space.World);
+    }
+
+    private void OnTriggerExit(Collider other) {
+      var wasTarget = other.transform == Target;
+      m_Targets.Remove(other.transform);
+
+      if (!Target) {
+        m_Rigidbody.isKinematic = false;
+        m_Rigidbody.AddTorque(0, m_RotationDelta*m_Push*m_RotationTimeDelta*100, 0, ForceMode.VelocityChange);
+      }
+      else if (wasTarget) { InitNewTarget(); }
+    }
+
+    private static Vector3 ProjectPointOnPlane(Vector3 planeNormal, Vector3 planePoint, Vector3 point) {
+      // TH - This should work as well      
+      // return planePoint + Vector3.ProjectOnPlane(point - planePoint, planeNormal);     
+      //First calculate the distance from the point to the plane:
+      var distance = SignedDistancePlanePoint(planeNormal, planePoint, point);
+
+      //Reverse the sign of the distance
+      distance *= -1;
+
+      //Get a translation vector
+      var translationVector = SetVectorLength(planeNormal, distance);
+
+      //Translate the point to form a projection
+      return point + translationVector;
+    }
+
+    private static Vector3 SetVectorLength(Vector3 vector, float size) {
+      //normalize the vector
+      var vectorNormalized = Vector3.Normalize(vector);
+
+      //scale the vector
+      return vectorNormalized*size;
+    }
+
+    private static float SignedDistancePlanePoint(Vector3 planeNormal, Vector3 planePoint, Vector3 point) { return Vector3.Dot(planeNormal, point - planePoint); }
+
+    private static float SignedAngleBetween(Vector3 startDirection, Vector3 endDirection, Vector3 axis) {
+      var angle = Vector3.Angle(startDirection, endDirection);
+      var sign = Mathf.Sign(Vector3.Dot(axis, Vector3.Cross(startDirection, endDirection)));
+      return angle*sign;
+    }
+
+
+    private void OnDrawGizmos() {
+      XDebug.DrawText(transform.position, m_RotationDelta.ToString("N2"));
+      XDebug.DrawSphere(m_LookPos, 0.05f, Color.red);
+      XDebug.DrawArrow(transform.position, m_Axis, 0.05f, Color.red);
+      XDebug.DrawArrow(transform.position, m_LookDir, 0.05f, Color.blue);
+    }
+  }
+}

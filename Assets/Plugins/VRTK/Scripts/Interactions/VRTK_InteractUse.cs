@@ -4,9 +4,11 @@ namespace VRTK
     using UnityEngine;
 
     /// <summary>
-    /// The Interact Use script is attached to a Controller object within the `[CameraRig]` prefab and the Controller object requires the `VRTK_ControllerEvents` script to be attached as it uses this for listening to the controller button events for using and stop using interactable game objects. It listens for the `AliasUseOn` and `AliasUseOff` events to determine when an object should be used and should stop using.
+    /// The Interact Use script is attached to a Controller object and requires the `VRTK_ControllerEvents` script to be attached as it uses this for listening to the controller button events for using and stop using interactable game objects.
     /// </summary>
     /// <remarks>
+    /// It listens for the `AliasUseOn` and `AliasUseOff` events to determine when an object should be used and should stop using.
+    ///
     /// The Controller object also requires the `VRTK_InteractTouch` script to be attached to it as this is used to determine when an interactable object is being touched. Only valid touched objects can be used.
     ///
     /// An object can be used if the Controller touches a game object which contains the `VRTK_InteractableObject` script and has the flag `isUsable` set to `true`.
@@ -161,10 +163,6 @@ namespace VRTK
                     controllerAppearanceScript.ToggleControllerOnUse(visible, controllerActions, usingObject);
                 }
             }
-            else if (visible)
-            {
-                controllerActions.ToggleControllerModel(true, usingObject);
-            }
         }
 
         private void UseInteractedObject(GameObject touchedObject)
@@ -184,14 +182,6 @@ namespace VRTK
                 ToggleControllerVisibility(false);
                 AttemptHaptics();
                 OnControllerUseInteractableObject(interactTouch.SetControllerInteractEvent(usingObject));
-            }
-        }
-
-        private void HideController()
-        {
-            if (usingObject != null)
-            {
-                controllerActions.ToggleControllerModel(false, usingObject);
             }
         }
 

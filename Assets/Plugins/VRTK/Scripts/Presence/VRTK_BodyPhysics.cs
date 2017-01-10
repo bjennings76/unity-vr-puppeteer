@@ -72,6 +72,8 @@ namespace VRTK
 
         [Header("Snap To Floor Settings")]
 
+        [Tooltip("The layers to ignore when raycasting to find floors.")]
+        public LayerMask layersToIgnore = Physics.IgnoreRaycastLayer;
         [Tooltip("A check to see if the drop to nearest floor should take place. If the selected restrictor is still over the current floor then the drop to nearest floor will not occur. Works well for being able to lean over ledges and look down. Only works for falling down not teleporting up.")]
         public FallingRestrictors fallRestriction = FallingRestrictors.No_Restriction;
         [Tooltip("When the `y` distance between the floor and the headset exceeds this distance and `Enable Body Collisions` is true then the rigidbody gravity will be used instead of teleport to drop to nearest floor.")]
@@ -359,8 +361,14 @@ namespace VRTK
 
         protected void TogglePhysics(bool state)
         {
-            bodyRigidbody.isKinematic = !state;
-            bodyCollider.isTrigger = !state;
+            if (bodyRigidbody)
+            {
+                bodyRigidbody.isKinematic = !state;
+            }
+            if (bodyCollider)
+            {
+                bodyCollider.isTrigger = !state;
+            }
         }
 
         private void CheckBodyCollisionsSetting()
@@ -406,7 +414,7 @@ namespace VRTK
             Vector3 rayDirection = (playArea ? -playArea.up : Vector3.zero);
             Ray standingDownRay = new Ray(standingDownRayStartPosition, rayDirection);
             RaycastHit standingDownRayCollision;
-            bool standingDownRayHit = Physics.Raycast(standingDownRay, out standingDownRayCollision);
+            bool standingDownRayHit = Physics.Raycast(standingDownRay, out standingDownRayCollision, Mathf.Infinity, ~layersToIgnore);
 
             if (standingDownRayHit)
             {
@@ -430,7 +438,7 @@ namespace VRTK
             RaycastHit forwardRayCollision;
 
             // Cast a ray forward just outside the body collider radius to see if anything is blocking your path
-            if (!Physics.Raycast(forwardRay, out forwardRayCollision, forwardLength))
+            if (!Physics.Raycast(forwardRay, out forwardRayCollision, forwardLength, ~layersToIgnore))
             {
                 if (standingDownRayHit)
                 {
@@ -439,7 +447,7 @@ namespace VRTK
                     RaycastHit downRayCollision;
 
                     //Cast a ray down from the end of the forward ray position
-                    if (Physics.Raycast(downRay, out downRayCollision))
+                    if (Physics.Raycast(downRay, out downRayCollision, Mathf.Infinity, ~layersToIgnore))
                     {
                         var distancePrecision = 1000f;
                         float rayDownDelta = (Mathf.Round((standingDownRayCollision.distance - downRayCollision.distance) * distancePrecision) / distancePrecision);
@@ -560,6 +568,12 @@ namespace VRTK
             generateCollider = false;
             generateRigidbody = false;
 
+            if (!playArea)
+            {
+                Debug.LogError("No play area could be found. Have you selected a valid Boundaries SDK in the SDK Manager? If you are unsure, then click the GameObject with the `VRTK_SDKManager` script attached to it in Edit Mode and select a Boundaries SDK from the dropdown.");
+                return;
+            }
+
             VRTK_PlayerObject.SetPlayerObject(playArea.gameObject, VRTK_PlayerObject.ObjectTypes.CameraRig);
             bodyRigidbody = playArea.GetComponent<Rigidbody>();
             if (bodyRigidbody == null)
@@ -580,7 +594,10 @@ namespace VRTK
                 bodyCollider.radius = 0.15f;
             }
 
-            playArea.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            if (playArea.gameObject.layer == 0)
+            {
+                playArea.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            }
             TogglePhysics(enableBodyCollisions);
         }
 
@@ -599,13 +616,16 @@ namespace VRTK
 
         private void UpdateCollider()
         {
-            var newpresenceColliderYSize = (headset ? headset.transform.localPosition.y - headsetYOffset : 0f);
-            var newpresenceColliderYCenter = Mathf.Max((newpresenceColliderYSize / 2) + playAreaHeightAdjustment, bodyCollider.radius + playAreaHeightAdjustment);
-
-            if (headset && bodyCollider)
+            if (bodyCollider)
             {
-                bodyCollider.height = Mathf.Max(newpresenceColliderYSize, bodyCollider.radius);
-                bodyCollider.center = new Vector3(headset.localPosition.x, newpresenceColliderYCenter, headset.localPosition.z);
+                var newpresenceColliderYSize = (headset ? headset.transform.localPosition.y - headsetYOffset : 0f);
+                var newpresenceColliderYCenter = Mathf.Max((newpresenceColliderYSize / 2) + playAreaHeightAdjustment, bodyCollider.radius + playAreaHeightAdjustment);
+
+                if (headset && bodyCollider)
+                {
+                    bodyCollider.height = Mathf.Max(newpresenceColliderYSize, bodyCollider.radius);
+                    bodyCollider.center = new Vector3(headset.localPosition.x, newpresenceColliderYCenter, headset.localPosition.z);
+                }
             }
         }
 
@@ -701,7 +721,7 @@ namespace VRTK
         {
             Ray ray = new Ray(controllerObj.transform.position, -playArea.up);
             RaycastHit rayCollidedWith;
-            Physics.Raycast(ray, out rayCollidedWith);
+            Physics.Raycast(ray, out rayCollidedWith, Mathf.Infinity, ~layersToIgnore);
             return controllerObj.transform.position.y - rayCollidedWith.distance;
         }
 
@@ -743,7 +763,7 @@ namespace VRTK
             {
                 Ray ray = new Ray(headset.transform.position, -playArea.up);
                 RaycastHit rayCollidedWith;
-                bool rayHit = Physics.Raycast(ray, out rayCollidedWith);
+                bool rayHit = Physics.Raycast(ray, out rayCollidedWith, Mathf.Infinity, ~layersToIgnore);
                 float hitFloorY = headset.transform.position.y - rayCollidedWith.distance;
                 hitFloorYDelta = playArea.position.y - hitFloorY;
 

@@ -305,15 +305,11 @@ namespace VRTK
             {
                 OnValidate();
             }
-
-            CreateOrDestroyDebugVisualization();
         }
 
         private void OnDisable()
         {
             Camera.onPreCull -= OnCameraPreCull;
-
-            CreateOrDestroyDebugVisualization();
             SetRenderScale(1.0f, 1.0f);
         }
 
@@ -332,12 +328,13 @@ namespace VRTK
         {
             HandleKeyPresses();
             UpdateRenderScaleLevels();
+            CreateOrDestroyDebugVisualization();
             UpdateDebugVisualization();
 
             timing.SaveCurrentFrameTiming();
         }
 
-#if UNITY_5_4_1 || UNITY_5_4_2 || UNITY_5_5_OR_NEWER
+#if UNITY_5_4_1 || UNITY_5_4_2 || UNITY_5_4_3 || UNITY_5_5_OR_NEWER
         private void LateUpdate()
         {
             UpdateRenderScale();
@@ -351,7 +348,7 @@ namespace VRTK
                 return;
             }
 
-#if !(UNITY_5_4_1 || UNITY_5_4_2 || UNITY_5_5_OR_NEWER)
+#if !(UNITY_5_4_1 || UNITY_5_4_2 || UNITY_5_4_3 || UNITY_5_5_OR_NEWER)
             UpdateRenderScale();
 #endif
             UpdateMSAALevel();
@@ -684,10 +681,16 @@ namespace VRTK
                         },
                     triangles = new[] { 0, 1, 2, 0, 2, 3 }
                 };
+#if !UNITY_5_5_OR_NEWER
+                mesh.Optimize();
+#endif
                 mesh.UploadMeshData(true);
 
                 debugVisualizationQuad = new GameObject("AdaptiveQualityDebugVisualizationQuad");
-                debugVisualizationQuad.transform.parent = VRTK_DeviceFinder.HeadsetTransform();
+                if (VRTK_SDKManager.instance)
+                {
+                    debugVisualizationQuad.transform.parent = VRTK_DeviceFinder.HeadsetTransform();
+                }
                 debugVisualizationQuad.transform.localPosition = Vector3.forward;
                 debugVisualizationQuad.transform.localRotation = Quaternion.identity;
                 debugVisualizationQuad.AddComponent<MeshFilter>().mesh = mesh;

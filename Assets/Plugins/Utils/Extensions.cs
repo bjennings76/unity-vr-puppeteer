@@ -115,6 +115,16 @@ namespace Utils {
       return items.IndexOf(i => EqualityComparer<T>.Default.Equals(item, i));
     }
 
+    public static T GetFirst<T>(this List<T> items) {
+      if (items == null || items.Count == 0) { return default(T); }
+      return items[0];
+    }
+
+    public static T GetLast<T>(this List<T> items) {
+      if (items == null || items.Count == 0) { return default(T); }
+      return items[items.Count - 1];
+    }
+
     public static string NameOrNull(this Object o) {
       return o != null ? o.name : "null";
     }

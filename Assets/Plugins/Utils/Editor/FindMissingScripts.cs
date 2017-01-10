@@ -19,9 +19,9 @@ namespace Utils.Editor {
       s_GoCount = 0;
       s_ComponentsCount = 0;
       s_MissingCount = 0;
-      DateTime start = DateTime.Now;
-      Dictionary<string, List<string>> manifest = new Dictionary<string, List<string>>();
-      Dictionary<string, List<string>> oldManifest = LoadManifest(manifestName);
+      var start = DateTime.Now;
+      var manifest = new Dictionary<string, List<string>>();
+      var oldManifest = LoadManifest(manifestName);
       search(manifest, oldManifest);
       SaveManifest(manifestName, manifest);
       Debug.Log(string.Format("Searched {0} GameObjects, {1} components, found {2} missing in {3:N2} seconds", s_GoCount, s_ComponentsCount, s_MissingCount, (DateTime.Now - start).TotalSeconds));
@@ -29,24 +29,22 @@ namespace Utils.Editor {
 
     [MenuItem("Tools/Find Missing Scripts in Scene")]
     public static void FindMissingInScene() {
-      for (int i = 0; i < SceneManager.sceneCount; i++) {
-        Scene scene = SceneManager.GetSceneAt(i);
+      for (var i = 0; i < SceneManager.sceneCount; i++) {
+        var scene = SceneManager.GetSceneAt(i);
         Debug.Log("Searching " + scene.path);
-        string manifestName = GetSceneManifestName(scene);
+        var manifestName = GetSceneManifestName(scene);
         FindMissing(manifestName, (manifest, oldManifest) => {
-          List<GameObject> tested = new List<GameObject>();
-          foreach (GameObject go in scene.GetRootGameObjects())
-          {
-            if (tested.Contains(go))
-            {
-              continue;
-            }
+                      var tested = new List<GameObject>();
+                      foreach (var go in scene.GetRootGameObjects()) {
+                        if (tested.Contains(go)) {
+                          continue;
+                        }
 
-            string shortPath = string.Format("root[{0}]/{1}", go.transform.GetSiblingIndex(), go.name);
-            FindInGO(go, shortPath, manifest, oldManifest, true, -1);
-            tested.Add(go);
-          }
-        });
+                        var shortPath = string.Format("root[{0}]/{1}", go.transform.GetSiblingIndex(), go.name);
+                        FindInGO(go, shortPath, manifest, oldManifest, true, -1);
+                        tested.Add(go);
+                      }
+                    });
       }
     }
 
@@ -55,14 +53,12 @@ namespace Utils.Editor {
       Debug.Log("Searching all prefabs...");
 
       FindMissing("Prefab", (manifest, oldManifest) => {
-                    string[] paths = Directory.GetFiles(Application.dataPath, "*.prefab", SearchOption.AllDirectories);
-                    for (int i = 0; i < paths.Length; i++) {
-                      string path = paths[i];
-                      if (EditorUtility.DisplayCancelableProgressBar("Find Missing Scripts", "Searching all prefabs... (" + s_MissingCount + " components missing)", i*1f/paths.Length)) {
-                        return;
-                      }
-                      string shortPath = GetPathFromAssetsDirectory(path).Replace('\\', '/');
-                      GameObject go = AssetDatabase.LoadAssetAtPath<GameObject>(shortPath);
+                    var paths = Directory.GetFiles(Application.dataPath, "*.prefab", SearchOption.AllDirectories);
+                    for (var i = 0; i < paths.Length; i++) {
+                      var path = paths[i];
+                      if (EditorUtility.DisplayCancelableProgressBar("Find Missing Scripts", "Searching all prefabs... (" + s_MissingCount + " components missing)", i*1f/paths.Length)) { return; }
+                      var shortPath = GetPathFromAssetsDirectory(path).Replace('\\', '/');
+                      var go = AssetDatabase.LoadAssetAtPath<GameObject>(shortPath);
 
                       if (!go) {
                         continue;
@@ -76,55 +72,42 @@ namespace Utils.Editor {
     }
 
     private static string GetSceneManifestName(Scene scene) {
-      string[] pieces = scene.path.Replace(".unity", "").Replace("Assets/", "").Split('/');
+      var pieces = scene.path.Replace(".unity", "").Replace("Assets/", "").Split('/');
       return pieces.AggregateString("-");
     }
 
     private static Dictionary<string, List<string>> LoadManifest(string manifestName) {
-      if (manifestName.IsNullOrEmpty() || !Directory.Exists("Manifests")) {
-        return new Dictionary<string, List<string>>();
-      }
+      if (manifestName.IsNullOrEmpty() || !Directory.Exists("Manifests")) { return new Dictionary<string, List<string>>(); }
 
-      string path = Path.Combine("Manifests", manifestName + " Manifest.txt");
+      var path = Path.Combine("Manifests", manifestName + " Manifest.txt");
 
-      if (!File.Exists(path)) {
-        return new Dictionary<string, List<string>>();
-      }
+      if (!File.Exists(path)) { return new Dictionary<string, List<string>>(); }
 
-      string text = File.ReadAllText(path);
-      object result = Deserialize(text);
-      Dictionary<string, object> dictionary = result as Dictionary<string, object>;
+      var text = File.ReadAllText(path);
+      var result = Deserialize(text);
+      var dictionary = result as Dictionary<string, object>;
 
       if (dictionary == null) {
         Debug.LogError("Couldn't deserialize " + result.GetType().Name);
         return null;
       }
 
-      Debug.Log("Deserialized " + result.GetType().Name);
-      Dictionary<string, List<string>> manifest = new Dictionary<string, List<string>>();
+      var manifest = new Dictionary<string, List<string>>();
 
-      foreach (KeyValuePair<string, object> kvp in dictionary) {
-        manifest[kvp.Key] = ((string[]) kvp.Value).ToList();
-      }
+      foreach (var kvp in dictionary) { manifest[kvp.Key] = ((string[]) kvp.Value).ToList(); }
       return manifest;
     }
 
     private static void SaveManifest(string manifestName, Dictionary<string, List<string>> prefabs) {
-      if (manifestName.IsNullOrEmpty()) {
-        return;
-      }
-      if (!Directory.Exists("Manifests")) {
-        Directory.CreateDirectory("Manifests");
-      }
+      if (manifestName.IsNullOrEmpty()) { return; }
+      if (!Directory.Exists("Manifests")) { Directory.CreateDirectory("Manifests"); }
       File.WriteAllText(Path.Combine("Manifests", manifestName + " Manifest.txt"), Serialize(prefabs));
     }
 
     private static string GetPathFromAssetsDirectory(string fullPath) {
-      if (fullPath.IsNullOrEmpty()) {
-        return "";
-      } //throw new Exception("Cannot get path from assets directory when the path is null."); }
+      if (fullPath.IsNullOrEmpty()) { return ""; } //throw new Exception("Cannot get path from assets directory when the path is null."); }
       fullPath = fullPath.Replace('\\', '/');
-      int assetsPos = fullPath.IndexOf("Assets", StringComparison.OrdinalIgnoreCase);
+      var assetsPos = fullPath.IndexOf("Assets", StringComparison.OrdinalIgnoreCase);
       return assetsPos < 1 ? fullPath : fullPath.Substring(assetsPos);
     }
 
@@ -135,66 +118,59 @@ namespace Utils.Editor {
       }
 
       s_GoCount++;
-      Component[] components = go.GetComponents<Component>();
+      var components = go.GetComponents<Component>();
 
-      List<string> componentList = new List<string>();
+      var componentList = new List<string>();
       List<string> oldComponentList;
       oldDirectory.TryGetValue(path, out oldComponentList);
 
-      bool componentsMatch = oldComponentList != null;
+      var componentsMatch = oldComponentList != null;
 
-      for (int i = 0; i < components.Length; i++) {
+      for (var i = 0; i < components.Length; i++) {
         s_ComponentsCount++;
-        Component component = components[i];
+        var component = components[i];
 
 
         if (component) {
-          string componentType = component.GetType().FullName;
+          var componentType = component.GetType().FullName;
           componentList.Add(component.GetType().FullName);
-          componentsMatch = componentsMatch && (i < oldComponentList.Count) && (componentType == oldComponentList[i]);
+          componentsMatch = componentsMatch && i < oldComponentList.Count && componentType == oldComponentList[i];
           continue;
         }
 
-        componentsMatch = componentsMatch && (i < oldComponentList.Count);
+        componentsMatch = componentsMatch && i < oldComponentList.Count;
 
         string previousComponent = null;
         if (componentsMatch && !oldComponentList[i].Contains("*** MISSING ***")) {
-          Match match = Regex.Match(oldComponentList[i], @"^\*\*\* (WAS|MISSING) (?<name>\S+) \*\*\*");
-          if (match.Success) {
-            previousComponent = match.Groups["name"].Value;
-          } else {
-            previousComponent = oldComponentList[i];
-          }
+          var match = Regex.Match(oldComponentList[i], @"^\*\*\* (WAS|MISSING) (?<name>\S+) \*\*\*");
+          if (match.Success) { previousComponent = match.Groups["name"].Value; }
+          else { previousComponent = oldComponentList[i]; }
         }
 
-        string result = previousComponent == null ? "*** MISSING ***" : "*** MISSING " + previousComponent + " ***";
+        var result = previousComponent == null ? "*** MISSING ***" : "*** MISSING " + previousComponent + " ***";
 
         componentList.Add(result);
         s_MissingCount++;
-        string warning = string.Format("Missing {0}script: {1}@{2}", previousComponent == null ? "" : previousComponent + " ", path, i);
-        Debug.LogWarning(warning, (level > 2) && fromFile ? root : go);
+        var warning = string.Format("Missing {0}script: {1}@{2}", previousComponent == null ? "" : previousComponent + " ", path, i);
+        Debug.LogWarning(warning, level > 2 && fromFile ? root : go);
       }
 
-      if (componentList.Count > 1) {
-        directory.Add(path, componentList);
-      }
+      if (componentList.Count > 1) { directory.Add(path, componentList); }
 
-      for (int i = 0; i < go.transform.childCount; i++) {
-        Transform childT = go.transform.GetChild(i);
+      for (var i = 0; i < go.transform.childCount; i++) {
+        var childT = go.transform.GetChild(i);
         FindInGO(childT.gameObject, string.Format("{0}[{1}]/{2}", path, i, childT.name), directory, oldDirectory, fromFile, level > 0 ? level + 1 : level, root ?? go);
       }
     }
 
     private static string Serialize(object data) {
-			StringBuilder jsonOutput = new StringBuilder();
-			JsonWriterSettings jsonWriterSettings = new JsonWriterSettings {PrettyPrint = true};
-			JsonWriter jsonWriter = new JsonWriter(jsonOutput, jsonWriterSettings);
-			jsonWriter.Write(data);
-			return jsonOutput.ToString();
+      var jsonOutput = new StringBuilder();
+      var jsonWriterSettings = new JsonWriterSettings {PrettyPrint = true};
+      var jsonWriter = new JsonWriter(jsonOutput, jsonWriterSettings);
+      jsonWriter.Write(data);
+      return jsonOutput.ToString();
     }
 
-    private static object Deserialize(string jsonText) {
-			return JsonReader.Deserialize(jsonText);
-    }
+    private static object Deserialize(string jsonText) { return JsonReader.Deserialize(jsonText); }
   }
 }

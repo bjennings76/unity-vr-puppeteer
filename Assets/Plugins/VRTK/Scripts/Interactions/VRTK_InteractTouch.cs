@@ -197,7 +197,8 @@ namespace VRTK
             controllerActions = GetComponent<VRTK_ControllerActions>();
             VRTK_PlayerObject.SetPlayerObject(gameObject, VRTK_PlayerObject.ObjectTypes.Controller);
             destroyColliderOnDisable = false;
-            defaultColliderPrefab = Resources.Load(VRTK_SDK_Bridge.GetControllerDefaultColliderPath());
+            var controllerHand = VRTK_DeviceFinder.GetControllerHand(gameObject);
+            defaultColliderPrefab = Resources.Load(VRTK_SDK_Bridge.GetControllerDefaultColliderPath(controllerHand));
         }
 
         private void OnEnable()
@@ -279,6 +280,7 @@ namespace VRTK
                 CancelInvoke("ResetTriggerRumble");
                 ResetTriggerRumble();
                 ForceStopTouching();
+                triggerIsColliding = true;
             }
         }
 
@@ -293,6 +295,12 @@ namespace VRTK
         private void OnTriggerStay(Collider collider)
         {
             var colliderInteractableObject = TriggerStart(collider);
+
+            if (touchedObject == null || touchedObject == collider.gameObject)
+            {
+                triggerIsColliding = true;
+            }
+
             if (touchedObject == null && colliderInteractableObject && IsObjectInteractable(collider.gameObject))
             {
                 touchedObject = colliderInteractableObject;
@@ -317,9 +325,27 @@ namespace VRTK
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (!triggerIsColliding && !triggerWasColliding)
+            {
+                CheckStopTouching();
+            }
+            triggerWasColliding = triggerIsColliding;
+            triggerIsColliding = false;
+        }
+
         private void LateUpdate()
         {
-            if (touchedObject != null && (touchedObjectActiveColliders.Count == 0 || (!triggerIsColliding && !triggerWasColliding)))
+            if (touchedObjectActiveColliders.Count == 0)
+            {
+                CheckStopTouching();
+            }
+        }
+
+        private void CheckStopTouching()
+        {
+            if (touchedObject != null)
             {
                 var touchedObjectScript = touchedObject.GetComponent<VRTK_InteractableObject>();
                 var touchingObject = gameObject;
@@ -330,9 +356,6 @@ namespace VRTK
                     StopTouching(touchedObject);
                 }
             }
-
-            triggerWasColliding = triggerIsColliding;
-            triggerIsColliding = false;
         }
 
         private GameObject TriggerStart(Collider collider)
@@ -342,7 +365,6 @@ namespace VRTK
                 return null;
             }
 
-            triggerIsColliding = true;
             AddActiveCollider(collider);
 
             return GetColliderInteractableObject(collider);
@@ -441,10 +463,15 @@ namespace VRTK
         {
             if (customRigidbodyObject == null)
             {
+                if (!defaultColliderPrefab)
+                {
+                    Debug.LogError("No default collider prefab could be found. Have you selected a valid Controller SDK in the SDK Manager? If you are unsure, then click the GameObject with the `VRTK_SDKManager` script attached to it in Edit Mode and select a Controller SDK from the dropdown.");
+                    return;
+                }
                 controllerCollisionDetector = Instantiate(defaultColliderPrefab, transform.position, transform.rotation) as GameObject;
                 controllerCollisionDetector.transform.SetParent(transform);
                 controllerCollisionDetector.transform.localScale = transform.localScale;
-                controllerCollisionDetector.name = "ControllerColliders";
+                controllerCollisionDetector.name = "VRTK_ControllerCollidersContainer";
                 destroyColliderOnDisable = true;
             }
             else
@@ -475,14 +502,6 @@ namespace VRTK
                 touchRigidBody.useGravity = false;
                 touchRigidBody.constraints = RigidbodyConstraints.FreezeAll;
                 touchRigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            }
-        }
-
-        private void HideController()
-        {
-            if (touchedObject != null)
-            {
-                controllerActions.ToggleControllerModel(false, touchedObject);
             }
         }
     }

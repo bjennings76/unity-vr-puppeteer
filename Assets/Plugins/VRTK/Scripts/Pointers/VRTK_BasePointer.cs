@@ -2,6 +2,9 @@
 namespace VRTK
 {
     using UnityEngine;
+#if UNITY_5_5_OR_NEWER
+    using UnityEngine.AI;
+#endif
 
     /// <summary>
     /// This abstract class provides any game pointer the ability to know the state of the implemented pointer.
@@ -114,6 +117,9 @@ namespace VRTK
         protected override void OnEnable()
         {
             base.OnEnable();
+
+            pointerOriginTransform = (pointerOriginTransform == null ? VRTK_SDK_Bridge.GenerateControllerPointerOrigin() : pointerOriginTransform);
+
             AttemptSetController();
 
             var tmpMaterial = Resources.Load("WorldPointer") as Material;
@@ -127,11 +133,6 @@ namespace VRTK
 
             var fetchedPlayAreaCursor = GetComponent<VRTK_PlayAreaCursor>();
             playAreaCursor = (fetchedPlayAreaCursor ?? fetchedPlayAreaCursor);
-
-            if (interactWithObjects)
-            {
-                CreateObjectInteractor();
-            }
         }
 
         protected override void OnDisable()
@@ -160,7 +161,7 @@ namespace VRTK
 
         protected virtual void Update()
         {
-            if (interactWithObjects && objectInteractor.activeInHierarchy)
+            if (interactWithObjects && objectInteractor && objectInteractor.activeInHierarchy)
             {
                 UpdateObjectInteractor();
             }
@@ -179,6 +180,11 @@ namespace VRTK
         protected virtual Vector3 GetOriginForward()
         {
             return (pointerOriginTransform ? pointerOriginTransform.forward : transform.forward);
+        }
+
+        protected virtual Quaternion GetOriginRotation()
+        {
+            return (pointerOriginTransform ? pointerOriginTransform.rotation : transform.rotation);
         }
 
         protected virtual Quaternion GetOriginLocalRotation()
@@ -314,7 +320,10 @@ namespace VRTK
                     savedBeamLength = 0f;
                 }
 
-                objectInteractor.SetActive(state);
+                if (objectInteractor)
+                {
+                    objectInteractor.SetActive(state);
+                }
             }
         }
 
@@ -362,8 +371,8 @@ namespace VRTK
             bool validNavMeshLocation = false;
             if (target)
             {
-                UnityEngine.AI.NavMeshHit hit;
-                validNavMeshLocation = UnityEngine.AI.NavMesh.SamplePosition(destinationPosition, out hit, navMeshCheckDistance, UnityEngine.AI.NavMesh.AllAreas);
+                NavMeshHit hit;
+                validNavMeshLocation = NavMesh.SamplePosition(destinationPosition, out hit, navMeshCheckDistance, NavMesh.AllAreas);
             }
             if (navMeshCheckDistance == 0f)
             {
@@ -444,6 +453,11 @@ namespace VRTK
                 controller.AliasPointerSet += new ControllerInteractionEventHandler(SetPointerDestination);
 
                 controllerGrabScript = controller.GetComponent<VRTK_InteractGrab>();
+
+                if (interactWithObjects)
+                {
+                    CreateObjectInteractor();
+                }
             }
         }
 
