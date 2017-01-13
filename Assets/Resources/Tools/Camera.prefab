@@ -250,7 +250,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1831845574793256}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.00786335, y: -0.0008779466, z: -0.004831616, w: 0.9999571}
   m_LocalPosition: {x: -0.037400138, y: -0.066, z: 1.166}
   m_LocalScale: {x: 0.10224126, y: 0.10224121, z: 0.10224121}
   m_Children:
@@ -259,7 +259,7 @@ Transform:
   - {fileID: 4178112434432396}
   m_Father: {fileID: 4723042775948292}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.90200007, y: -0.096, z: -0.55300003}
 --- !u!4 &4358736504935796
 Transform:
   m_ObjectHideFlags: 1
@@ -293,8 +293,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1124060673092408}
-  m_LocalRotation: {x: -0.10183136, y: -0, z: -0, w: 0.9948017}
-  m_LocalPosition: {x: -0.27, y: 0.365, z: -0.95}
+  m_LocalRotation: {x: 0.26452163, y: -0.46219727, z: 0.1467087, w: 0.8335938}
+  m_LocalPosition: {x: 0.025, y: 1.076, z: -0.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4058872316111424}
@@ -302,7 +302,7 @@ Transform:
   - {fileID: 4723042775948292}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -11.689, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 35.213, y: -58.012, z: 0.0050000004}
 --- !u!4 &4686447883319508
 Transform:
   m_ObjectHideFlags: 1
@@ -416,7 +416,7 @@ Camera:
   m_Depth: 0.26
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967263
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -698,7 +698,7 @@ MonoBehaviour:
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
   validDrop: 1
-  grabOverrideButton: 8
+  grabOverrideButton: 0
   allowedGrabControllers: 0
   grabAttachMechanicScript: {fileID: 0}
   secondaryGrabActionScript: {fileID: 0}
@@ -706,7 +706,7 @@ MonoBehaviour:
   holdButtonToUse: 0
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
-  useOverrideButton: 8
+  useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
 --- !u!114 &114606544036522742
