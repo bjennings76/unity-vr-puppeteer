@@ -70,7 +70,7 @@ namespace ProBuilder2.Actions
 				Renderer ren = go.GetComponent<Renderer>();
 
 				if(ren != null)
-					EditorUtility.SetSelectedWireframeHidden(ren, false);
+					EditorUtility.SetSelectedRenderState(ren, EditorSelectedRenderState.Hidden);
 
 				if( PrefabUtility.GetPrefabType(go) == PrefabType.Prefab )
 					return;

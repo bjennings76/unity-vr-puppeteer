@@ -10,8 +10,8 @@ public class ModelSwapperEditor : Editor
 	public override void OnInspectorGUI() {
 		base.OnInspectorGUI();
 		GUILayout.BeginHorizontal();
-		if (GUILayout.Button("Previous")) { Swapper.PreviousModel(); }
-		if (GUILayout.Button("Next")) { Swapper.NextModel(); }
+		if (GUILayout.Button("Previous")) { Swapper.Index--;; }
+		if (GUILayout.Button("Next")) { Swapper.Index++; }
 		GUILayout.EndHorizontal();
 	}
 }

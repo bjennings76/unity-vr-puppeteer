@@ -100,12 +100,8 @@ namespace Invaders.Map {
       return angle*sign;
     }
 
-
     private void OnDrawGizmos() {
       XDebug.DrawText(transform.position, m_RotationDelta.ToString("N2"));
-      XDebug.DrawSphere(m_LookPos, 0.05f, Color.red);
-      XDebug.DrawArrow(transform.position, m_Axis, 0.05f, Color.red);
-      XDebug.DrawArrow(transform.position, m_LookDir, 0.05f, Color.blue);
     }
   }
 }

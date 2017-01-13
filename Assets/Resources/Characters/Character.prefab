@@ -241,7 +241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1209903331970568
 GameObject:
   m_ObjectHideFlags: 1
@@ -944,6 +944,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4341108029113524}
+  - component: {fileID: 114162982349269674}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -2471,6 +2472,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c7ab4bb8cde38148a8417bf480f3891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Models:
+  - {fileID: 137157760386106558}
+  - {fileID: 137642775340700944}
+  - {fileID: 137850551850770874}
+  - {fileID: 137766848813942126}
+  - {fileID: 137332712082926948}
+  - {fileID: 137161304217898080}
+  - {fileID: 137261915998780026}
+  - {fileID: 137109912980689626}
+  - {fileID: 137959834008987080}
+  - {fileID: 137037377083818644}
+  - {fileID: 137040970092361382}
+  - {fileID: 137297202824793216}
+  - {fileID: 137619088728599490}
+  - {fileID: 137330372592358270}
+  - {fileID: 137970226247134462}
+  - {fileID: 137325310015066382}
+  - {fileID: 137905270334250336}
+  - {fileID: 137688926561803706}
+  - {fileID: 137529479815356900}
+  - {fileID: 137542439304668292}
+  - {fileID: 137991443717193068}
+  - {fileID: 137265062947570042}
+  - {fileID: 137828818372554830}
+  - {fileID: 137230540852744556}
+  - {fileID: 137056700481428566}
+  - {fileID: 137142383276644436}
+  - {fileID: 137308075853362110}
+  - {fileID: 137522416231505694}
+  - {fileID: 137175876309174218}
+  - {fileID: 137669693465257930}
+  - {fileID: 137368856997389964}
+  - {fileID: 137190789810794732}
+  - {fileID: 137506324941367406}
+  - {fileID: 137918418381615060}
+  - {fileID: 137722607908916054}
+  - {fileID: 137319773639387742}
+  - {fileID: 137130960640901926}
+  - {fileID: 137314802036003342}
+  - {fileID: 137874491547870660}
+  m_Init: 1
 --- !u!114 &114134713773253184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2544,6 +2586,18 @@ MonoBehaviour:
   thickness: 1
   customOutlineModel: {fileID: 0}
   customOutlineModelPath: 
+--- !u!114 &114162982349269674
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1774800234531344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0dedcbb7ad802f4c8a40a0ecfd5f553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ModelSwapper: {fileID: 114043542774523724}
 --- !u!114 &114180034499723008
 MonoBehaviour:
   m_ObjectHideFlags: 1
