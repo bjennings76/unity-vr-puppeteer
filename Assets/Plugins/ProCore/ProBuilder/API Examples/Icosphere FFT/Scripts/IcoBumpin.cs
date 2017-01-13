@@ -169,7 +169,7 @@ namespace ProBuilder2.Examples
 
 			// Build the waveform ring.
 			icoPosition = icoTransform.position;
-			waveform.SetVertexCount(WAVEFORM_SAMPLES);
+			waveform.numPositions = WAVEFORM_SAMPLES;
 
 			if( bounceWaveform )
 				waveform.transform.parent = icoTransform;
