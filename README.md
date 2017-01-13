@@ -8,7 +8,7 @@
 
 ## If you've decided to join:
 1. Read [Join the #100DaysOfCode](https://medium.freecodecamp.com/join-the-100daysofcode-556ddb4579e4)
-2. Fork this repo and commit to the [Log](log.md) daily. [Example](https://github.com/Kallaway/100-days-kallaway-log).
+2. [Fork this repo](https://github.com/Kallaway/100-days-of-code) and commit to the [Log](log.md) daily. [Example](https://github.com/Kallaway/100-days-kallaway-log).
 3. **Code minimum an hour every day for the next 100 days.**
 4. Change the date in [Rules](rules.md) to the day you've started the challenge.
 5. Delete the examples in the log, or comment them out, and start filling it with your own content.
@@ -18,5 +18,5 @@
 9. If you find a great, helpful resource that others would benefit from, either submit a Pull Request to add it to the repo, or just tweet at me (see info below)
 
 ## Note
-* If you have any questions or ideas about 100DaysOfCode (or other ideas), feel free to reach out to me on Twitter: [@ka11away](https://twitter.com/ka11away)
+* If you have any questions or ideas about 100DaysOfCode (or other ideas), feel free to reach out to [@ka11away](https://twitter.com/ka11away) on Twitter.
 * If you like this repo and find it useful, please consider &#9733; starring it (on top right of the page) :)
