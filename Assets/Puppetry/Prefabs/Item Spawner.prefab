@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4320849429080122}
+  - component: {fileID: 65999384962019754}
   m_Layer: 0
   m_Name: Spawn Point
   m_TagString: Untagged
@@ -129,7 +130,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1969625408673684}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.28, y: 0, z: -0.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4320849429080122}
@@ -175,6 +176,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1497213475475384}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65999384962019754
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1042863499544416}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.20899005, y: 0.5893473, z: 0.22829235}
+  m_Center: {x: 0.0000006913151, y: 0.29637426, z: -0.0036606516}
 --- !u!114 &114330245049762100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -219,6 +232,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7dcbd7383f093649a98b60e72b758b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableWhenIdle: 1
+  touchHighlightColor: {r: 0.90344834, g: 1, b: 0, a: 0}
+  allowedTouchControllers: 0
+  isGrabbable: 0
+  holdButtonToGrab: 1
+  stayGrabbedOnTeleport: 1
+  validDrop: 1
+  grabOverrideButton: 0
+  allowedGrabControllers: 0
+  grabAttachMechanicScript: {fileID: 0}
+  secondaryGrabActionScript: {fileID: 0}
+  isUsable: 1
+  holdButtonToUse: 1
+  useOnlyIfGrabbed: 0
+  pointerActivatesUseAction: 0
+  useOverrideButton: 3
+  allowedUseControllers: 0
+  usingState: 0
   m_SpawnPoint: {fileID: 4320849429080122}
   m_Label: {fileID: 114330245049762100}
 --- !u!114 &114674764969592300
