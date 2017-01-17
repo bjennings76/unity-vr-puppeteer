@@ -235,13 +235,14 @@ GameObject:
   - component: {fileID: 114155184484085566}
   - component: {fileID: 114334257333866236}
   - component: {fileID: 114180034499723008}
+  - component: {fileID: 114674584606239650}
   m_Layer: 5
   m_Name: Hands Stick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1209903331970568
 GameObject:
   m_ObjectHideFlags: 1
@@ -2142,7 +2143,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -5294,6 +5295,17 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+--- !u!114 &114674584606239650
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1176675536812690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c5a0c51da282ed478c161da9bb71de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114711066815533490
 MonoBehaviour:
   m_ObjectHideFlags: 1

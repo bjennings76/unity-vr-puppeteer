@@ -13,7 +13,8 @@ public class ItemSlot : VRTK_InteractableObject {
 
 	public override void StartUsing(GameObject currentUsingObject) {
 		base.StartUsing(currentUsingObject);
-		Grab(currentUsingObject, m_Prefab);
+		Use(currentUsingObject, m_Prefab);
+		//UnityUtils.DelayAction(0.01f, () => Use(currentUsingObject, m_Prefab), this);
 	}
 
 	public void Spawn(IItemCreator creator) {
@@ -21,7 +22,9 @@ public class ItemSlot : VRTK_InteractableObject {
 		UnityUtils.Destroy(m_Instance);
 		m_Instance = m_Creator.Create(prefab => {
 			m_Prefab = prefab;
-			return Instantiate(prefab, m_SpawnPoint, false);
+			var preview = Instantiate(prefab, m_SpawnPoint, false);
+			preview.GetComponentsInChildren<HideInItemSlot>().ForEach(c => c.Hide());
+			return preview;
 		});
 		m_Instance.transform.ResetTransform();
 		m_Label.text = m_Creator.Name;
@@ -30,30 +33,31 @@ public class ItemSlot : VRTK_InteractableObject {
 
 	private static void DisableColliders(GameObject instance) { instance.GetComponentsInChildren<Collider>().ForEach(c => c.enabled = false); }
 
-	private void Grab(GameObject controller, GameObject prefab) {
-		var controllerGrab = controller.GetComponent<VRTK_InteractGrab>();
-		var controllerTouch = controller.GetComponent<VRTK_InteractTouch>();
+	private void Use(GameObject controller, GameObject prefab) {
+		StopUsing(null);
 
-		if (controllerGrab.controllerAttachPoint == null || controllerGrab.GetGrabbedObject()) return;
+		//var controllerGrab = controller.GetComponent<VRTK_InteractGrab>();
+		//var controllerTouch = controller.GetComponent<VRTK_InteractTouch>();
+
+		//if (controllerGrab.controllerAttachPoint == null || controllerGrab.GetGrabbedObject()) return;
 
 		var instance = m_Creator.Create(p => Instantiate(p, controller.transform.position, transform.rotation));
 
-		var defaultGrabObject = instance.GetComponent<DefaultGrabObject>();
+		//var defaultGrabObject = instance.GetComponent<DefaultGrabObject>();
 
-		var grabbableObject = defaultGrabObject ? defaultGrabObject.GrabbableObject : instance.GetComponentInChildren<VRTK_InteractableObject>();
+		//var grabbableObject = defaultGrabObject ? defaultGrabObject.GrabbableObject : instance.GetComponentInChildren<VRTK_InteractableObject>();
 
-		if (!grabbableObject) {
-			Debug.LogError("Object cannot be grabbed.", prefab);
-			UnityUtils.Destroy(instance);
-			return;
-		}
+		//if (!grabbableObject) {
+		//	Debug.LogError("Object cannot be grabbed.", prefab);
+		//	UnityUtils.Destroy(instance);
+		//	return;
+		//}
 
-		if (!grabbableObject.isGrabbable || grabbableObject.IsGrabbed()) return;
+		//if (!grabbableObject.isGrabbable || grabbableObject.IsGrabbed()) return;
 
-		if (grabbableObject.grabAttachMechanicScript && grabbableObject.grabAttachMechanicScript.IsKinematic()) grabbableObject.isKinematic = true;
-
-		controllerTouch.ForceStopTouching();
-		controllerTouch.ForceTouch(grabbableObject.gameObject);
-		controllerGrab.AttemptGrab();
+		//if (grabbableObject.grabAttachMechanicScript && grabbableObject.grabAttachMechanicScript.IsKinematic()) grabbableObject.isKinematic = true;
+		//controllerTouch.ForceStopTouching();
+		//controllerTouch.ForceTouch(grabbableObject.gameObject);
+		//controllerGrab.AttemptGrab();
 	}
 }

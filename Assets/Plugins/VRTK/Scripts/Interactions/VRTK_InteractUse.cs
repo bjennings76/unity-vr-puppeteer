@@ -146,7 +146,7 @@ namespace VRTK
 
         private void AttemptHaptics()
         {
-            var doHaptics = usingObject.GetComponentInParent<VRTK_InteractHaptics>();
+            var doHaptics = usingObject ? usingObject.GetComponentInParent<VRTK_InteractHaptics>() : null;
             if (doHaptics)
             {
                 doHaptics.HapticsOnUse(controllerActions);
