@@ -945,6 +945,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4341108029113524}
   - component: {fileID: 114162982349269674}
+  - component: {fileID: 114938181173038462}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -2110,7 +2111,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -5351,6 +5352,18 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+--- !u!114 &114938181173038462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1774800234531344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e404c89f72b65c246a542dbecaa6b511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GrabbableObject: {fileID: 114251078425952004}
 --- !u!114 &114978116915435956
 MonoBehaviour:
   m_ObjectHideFlags: 1
