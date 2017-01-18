@@ -119,6 +119,7 @@ namespace VRTK.Highlighters
         {
             foreach (Renderer renderer in GetComponentsInChildren<Renderer>(true))
             {
+                if (renderer is SpriteRenderer) continue;
                 var swapCustomMaterials = new Material[renderer.materials.Length];
 
                 for (int i = 0; i < renderer.materials.Length; i++)
