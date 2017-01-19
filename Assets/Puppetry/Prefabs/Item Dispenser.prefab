@@ -120,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4431441261414988}
   - component: {fileID: 212672101811715590}
+  - component: {fileID: 114862252177171594}
   m_Layer: 0
   m_Name: icon-puppets
   m_TagString: Untagged
@@ -138,7 +139,7 @@ GameObject:
   - component: {fileID: 33277821603921026}
   - component: {fileID: 23332487649979742}
   - component: {fileID: 65402007453487492}
-  - component: {fileID: 114284345099613552}
+  - component: {fileID: 114859570243674062}
   m_Layer: 0
   m_Name: Backdrops
   m_TagString: Untagged
@@ -205,7 +206,7 @@ GameObject:
   - component: {fileID: 33336142677974332}
   - component: {fileID: 23797963524334860}
   - component: {fileID: 65373781125052086}
-  - component: {fileID: 114068339727871176}
+  - component: {fileID: 114299635157660682}
   m_Layer: 0
   m_Name: Props
   m_TagString: Untagged
@@ -291,7 +292,7 @@ GameObject:
   - component: {fileID: 33332878852395694}
   - component: {fileID: 23418272461931346}
   - component: {fileID: 65471341227659654}
-  - component: {fileID: 114888893094439962}
+  - component: {fileID: 114155800360520438}
   m_Layer: 0
   m_Name: Equipment
   m_TagString: Untagged
@@ -310,7 +311,7 @@ GameObject:
   - component: {fileID: 33188130110900516}
   - component: {fileID: 23600739748511804}
   - component: {fileID: 65487679498321952}
-  - component: {fileID: 114662179046402148}
+  - component: {fileID: 114012138305064432}
   m_Layer: 0
   m_Name: Puppets
   m_TagString: Untagged
@@ -1057,19 +1058,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.19972968, y: 0.01409125, z: 0.20009184}
   m_Center: {x: 0.10082072, y: 0.0074341297, z: -0.10063571}
---- !u!114 &114068339727871176
+--- !u!114 &114012138305064432
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1504416469367432}
+  m_GameObject: {fileID: 1922973848293620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0.94482756, g: 1, b: 0, a: 0}
+  touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
   isGrabbable: 0
   holdButtonToGrab: 1
@@ -1086,6 +1087,39 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+  m_Type: {fileID: 11400000, guid: 907d69cb45c922f42b16d738beccabf4, type: 2}
+  m_Dispenser: {fileID: 114216985138838482}
+--- !u!114 &114155800360520438
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1883878405975660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableWhenIdle: 1
+  touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
+  allowedTouchControllers: 0
+  isGrabbable: 0
+  holdButtonToGrab: 1
+  stayGrabbedOnTeleport: 1
+  validDrop: 1
+  grabOverrideButton: 0
+  allowedGrabControllers: 0
+  grabAttachMechanicScript: {fileID: 0}
+  secondaryGrabActionScript: {fileID: 0}
+  isUsable: 1
+  holdButtonToUse: 0
+  useOnlyIfGrabbed: 0
+  pointerActivatesUseAction: 0
+  useOverrideButton: 0
+  allowedUseControllers: 0
+  usingState: 0
+  m_Type: {fileID: 11400000, guid: 87706f25e9d89ef4190d491afdfcaae0, type: 2}
+  m_Dispenser: {fileID: 114216985138838482}
 --- !u!114 &114216985138838482
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1098,25 +1132,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Hinge: {fileID: 59284283889886028}
-  m_SlotPrefab: {fileID: 114643173349212206, guid: 5f4a9b3056e02f547a13c6703db289a1,
-    type: 2}
-  m_SlotCount: 8
-  m_ItemPrefabs:
-  - {fileID: 1774800234531344, guid: e061099f005f1cb489df4dcc3dce7e0f, type: 2}
-  m_ItemSlots: []
---- !u!114 &114284345099613552
+  m_ItemType: {fileID: 11400000, guid: 907d69cb45c922f42b16d738beccabf4, type: 2}
+--- !u!114 &114299635157660682
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1248309572998288}
+  m_GameObject: {fileID: 1504416469367432}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0.94482756, g: 1, b: 0, a: 0}
+  touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
   isGrabbable: 0
   holdButtonToGrab: 1
@@ -1133,6 +1162,8 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+  m_Type: {fileID: 11400000, guid: a822ce0281bf704479e26dbb0a830139, type: 2}
+  m_Dispenser: {fileID: 114216985138838482}
 --- !u!114 &114357226260265400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4158,19 +4189,19 @@ MonoBehaviour:
   isSelectable: 1
   _name: Cylinder
   dontDestroyMeshOnDelete: 0
---- !u!114 &114662179046402148
+--- !u!114 &114859570243674062
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1922973848293620}
+  m_GameObject: {fileID: 1248309572998288}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0.94482756, g: 1, b: 0, a: 0}
+  touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
   isGrabbable: 0
   holdButtonToGrab: 1
@@ -4187,35 +4218,22 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
---- !u!114 &114888893094439962
+  m_Type: {fileID: 11400000, guid: e9600f650a690fe4ba4ffa1690ea4d7c, type: 2}
+  m_Dispenser: {fileID: 114216985138838482}
+--- !u!114 &114862252177171594
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1883878405975660}
+  m_GameObject: {fileID: 1146851988009280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 4dc366c4ab9b63a4dad97fc1290dc00a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableWhenIdle: 1
-  touchHighlightColor: {r: 0.94482756, g: 1, b: 0, a: 0}
-  allowedTouchControllers: 0
-  isGrabbable: 0
-  holdButtonToGrab: 1
-  stayGrabbedOnTeleport: 1
-  validDrop: 1
-  grabOverrideButton: 0
-  allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
-  isUsable: 1
-  holdButtonToUse: 0
-  useOnlyIfGrabbed: 0
-  pointerActivatesUseAction: 0
-  useOverrideButton: 0
-  allowedUseControllers: 0
-  usingState: 0
+  active: 0
+  emissionDarken: 50
+  customMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!114 &114891135322218590
 MonoBehaviour:
   m_ObjectHideFlags: 1
