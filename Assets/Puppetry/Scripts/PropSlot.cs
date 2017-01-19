@@ -11,13 +11,21 @@ public class PropSlot : VRTK_InteractableObject {
 	private IPropCreator m_Creator;
 	private PropDispenser m_Dispenser;
 
+	private static Transform m_CreationParent;
+
+	private Transform CreationParent {  get { return m_CreationParent ? m_CreationParent : (m_CreationParent = GetPropParent()); } }
+
+	private static Transform GetPropParent() {
+		var parent = new GameObject("Props").transform;
+		parent.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+		return parent;
+	}
+
 	private PropDispenser Dispenser {  get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
-	public override void StartUsing(GameObject currentUsingObject) {
-		base.StartUsing(currentUsingObject);
-		StopUsing(currentUsingObject);
-
-		m_Creator.Create(p => Instantiate(p, Dispenser.transform.position, Dispenser.transform.rotation));
+	public override void OnInteractableObjectUsed(InteractableObjectEventArgs e) {
+		base.OnInteractableObjectUsed(e);
+		m_Creator.Create(p => Instantiate(p, Dispenser.transform.position, Dispenser.transform.rotation, CreationParent));
 
 		//var instance = m_Creator.Create(p => Instantiate(p, currentUsingObject.transform.position, transform.rotation));
 		//var controllerGrab = currentUsingObject.GetComponent<VRTK_InteractGrab>();
@@ -39,7 +47,7 @@ public class PropSlot : VRTK_InteractableObject {
 		m_Creator = creator;
 		UnityUtils.Destroy(m_PreviewInstance);
 		m_PreviewInstance = m_Creator.Create(p => {
-			var preview = Instantiate(p, m_SpawnPoint, false);
+			var preview = Instantiate(p, Vector3.zero, Quaternion.identity, m_SpawnPoint);
 			preview.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Hide());
 			return preview;
 		});
