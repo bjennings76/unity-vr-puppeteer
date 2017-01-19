@@ -4,11 +4,11 @@ using VRTK;
 public class ItemTypeSwitch : VRTK_InteractableObject {
 	[Header("Type Options", order = 3)]
 
-	[SerializeField] private ItemType m_Type;
-	[SerializeField] private ItemDispenser m_Dispenser;
+	[SerializeField] private PropType m_Type;
+	[SerializeField] private PropDispenser m_Dispenser;
 
 	public override void OnInteractableObjectUsed(InteractableObjectEventArgs e) {
 		base.OnInteractableObjectUsed(e);
-		m_Dispenser.ItemType = m_Type;
+		m_Dispenser.PropType = m_Type;
 	}
 }

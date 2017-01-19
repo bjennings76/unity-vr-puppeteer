@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4403015327240486}
   - component: {fileID: 114216985138838482}
   m_Layer: 0
-  m_Name: Item Dispenser
+  m_Name: Prop Dispenser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1132,7 +1132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Hinge: {fileID: 59284283889886028}
-  m_ItemType: {fileID: 11400000, guid: 907d69cb45c922f42b16d738beccabf4, type: 2}
+  m_PropType: {fileID: 0}
 --- !u!114 &114299635157660682
 MonoBehaviour:
   m_ObjectHideFlags: 1

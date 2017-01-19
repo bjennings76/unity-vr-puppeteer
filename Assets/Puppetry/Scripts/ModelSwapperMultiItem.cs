@@ -4,22 +4,22 @@ using System.Linq;
 using UnityEngine;
 using Utils;
 
-public class ModelSwapperMultiItem : MonoBehaviour, IMultiItem {
+public class ModelSwapperMultiProp : MonoBehaviour, IMultiProp {
 	[SerializeField] private ModelSwapper m_ModelSwapper;
 	[SerializeField] private string m_TrimRegex;
 
-	public IEnumerable<IItemCreator> GetItemCreators() { return m_ModelSwapper.Models.Select((m, i) => new ModelSwapperItem(gameObject, i, CleanName(m.name)) as IItemCreator); }
+	public IEnumerable<IPropCreator> GetPropCreators() { return m_ModelSwapper.Models.Select((m, i) => new ModelSwapperProp(gameObject, i, CleanName(m.name)) as IPropCreator); }
 
 	private string CleanName(string nam) {
 		if (!m_TrimRegex.IsNullOrEmpty()) nam = nam.ReplaceRegex(m_TrimRegex, "");
 		return nam.ToSpacedName();
 	}
 
-	private class ModelSwapperItem : PrefabItemCreator {
+	private class ModelSwapperProp : PrefabPropCreator {
 		private readonly int m_Index;
 		private readonly string m_Name;
 
-		public ModelSwapperItem(GameObject prefab, int index, string name) : base(prefab) {
+		public ModelSwapperProp(GameObject prefab, int index, string name) : base(prefab) {
 			m_Index = index;
 			m_Name = name;
 		}

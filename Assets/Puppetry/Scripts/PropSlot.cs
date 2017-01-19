@@ -3,15 +3,15 @@ using UnityEngine.UI;
 using Utils;
 using VRTK;
 
-public class ItemSlot : VRTK_InteractableObject {
+public class PropSlot : VRTK_InteractableObject {
 	[SerializeField] private Transform m_SpawnPoint;
 	[SerializeField] private Text m_Label;
 
-	private GameObject m_Instance;
-	private IItemCreator m_Creator;
-	private ItemDispenser m_Dispenser;
+	private GameObject m_PreviewInstance;
+	private IPropCreator m_Creator;
+	private PropDispenser m_Dispenser;
 
-	private ItemDispenser Dispenser {  get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<ItemDispenser>()); } }
+	private PropDispenser Dispenser {  get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
 	public override void StartUsing(GameObject currentUsingObject) {
 		base.StartUsing(currentUsingObject);
@@ -35,17 +35,17 @@ public class ItemSlot : VRTK_InteractableObject {
 		//if (controllerGrab) controllerGrab.AttemptGrab();
 	}
 
-	public void Spawn(IItemCreator creator) {
+	public void Spawn(IPropCreator creator) {
 		m_Creator = creator;
-		UnityUtils.Destroy(m_Instance);
-		m_Instance = m_Creator.Create(p => {
+		UnityUtils.Destroy(m_PreviewInstance);
+		m_PreviewInstance = m_Creator.Create(p => {
 			var preview = Instantiate(p, m_SpawnPoint, false);
-			preview.GetComponentsInChildren<HideInItemSlot>().ForEach(c => c.Hide());
+			preview.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Hide());
 			return preview;
 		});
-		m_Instance.transform.ResetTransform();
+		m_PreviewInstance.transform.ResetTransform();
 		m_Label.text = m_Creator.Name;
-		DisableColliders(m_Instance);
+		DisableColliders(m_PreviewInstance);
 	}
 
 	private static void DisableColliders(GameObject instance) { instance.GetComponentsInChildren<Collider>().ForEach(c => c.enabled = false); }

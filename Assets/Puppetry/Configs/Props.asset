@@ -14,10 +14,8 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: a8217d54faac77d49a6b38746cff5139, type: 3}
   SlotPrefab: {fileID: 114643173349212206, guid: 5f4a9b3056e02f547a13c6703db289a1,
     type: 2}
-  Items:
+  Props:
   - {fileID: 145978, guid: 44f7c229abed59d4a966dcdcc511cfb0, type: 2}
-  - {fileID: 116922, guid: b57d9ac0df33e5e4e99617617b1a3c31, type: 2}
   - {fileID: 159254, guid: ee139cd519a451449956f62bac8cea95, type: 2}
   - {fileID: 135848, guid: ea276be5ca4c07e47b8aa711e0fa37d9, type: 2}
-  - {fileID: 169662, guid: e8d6e498307688b4c95c1f03b5b2af4e, type: 2}
   SlotCount: 8

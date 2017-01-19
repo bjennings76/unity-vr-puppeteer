@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class HideInItemSlot : MonoBehaviour {
+public class HideInPropPreview : MonoBehaviour {
 	public void Hide() { gameObject.SetActive(false); }
 }

@@ -2600,7 +2600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ModelSwapper: {fileID: 114043542774523724}
-  m_TrimRegex: ^SF_Character_
+  m_TrimRegex: 5e53465f4368617261637465725f
 --- !u!114 &114180034499723008
 MonoBehaviour:
   m_ObjectHideFlags: 1
