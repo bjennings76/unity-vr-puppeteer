@@ -52,6 +52,18 @@ public class PropSlot : VRTK_InteractableObject {
 			return preview;
 		});
 		m_PreviewInstance.transform.ResetTransform();
+		Bounds previewBounds = UnityUtils.GetBounds(m_PreviewInstance.transform);
+		var col = m_SpawnPoint.GetComponent<BoxCollider>();
+
+		var xScale = col.size.x * col.transform.lossyScale.x / previewBounds.size.x;
+		var yScale = col.size.y * col.transform.lossyScale.y / previewBounds.size.y;
+		var zScale = col.size.z * col.transform.lossyScale.z / previewBounds.size.z;
+
+		var scale = Mathf.Min(xScale, yScale, zScale);
+
+		m_PreviewInstance.transform.localScale = new Vector3(scale, scale, scale);
+		//m_PreviewInstance.transform.localPosition = -previewBounds.center * (1 - scale);
+
 		m_Label.text = m_Creator.Name;
 		DisableColliders(m_PreviewInstance);
 	}
