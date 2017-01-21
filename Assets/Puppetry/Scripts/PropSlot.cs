@@ -13,7 +13,7 @@ public class PropSlot : VRTK_InteractableObject {
 
 	private static Transform m_CreationParent;
 
-	private Transform CreationParent {  get { return m_CreationParent ? m_CreationParent : (m_CreationParent = GetPropParent()); } }
+	private static Transform CreationParent { get { return m_CreationParent ? m_CreationParent : (m_CreationParent = GetPropParent()); } }
 
 	private static Transform GetPropParent() {
 		var parent = new GameObject("Props").transform;
@@ -21,7 +21,7 @@ public class PropSlot : VRTK_InteractableObject {
 		return parent;
 	}
 
-	private PropDispenser Dispenser {  get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
+	private PropDispenser Dispenser { get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
 	public override void OnInteractableObjectUsed(InteractableObjectEventArgs e) {
 		base.OnInteractableObjectUsed(e);
@@ -46,13 +46,15 @@ public class PropSlot : VRTK_InteractableObject {
 	public void Spawn(IPropCreator creator) {
 		m_Creator = creator;
 		UnityUtils.Destroy(m_PreviewInstance);
+
 		m_PreviewInstance = m_Creator.Create(p => {
 			var preview = Instantiate(p, Vector3.zero, Quaternion.identity, m_SpawnPoint);
 			preview.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Hide());
 			return preview;
 		});
+
 		m_PreviewInstance.transform.ResetTransform();
-		Bounds previewBounds = UnityUtils.GetBounds(m_PreviewInstance.transform);
+		var previewBounds = UnityUtils.GetBounds(m_PreviewInstance.transform);
 		var col = m_SpawnPoint.GetComponent<BoxCollider>();
 
 		var xScale = col.size.x * col.transform.lossyScale.x / previewBounds.size.x;
@@ -61,8 +63,9 @@ public class PropSlot : VRTK_InteractableObject {
 
 		var scale = Mathf.Min(xScale, yScale, zScale);
 
+		var center = m_PreviewInstance.transform.InverseTransformPoint(previewBounds.center);
 		m_PreviewInstance.transform.localScale = new Vector3(scale, scale, scale);
-		//m_PreviewInstance.transform.localPosition = -previewBounds.center * (1 - scale);
+		m_PreviewInstance.transform.localPosition = -center*scale;
 
 		m_Label.text = m_Creator.Name;
 		DisableColliders(m_PreviewInstance);

@@ -15,7 +15,5 @@ MonoBehaviour:
   SlotPrefab: {fileID: 114643173349212206, guid: 5f4a9b3056e02f547a13c6703db289a1,
     type: 2}
   Props:
-  - {fileID: 142114, guid: 555fe218b31145540abfefa2086c482b, type: 2}
-  - {fileID: 121240, guid: 9d3d696efeb67df4fa05fdec8135ba2c, type: 2}
   - {fileID: 104894, guid: bbe7a4ef780e4e74191ace2d1859e268, type: 2}
   SlotCount: 8
