@@ -11,7 +11,6 @@ public class ModelSwapperEditor : Editor {
 		GUILayout.BeginHorizontal();
 		if (GUILayout.Button("Previous")) {
 			Swapper.Index--;
-			;
 		}
 		if (GUILayout.Button("Next")) Swapper.Index++;
 		GUILayout.EndHorizontal();
