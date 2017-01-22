@@ -4,6 +4,7 @@ using UnityEngine;
 public class PropType : ScriptableObject {
 	public Sprite Icon;
 	public PropSlot SlotPrefab;
-	public GameObject[] Props;
+	public string TrimRegex;
 	[Range(1, 20)] public int SlotCount = 8;
+	public GameObject[] Props;
 }

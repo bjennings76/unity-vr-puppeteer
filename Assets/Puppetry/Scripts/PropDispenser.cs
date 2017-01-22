@@ -8,7 +8,7 @@ public class PropDispenser : MonoBehaviour {
 	[SerializeField] private PropType m_PropType;
 
 	public PropType PropType {
-		private get { return m_PropType; }
+		get { return m_PropType; }
 		set {
 			m_PropType = value;
 			RefreshPropCreators();

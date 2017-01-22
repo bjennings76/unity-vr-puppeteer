@@ -65,11 +65,13 @@ public class PropSlot : VRTK_InteractableObject {
 
 		var center = m_PreviewInstance.transform.InverseTransformPoint(previewBounds.center);
 		m_PreviewInstance.transform.localScale = new Vector3(scale, scale, scale);
-		m_PreviewInstance.transform.localPosition = -center*scale;
+		m_PreviewInstance.transform.localPosition = -center * scale;
 
-		m_Label.text = m_Creator.Name;
+		m_Label.text = GetName(m_Creator, Dispenser.PropType.TrimRegex);
 		DisableColliders(m_PreviewInstance);
 	}
+
+	private string GetName(IPropCreator creator, string trimRegex) { return trimRegex.IsNullOrEmpty() ? creator.Name.ToSpacedName() : creator.Name.ReplaceRegex(trimRegex, "").ToSpacedName(); }
 
 	private static void DisableColliders(GameObject instance) { instance.GetComponentsInChildren<Collider>().ForEach(c => c.enabled = false); }
 }
