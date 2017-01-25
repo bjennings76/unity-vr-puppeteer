@@ -474,8 +474,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1082992065020820}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.69, y: 0.713, z: -1.03}
+  m_LocalRotation: {x: -0, y: 0.9238796, z: -0, w: -0.38268322}
+  m_LocalPosition: {x: -0.975, y: 0.572, z: -0.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4189326208830108}
@@ -483,7 +483,7 @@ Transform:
   - {fileID: 4904138987685128}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 225, z: 0}
 --- !u!4 &4431441261414988
 Transform:
   m_ObjectHideFlags: 1
@@ -687,7 +687,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -749,7 +749,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -4181,9 +4181,15 @@ MonoBehaviour:
   areaError: 15
   hardAngle: 88
   packMargin: 20
-  m_selectedFaces: 
-  m_SelectedEdges: []
-  m_selectedTriangles: 
+  m_selectedFaces: 2a000000
+  m_SelectedEdges:
+  - x: 127
+    y: 128
+  - x: 128
+    y: 129
+  - x: 129
+    y: 127
+  m_selectedTriangles: 7f0000008000000081000000
   previousTransform: {x: 0, y: 0, z: 0}
   userCollisions: 0
   isSelectable: 1
