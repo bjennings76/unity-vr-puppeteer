@@ -21,7 +21,6 @@ public class UnlockOnGrab : MonoBehaviour {
 
 	private void Update() {
 		if (m_InteractingObject) {
-			XDebug.Log(this, m_InteractingObject.name + " velocity: " + Velocity);
 			m_LastInteractingObjectPosition = m_InteractingObject.position;
 		}
 	}
@@ -40,7 +39,9 @@ public class UnlockOnGrab : MonoBehaviour {
 	}
 
 	private void OnUngrabbed(object sender, InteractableObjectEventArgs e) {
-		if (Velocity < m_StayUnlockedVelocity) SetLock(true);
+		var locked = m_ObjectToUnlock.velocity.magnitude < m_StayUnlockedVelocity;
+		XDebug.Log(this, "{0} release velocity: {1:N2} ({2})", m_InteractingObject.name, m_ObjectToUnlock.velocity.magnitude, locked ? "Locked" : "Ragdoll");
+		SetLock(locked);
 		m_InteractingObject = null;
 	}
 

@@ -204,12 +204,12 @@ namespace Utils {
 			bounds.center = transform.position;
 
 			if (type == BoundsType.All || type == BoundsType.Collider) {
-				var colliders = transform.GetComponentsInChildren<Collider>();
+				var colliders = transform.GetComponentsInChildren<Collider>(true);
 				foreach (var c in colliders) if (c != excluded) bounds = CombineBounds(bounds, c.bounds);
 			}
 
 			if (type == BoundsType.All || type == BoundsType.Renderer) {
-				var renderers = transform.GetComponentsInChildren<Renderer>();
+				var renderers = transform.GetComponentsInChildren<Renderer>(true);
 				foreach (var renderer in renderers) bounds = CombineBounds(bounds, renderer.bounds);
 			}
 

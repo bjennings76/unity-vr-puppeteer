@@ -78,7 +78,7 @@ public class PropDispenser : MonoBehaviour {
 		var propIndex = forward ? Cursor : BackCursor;
 
 		XDebug.Log(this, "Segment {0} --> {1}. Spawning prop #{2} in slot {3}", lastSegment, currentSegment, propIndex, slotIndex);
-		m_PropSlots[slotIndex].Spawn(m_PropCreators[propIndex]);
+		m_PropSlots[slotIndex].CreatePreview(m_PropCreators[propIndex]);
 	}
 
 	private int GetSegment(float hingeAngle) {
@@ -117,7 +117,7 @@ public class PropDispenser : MonoBehaviour {
 			slot.transform.ResetTransform();
 			slot.transform.Rotate(0, angleStep * i, 0);
 			m_PropSlots.Add(slot);
-			slot.Spawn(m_PropCreators[Cursor]);
+			slot.CreatePreview(m_PropCreators[Cursor]);
 			Cursor++;
 		}
 	}

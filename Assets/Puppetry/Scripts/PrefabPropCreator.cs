@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 public class PrefabPropCreator : IPropCreator {
 	private readonly GameObject m_Prefab;
@@ -10,11 +11,16 @@ public class PrefabPropCreator : IPropCreator {
 	public PrefabPropCreator(GameObject prefab) { m_Prefab = prefab; }
 
 	public virtual GameObject Create(Func<GameObject, GameObject> instantiate) { return instantiate(m_Prefab); }
+
+	public Bounds GetBounds() {
+		return UnityUtils.GetBounds(m_Prefab.transform);
+	}
 }
 
 public interface IPropCreator {
-	GameObject Create(Func<GameObject, GameObject> instantiate);
 	string Name { get; }
+	GameObject Create(Func<GameObject, GameObject> instantiate);
+	Bounds GetBounds();
 }
 
 public interface IMultiProp {

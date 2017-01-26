@@ -11,39 +11,16 @@ public class PropSlot : VRTK_InteractableObject {
 	private IPropCreator m_Creator;
 	private PropDispenser m_Dispenser;
 
-	private static Transform m_CreationParent;
-
-	private static Transform CreationParent { get { return m_CreationParent ? m_CreationParent : (m_CreationParent = GetPropParent()); } }
-
-	private static Transform GetPropParent() {
-		var parent = new GameObject("Props").transform;
-		parent.localScale = new Vector3(0.15f, 0.15f, 0.15f);
-		return parent;
-	}
-
 	private PropDispenser Dispenser { get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
-	public override void OnInteractableObjectUsed(InteractableObjectEventArgs e) {
-		base.OnInteractableObjectUsed(e);
-		m_Creator.Create(p => Instantiate(p, Dispenser.transform.position, Dispenser.transform.rotation, CreationParent));
-
-		//var instance = m_Creator.Create(p => Instantiate(p, currentUsingObject.transform.position, transform.rotation));
-		//var controllerGrab = currentUsingObject.GetComponent<VRTK_InteractGrab>();
-		//var defaultGrabObject = instance.GetComponent<DefaultGrabObject>();
-		//var grabbableObject = defaultGrabObject ? defaultGrabObject.GrabbableObject : instance.GetComponentInChildren<VRTK_InteractableObject>();
-
-		//if (!grabbableObject || !grabbableObject.isGrabbable || grabbableObject.IsGrabbed()) {
-		//	Debug.LogError("Object cannot be grabbed.", this);
-		//	UnityUtils.Destroy(instance);
-		//	return;
-		//}
-
-		//var controllerTouch = currentUsingObject.GetComponent<VRTK_InteractTouch>();
-		//if (controllerTouch) controllerTouch.ForceTouch(grabbableObject ? grabbableObject.gameObject : null);
-		//if (controllerGrab) controllerGrab.AttemptGrab();
+	public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e) {
+		var instance = m_Creator.Create(p => Instantiate(p, Dispenser.transform.position, Dispenser.transform.rotation, GetPropParent()));
+		var defaultGrabObject = instance.GetComponent<DefaultGrabObject>();
+		var grabbableObject = defaultGrabObject ? defaultGrabObject.GrabbableObject : instance.GetComponentInChildren<VRTK_InteractableObject>();
+		if (grabbableObject) grabbableObject.OnInteractableObjectGrabbed(e);
 	}
 
-	public void Spawn(IPropCreator creator) {
+	public void CreatePreview(IPropCreator creator) {
 		m_Creator = creator;
 		UnityUtils.Destroy(m_PreviewInstance);
 
@@ -54,7 +31,7 @@ public class PropSlot : VRTK_InteractableObject {
 		});
 
 		m_PreviewInstance.transform.ResetTransform();
-		var previewBounds = UnityUtils.GetBounds(m_PreviewInstance.transform);
+		var previewBounds = UnityUtils.GetBounds(m_PreviewInstance.transform); //creator.GetBounds();
 		var col = m_SpawnPoint.GetComponent<BoxCollider>();
 
 		var xScale = col.size.x * col.transform.lossyScale.x / previewBounds.size.x;
@@ -69,6 +46,16 @@ public class PropSlot : VRTK_InteractableObject {
 
 		m_Label.text = GetName(m_Creator, Dispenser.PropType.TrimRegex);
 		DisableColliders(m_PreviewInstance);
+	}
+
+	private static Transform m_PropRoot;
+
+	private Transform GetPropParent() {
+		m_PropRoot = m_PropRoot ? m_PropRoot : new GameObject("Props").transform;
+		var parent = new GameObject(m_Creator.Name + " Scaler").transform;
+		parent.localScale = Vector3.one * m_Dispenser.PropType.Scale;
+		parent.SetParent(m_PropRoot);
+		return parent;
 	}
 
 	private static string GetName(IPropCreator creator, string trimRegex) { return creator.Name.ReplaceRegex(trimRegex, "").ToSpacedName(); }
