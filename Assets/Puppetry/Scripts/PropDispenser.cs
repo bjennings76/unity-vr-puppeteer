@@ -7,6 +7,8 @@ public class PropDispenser : MonoBehaviour {
 	[SerializeField] private HingeJoint m_Hinge;
 	[SerializeField] private PropType m_PropType;
 
+	private PropType m_LastPropType;
+
 	public PropType PropType {
 		get { return m_PropType; }
 		set {
@@ -45,14 +47,21 @@ public class PropDispenser : MonoBehaviour {
 		CheckForInspectorChanges();
 	}
 
-	private void CheckForInspectorChanges() { CheckForSlotCountChange(); }
+	private void CheckForInspectorChanges() {
+		CheckForSlotCountChange();
+		CheckForPropTypeChange();
+	}
+
+	private void CheckForPropTypeChange() {
+		if (m_LastPropType == m_PropType) { return; }
+		RefreshPropCreators();
+	}
 
 	private void CheckForSlotCountChange() {
-		if (m_LastSlotCount != SlotCount) {
-			m_LastSlotCount = SlotCount;
-			Cursor = BackCursor + 1;
-			PopulatePropSlots();
-		}
+		if (m_LastSlotCount == SlotCount) return;
+		m_LastSlotCount = SlotCount;
+		Cursor = BackCursor + 1;
+		PopulatePropSlots();
 	}
 
 	private void UpdateRotation() {
@@ -80,6 +89,7 @@ public class PropDispenser : MonoBehaviour {
 
 	private void RefreshPropCreators() {
 		var list = new List<IPropCreator>();
+		m_LastPropType = m_PropType;
 
 		foreach (var prefab in PropType.Props) {
 			var multiProp = prefab.GetComponent<IMultiProp>();
@@ -98,8 +108,8 @@ public class PropDispenser : MonoBehaviour {
 
 		if (m_PropSlots != null && m_PropSlots.Any()) m_PropSlots.ForEach(s => UnityUtils.Destroy(s.gameObject));
 
+		m_LastSlotCount = SlotCount;
 		m_PropSlots = new List<PropSlot>();
-
 		var angleStep = 360 / SlotCount;
 
 		for (var i = 0; i < SlotCount; i++) {
