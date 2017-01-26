@@ -71,7 +71,7 @@ public class PropSlot : VRTK_InteractableObject {
 		DisableColliders(m_PreviewInstance);
 	}
 
-	private string GetName(IPropCreator creator, string trimRegex) { return trimRegex.IsNullOrEmpty() ? creator.Name.ToSpacedName() : creator.Name.ReplaceRegex(trimRegex, "").ToSpacedName(); }
+	private static string GetName(IPropCreator creator, string trimRegex) { return creator.Name.ReplaceRegex(trimRegex, "").ToSpacedName(); }
 
 	private static void DisableColliders(GameObject instance) { instance.GetComponentsInChildren<Collider>().ForEach(c => c.enabled = false); }
 }
