@@ -6,14 +6,8 @@ using Utils;
 
 public class ModelSwapperMultiProp : MonoBehaviour, IMultiProp {
 	[SerializeField] private ModelSwapper m_ModelSwapper;
-	[SerializeField] private string m_TrimRegex;
 
-	public IEnumerable<IPropCreator> GetPropCreators() { return m_ModelSwapper.Models.Select((m, i) => new ModelSwapperProp(gameObject, i, CleanName(m.name)) as IPropCreator); }
-
-	private string CleanName(string nam) {
-		if (!m_TrimRegex.IsNullOrEmpty()) nam = nam.ReplaceRegex(m_TrimRegex, "");
-		return nam.ToSpacedName();
-	}
+	public IEnumerable<IPropCreator> GetPropCreators() { return m_ModelSwapper.Models.Select((m, i) => new ModelSwapperProp(gameObject, i, m.name) as IPropCreator); }
 
 	private class ModelSwapperProp : PrefabPropCreator {
 		private readonly int m_Index;
