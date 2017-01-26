@@ -4,14 +4,20 @@ using VRTK;
 
 public class UnlockOnGrab : MonoBehaviour {
 	[SerializeField] private Rigidbody m_ObjectToUnlock;
-	[SerializeField] private float m_StayUnlockedVelocity = 5f;
+	[SerializeField] private float m_StayUnlockedVelocity = 3f;
 
 	private Transform m_InteractingObject;
 	private Vector3 m_LastInteractingObjectPosition;
+	private Collider[] m_Colliders;
+	private Renderer[] m_Renderers;
 
 	private float Velocity { get { return m_InteractingObject ? (m_InteractingObject.position - m_LastInteractingObjectPosition).magnitude / Time.deltaTime : 0; } }
 
-	private void Start() { GetComponentsInChildren<VRTK_InteractableObject>().ForEach(RegisterInteractable); }
+	private void Start() {
+		GetComponentsInChildren<VRTK_InteractableObject>().ForEach(RegisterInteractable);
+		m_Colliders = m_ObjectToUnlock.GetComponentsInChildren<Collider>();
+		m_Renderers = m_ObjectToUnlock.GetComponentsInChildren<Renderer>();
+	}
 
 	private void Update() {
 		if (m_InteractingObject) {
@@ -27,14 +33,20 @@ public class UnlockOnGrab : MonoBehaviour {
 	}
 
 	private void OnGrabbed(object sender, InteractableObjectEventArgs e) {
-		m_ObjectToUnlock.isKinematic = false;
+		SetLock(false);
 		if (!e.interactingObject) return;
 		m_InteractingObject = e.interactingObject.transform;
 		m_LastInteractingObjectPosition = m_InteractingObject.position;
 	}
 
 	private void OnUngrabbed(object sender, InteractableObjectEventArgs e) {
-		if (Velocity < m_StayUnlockedVelocity) m_ObjectToUnlock.isKinematic = true;
+		if (Velocity < m_StayUnlockedVelocity) SetLock(true);
 		m_InteractingObject = null;
+	}
+
+	private void SetLock(bool value) {
+		m_ObjectToUnlock.isKinematic = value;
+		m_Colliders.ForEach(c => c.enabled = value);
+		m_Renderers.ForEach(r => r.enabled = value);
 	}
 }
