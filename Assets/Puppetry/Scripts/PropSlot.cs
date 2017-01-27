@@ -14,10 +14,30 @@ public class PropSlot : VRTK_InteractableObject {
 	private PropDispenser Dispenser { get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
 	public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e) {
-		var instance = m_Creator.Create(p => Instantiate(p, Dispenser.transform.position, Dispenser.transform.rotation, GetPropParent()));
+		var instance = Create();
+
 		var defaultGrabObject = instance.GetComponent<DefaultGrabObject>();
 		var grabbableObject = defaultGrabObject ? defaultGrabObject.GrabbableObject : instance.GetComponentInChildren<VRTK_InteractableObject>();
 		if (grabbableObject) grabbableObject.OnInteractableObjectGrabbed(e);
+	}
+
+	public GameObject Create() {
+		Bounds prefabBounds = default(Bounds);
+		var instance = m_Creator.Create(p => {
+			prefabBounds = UnityUtils.GetBounds(p.transform);
+			return Instantiate(p, m_PreviewInstance.transform.position, m_PreviewInstance.transform.rotation, GetPropParent());
+		});
+		var existingCollider = instance.GetComponentInChildren<Collider>();
+
+		if (!existingCollider) {
+			var boxCollider = instance.AddComponent<BoxCollider>();
+			var bounds = UnityUtils.GetBounds(instance.transform);
+			boxCollider.size = prefabBounds.size;
+			boxCollider.center = prefabBounds.center;
+			instance.AddComponent<VRTK_InteractableObject>();
+		}
+
+		return instance;
 	}
 
 	public void CreatePreview(IPropCreator creator) {
