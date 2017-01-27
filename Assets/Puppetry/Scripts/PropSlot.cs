@@ -31,7 +31,6 @@ public class PropSlot : VRTK_InteractableObject {
 
 		if (!existingCollider) {
 			var boxCollider = instance.AddComponent<BoxCollider>();
-			var bounds = UnityUtils.GetBounds(instance.transform);
 			boxCollider.size = prefabBounds.size;
 			boxCollider.center = prefabBounds.center;
 			instance.AddComponent<VRTK_InteractableObject>();
