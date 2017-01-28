@@ -15,7 +15,7 @@ MonoBehaviour:
   SlotPrefab: {fileID: 114643173349212206, guid: 5f4a9b3056e02f547a13c6703db289a1,
     type: 2}
   Scale: 0.15
-  TrimRegex: ^SF_Weap_
+  TrimRegex: ^SF_Wep_
   SlotCount: 8
   Props:
   - {fileID: 142114, guid: 555fe218b31145540abfefa2086c482b, type: 2}
