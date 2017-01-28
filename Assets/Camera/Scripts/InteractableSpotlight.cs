@@ -5,8 +5,6 @@ using VRTK;
 public class InteractableSpotlight : VRTK_InteractableObject {
 	private Light[] m_Lights;
 
-	private bool m_Using;
-
 	private void Start() { m_Lights = GetComponentsInChildren<Light>(); }
 
 	public override void StartUsing(GameObject previousUsingObject) {

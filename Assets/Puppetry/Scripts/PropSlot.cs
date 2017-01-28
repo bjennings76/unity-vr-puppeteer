@@ -22,7 +22,7 @@ public class PropSlot : VRTK_InteractableObject {
 	}
 
 	public GameObject Create() {
-		Bounds prefabBounds = default(Bounds);
+		var prefabBounds = default(Bounds);
 		var instance = m_Creator.Create(p => {
 			prefabBounds = UnityUtils.GetBounds(p.transform);
 			return Instantiate(p, m_PreviewInstance.transform.position, m_PreviewInstance.transform.rotation, GetPropParent());

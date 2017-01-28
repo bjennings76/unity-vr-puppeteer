@@ -44,7 +44,7 @@ namespace Utils.Editor {
         return;
       }
       AssetDatabase.SaveAssets();
-      Debug.Log("Prefab change detected. Project saved. (To turn off: Tools Menu > BDJ's Extensions> Toggle PrefabSaver)");
+      Debug.Log("Prefab change detected. Project saved. (To turn off: Tools Menu > Toggle PrefabSaver)");
       s_Waiting = false;
     }
   }

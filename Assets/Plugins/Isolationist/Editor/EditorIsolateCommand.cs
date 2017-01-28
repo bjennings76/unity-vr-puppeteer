@@ -168,7 +168,7 @@ namespace Plugins.Isolationist.Editor
 
 		private static GameObject ObjectToGO(Object obj)
 		{
-			Component component = obj as Component;
+			var component = obj as Component;
 			return component ? component.gameObject : null;
 		}
 

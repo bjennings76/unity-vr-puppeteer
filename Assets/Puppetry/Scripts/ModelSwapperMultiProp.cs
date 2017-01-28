@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utils;
 
 public class ModelSwapperMultiProp : MonoBehaviour, IMultiProp {
 	[SerializeField] private ModelSwapper m_ModelSwapper;
