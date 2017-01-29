@@ -6,6 +6,7 @@ using Utils;
 public class PropDispenser : MonoBehaviour {
 	[SerializeField] private HingeJoint m_Hinge;
 	[SerializeField] private PropType m_PropType;
+	[SerializeField] private Transform m_SpawnPoint;
 
 	private PropType m_LastPropType;
 
@@ -16,6 +17,8 @@ public class PropDispenser : MonoBehaviour {
 			RefreshPropCreators();
 		}
 	}
+
+	public Transform SpawnPoint { get { return m_SpawnPoint; } }
 
 	private List<PropSlot> m_PropSlots;
 	private List<IPropCreator> m_PropCreators;

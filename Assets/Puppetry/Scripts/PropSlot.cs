@@ -13,19 +13,24 @@ public class PropSlot : VRTK_InteractableObject {
 
 	private PropDispenser Dispenser { get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
-	public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e) {
+	public override void Grabbed(GameObject currentGrabbingObject) {
+		//base.Grabbed(currentGrabbingObject);
+		//Ungrabbed(currentGrabbingObject);
+		ForceStopInteracting();
 		var instance = Create();
-
 		var defaultGrabObject = instance.GetComponent<DefaultGrabObject>();
 		var grabbableObject = defaultGrabObject ? defaultGrabObject.GrabbableObject : instance.GetComponentInChildren<VRTK_InteractableObject>();
-		if (grabbableObject) grabbableObject.OnInteractableObjectGrabbed(e);
+		if (!grabbableObject) return;
+		grabbableObject.StartTouching(currentGrabbingObject);
+		grabbableObject.Grabbed(currentGrabbingObject);
 	}
 
 	public GameObject Create() {
 		var prefabBounds = default(Bounds);
 		var instance = m_Creator.Create(p => {
 			prefabBounds = UnityUtils.GetBounds(p.transform);
-			return Instantiate(p, m_PreviewInstance.transform.position, m_PreviewInstance.transform.rotation, GetPropParent());
+			return Instantiate(p, GetPropParent());
+			//return Instantiate(p, m_PreviewInstance.transform.position, m_PreviewInstance.transform.rotation, GetPropParent());
 		});
 		var existingCollider = instance.GetComponentInChildren<Collider>();
 
@@ -33,7 +38,9 @@ public class PropSlot : VRTK_InteractableObject {
 			var boxCollider = instance.AddComponent<BoxCollider>();
 			boxCollider.size = prefabBounds.size;
 			boxCollider.center = prefabBounds.center;
-			instance.AddComponent<VRTK_InteractableObject>();
+			var grabbableObject = instance.AddComponent<VRTK_InteractableObject>();
+			grabbableObject.isGrabbable = true;
+			grabbableObject.grabAttachMechanicScript = grabAttachMechanicScript;
 		}
 
 		return instance;
@@ -70,10 +77,11 @@ public class PropSlot : VRTK_InteractableObject {
 	private static Transform m_PropRoot;
 
 	private Transform GetPropParent() {
-		m_PropRoot = m_PropRoot ? m_PropRoot : new GameObject("Props").transform;
+		m_PropRoot = m_PropRoot ? m_PropRoot : Dispenser.SpawnPoint ? Dispenser.SpawnPoint : new GameObject("Props").transform;
 		var parent = new GameObject(m_Creator.Name + " Scaler").transform;
+		parent.SetParent(m_PropRoot, false);
+		parent.ResetTransform();
 		parent.localScale = Vector3.one * m_Dispenser.PropType.Scale;
-		parent.SetParent(m_PropRoot);
 		return parent;
 	}
 
