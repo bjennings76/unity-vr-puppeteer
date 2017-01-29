@@ -17,6 +17,7 @@ namespace VRTK
         public string buttonOneModelPath = "";
         public string buttonTwoModelPath = "";
         public string systemMenuModelPath = "";
+        public string startMenuModelPath = "";
     }
 
     [System.Serializable]
@@ -30,6 +31,7 @@ namespace VRTK
         public VRTK_BaseHighlighter buttonOne;
         public VRTK_BaseHighlighter buttonTwo;
         public VRTK_BaseHighlighter systemMenu;
+        public VRTK_BaseHighlighter startMenu;
     }
 
     /// <summary>
@@ -69,7 +71,9 @@ namespace VRTK
          + " * `Grip Right Model Path`: The model that represents the right grip button.\n"
          + " * `Touchpad Model Path`: The model that represents the touchpad.\n"
          + " * `Button One Model Path`: The model that represents button one.\n"
-         + " * `System Menu Model Path`: The model that represents the system menu button.")]
+         + " * `Button Two Model Path`: The model that represents button two.\n"
+         + " * `System Menu Model Path`: The model that represents the system menu button."
+         + " * `Start Menu Model Path`: The model that represents the start menu button.")]
         public VRTK_ControllerModelElementPaths modelElementPaths;
 
         [Tooltip("A collection of highlighter overrides for each controller model sub element. If no highlighter override is given then highlighter on the Controller game object is used.\n\n"
@@ -80,7 +84,9 @@ namespace VRTK
          + " * `Grip Right`: The highlighter to use on the  right grip button.\n"
          + " * `Touchpad`: The highlighter to use on the touchpad.\n"
          + " * `Button One`: The highlighter to use on button one.\n"
-         + " * `System Menu`: The highlighter to use on the system menu button.")]
+         + " * `Button Two`: The highlighter to use on button two.\n"
+         + " * `System Menu`: The highlighter to use on the system menu button."
+         + " * `Start Menu`: The highlighter to use on the start menu button.")]
         public VRTK_ControllerElementHighlighers elementHighlighterOverrides;
 
         /// <summary>
@@ -130,7 +136,7 @@ namespace VRTK
         /// </summary>
         /// <param name="state">The visibility state to toggle the controller to, `true` will make the controller visible - `false` will hide the controller model.</param>
         /// <param name="grabbedChildObject">If an object is being held by the controller then this can be passed through to prevent hiding the grabbed game object as well.</param>
-        public void ToggleControllerModel(bool state, GameObject grabbedChildObject)
+        public virtual void ToggleControllerModel(bool state, GameObject grabbedChildObject)
         {
             if (!enabled)
             {
@@ -155,7 +161,7 @@ namespace VRTK
         /// The SetControllerOpacity method allows the opacity of the controller model to be changed to make the controller more transparent. A lower alpha value will make the object more transparent, such as `0.5f` will make the controller partially transparent where as `0f` will make the controller completely transparent.
         /// </summary>
         /// <param name="alpha">The alpha level to apply to opacity of the controller object. `0f` to `1f`.</param>
-        public void SetControllerOpacity(float alpha)
+        public virtual void SetControllerOpacity(float alpha)
         {
             if (!enabled)
             {
@@ -172,7 +178,7 @@ namespace VRTK
         /// <param name="element">The element of the controller to apply the highlight to.</param>
         /// <param name="highlight">The colour of the highlight.</param>
         /// <param name="fadeDuration">The duration of fade from white to the highlight colour. Optional parameter defaults to `0f`.</param>
-        public void HighlightControllerElement(GameObject element, Color? highlight, float fadeDuration = 0f)
+        public virtual void HighlightControllerElement(GameObject element, Color? highlight, float fadeDuration = 0f)
         {
             if (!enabled)
             {
@@ -190,7 +196,7 @@ namespace VRTK
         /// The UnhighlightControllerElement method is the inverse of the HighlightControllerElement method and resets the controller element to its original colour.
         /// </summary>
         /// <param name="element">The element of the controller to remove the highlight from.</param>
-        public void UnhighlightControllerElement(GameObject element)
+        public virtual void UnhighlightControllerElement(GameObject element)
         {
             if (!enabled)
             {
@@ -211,7 +217,7 @@ namespace VRTK
         /// <param name="element">The element of the controller to apply the highlight to.</param>
         /// <param name="highlight">The colour of the highlight.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightControllerElement(bool state, GameObject element, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightControllerElement(bool state, GameObject element, Color? highlight = null, float duration = 0f)
         {
             if (element)
             {
@@ -232,7 +238,7 @@ namespace VRTK
         /// <param name="state">The highlight colour state, `true` will enable the highlight on the trigger and `false` will remove the highlight from the trigger.</param>
         /// <param name="highlight">The colour to highlight the trigger with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightTrigger(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightTrigger(bool state, Color? highlight = null, float duration = 0f)
         {
             if (!state && controllerHighlighted)
             {
@@ -247,7 +253,7 @@ namespace VRTK
         /// <param name="state">The highlight colour state, `true` will enable the highlight on the grip and `false` will remove the highlight from the grip.</param>
         /// <param name="highlight">The colour to highlight the grip with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightGrip(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightGrip(bool state, Color? highlight = null, float duration = 0f)
         {
             if (!state && controllerHighlighted)
             {
@@ -263,7 +269,7 @@ namespace VRTK
         /// <param name="state">The highlight colour state, `true` will enable the highlight on the touchpad and `false` will remove the highlight from the touchpad.</param>
         /// <param name="highlight">The colour to highlight the touchpad with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightTouchpad(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightTouchpad(bool state, Color? highlight = null, float duration = 0f)
         {
             if (!state && controllerHighlighted)
             {
@@ -278,7 +284,7 @@ namespace VRTK
         /// <param name="state">The highlight colour state, `true` will enable the highlight on button one and `false` will remove the highlight from button one.</param>
         /// <param name="highlight">The colour to highlight button one with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightButtonOne(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightButtonOne(bool state, Color? highlight = null, float duration = 0f)
         {
             if (!state && controllerHighlighted)
             {
@@ -293,7 +299,7 @@ namespace VRTK
         /// <param name="state">The highlight colour state, `true` will enable the highlight on button two and `false` will remove the highlight from button two.</param>
         /// <param name="highlight">The colour to highlight button two with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightButtonTwo(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightButtonTwo(bool state, Color? highlight = null, float duration = 0f)
         {
             if (!state && controllerHighlighted)
             {
@@ -303,12 +309,27 @@ namespace VRTK
         }
 
         /// <summary>
+        /// The ToggleHighlightStartMenu method is a shortcut method that makes it easier to toggle the highlight state of the start menu controller element.
+        /// </summary>
+        /// <param name="state">The highlight colour state, `true` will enable the highlight on the start menu and `false` will remove the highlight from the start menu.</param>
+        /// <param name="highlight">The colour to highlight the start menu with.</param>
+        /// <param name="duration">The duration of fade from white to the highlight colour.</param>
+        public virtual void ToggleHighlightStartMenu(bool state, Color? highlight = null, float duration = 0f)
+        {
+            if (!state && controllerHighlighted)
+            {
+                return;
+            }
+            ToggleHighlightAlias(state, modelElementPaths.startMenuModelPath, highlight, duration);
+        }
+
+        /// <summary>
         /// The ToggleHighlighBody method is a shortcut method that makes it easier to toggle the highlight state of the controller body element.
         /// </summary>
         /// <param name="state">The highlight colour state, `true` will enable the highlight on the body and `false` will remove the highlight from the body.</param>
         /// <param name="highlight">The colour to highlight the body with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlighBody(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlighBody(bool state, Color? highlight = null, float duration = 0f)
         {
             if (!state && controllerHighlighted)
             {
@@ -323,7 +344,7 @@ namespace VRTK
         /// <param name="state">The highlight colour state, `true` will enable the highlight on the entire controller `false` will remove the highlight from the entire controller.</param>
         /// <param name="highlight">The colour to highlight the entire controller with.</param>
         /// <param name="duration">The duration of fade from white to the highlight colour.</param>
-        public void ToggleHighlightController(bool state, Color? highlight = null, float duration = 0f)
+        public virtual void ToggleHighlightController(bool state, Color? highlight = null, float duration = 0f)
         {
             controllerHighlighted = state;
             ToggleHighlightTrigger(state, highlight, duration);
@@ -331,6 +352,7 @@ namespace VRTK
             ToggleHighlightTouchpad(state, highlight, duration);
             ToggleHighlightButtonOne(state, highlight, duration);
             ToggleHighlightButtonTwo(state, highlight, duration);
+            ToggleHighlightStartMenu(state, highlight, duration);
             ToggleHighlightAlias(state, modelElementPaths.systemMenuModelPath, highlight, duration);
             ToggleHighlightAlias(state, modelElementPaths.bodyModelPath, highlight, duration);
         }
@@ -339,7 +361,7 @@ namespace VRTK
         /// The TriggerHapticPulse/1 method calls a single haptic pulse call on the controller for a single tick.
         /// </summary>
         /// <param name="strength">The intensity of the rumble of the controller motor. `0` to `1`.</param>
-        public void TriggerHapticPulse(float strength)
+        public virtual void TriggerHapticPulse(float strength)
         {
             if (enabled)
             {
@@ -355,7 +377,7 @@ namespace VRTK
         /// <param name="strength">The intensity of the rumble of the controller motor. `0` to `1`.</param>
         /// <param name="duration">The length of time the rumble should continue for.</param>
         /// <param name="pulseInterval">The interval to wait between each haptic pulse.</param>
-        public void TriggerHapticPulse(float strength, float duration, float pulseInterval)
+        public virtual void TriggerHapticPulse(float strength, float duration, float pulseInterval)
         {
             if (enabled)
             {
@@ -369,7 +391,7 @@ namespace VRTK
         /// <summary>
         /// The InitaliseHighlighters method sets up the highlighters on the controller model.
         /// </summary>
-        public void InitaliseHighlighters()
+        public virtual void InitaliseHighlighters()
         {
             highlighterOptions = new Dictionary<string, object>();
             highlighterOptions.Add("resetMainTexture", true);
@@ -388,12 +410,13 @@ namespace VRTK
             AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.Body, controllerHand)), objectHighlighter, elementHighlighterOverrides.body);
             AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.GripLeft, controllerHand)), objectHighlighter, elementHighlighterOverrides.gripLeft);
             AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.GripRight, controllerHand)), objectHighlighter, elementHighlighterOverrides.gripRight);
+            AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.StartMenu, controllerHand)), objectHighlighter, elementHighlighterOverrides.startMenu);
             AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.SystemMenu, controllerHand)), objectHighlighter, elementHighlighterOverrides.systemMenu);
             AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.Touchpad, controllerHand)), objectHighlighter, elementHighlighterOverrides.touchpad);
             AddHighlighterToElement(GetElementTransform(VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.Trigger, controllerHand)), objectHighlighter, elementHighlighterOverrides.trigger);
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             cachedElements = new Dictionary<string, Transform>();
 
@@ -431,9 +454,13 @@ namespace VRTK
             {
                 modelElementPaths.systemMenuModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.SystemMenu, controllerHand);
             }
+            if (modelElementPaths.startMenuModelPath.Trim() == "")
+            {
+                modelElementPaths.startMenuModelPath = VRTK_SDK_Bridge.GetControllerElementPath(SDK_BaseController.ControllerElements.StartMenu, controllerHand);
+            }
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             modelContainer = (!modelContainer ? VRTK_DeviceFinder.GetModelAliasController(gameObject) : modelContainer);
             StartCoroutine(WaitForModel());

@@ -45,9 +45,9 @@
             return GetControllerSDK().GetControllerOrigin(controller);
         }
 
-        public static Transform GenerateControllerPointerOrigin()
+        public static Transform GenerateControllerPointerOrigin(GameObject parent)
         {
-            return GetControllerSDK().GenerateControllerPointerOrigin();
+            return GetControllerSDK().GenerateControllerPointerOrigin(parent);
         }
 
         public static GameObject GetControllerLeftHand(bool actual)
@@ -118,6 +118,16 @@
         public static Vector3 GetAngularVelocityOnIndex(uint index)
         {
             return GetControllerSDK().GetAngularVelocityOnIndex(index);
+        }
+
+        public static Vector3 GetHeadsetVelocity()
+        {
+            return GetHeadsetSDK().GetHeadsetVelocity();
+        }
+
+        public static Vector3 GetHeadsetAngularVelocity()
+        {
+            return GetHeadsetSDK().GetHeadsetAngularVelocity();
         }
 
         public static Vector2 GetTouchpadAxisOnIndex(uint index)
@@ -323,6 +333,38 @@
         public static bool IsButtonTwoTouchedUpOnIndex(uint index)
         {
             return GetControllerSDK().IsButtonTwoTouchedUpOnIndex(index);
+        }
+
+        //StartMenu
+
+        public static bool IsStartMenuPressedOnIndex(uint index)
+        {
+            return GetControllerSDK().IsStartMenuPressedOnIndex(index);
+        }
+
+        public static bool IsStartMenuPressedDownOnIndex(uint index)
+        {
+            return GetControllerSDK().IsStartMenuPressedDownOnIndex(index);
+        }
+
+        public static bool IsStartMenuPressedUpOnIndex(uint index)
+        {
+            return GetControllerSDK().IsStartMenuPressedUpOnIndex(index);
+        }
+
+        public static bool IsStartMenuTouchedOnIndex(uint index)
+        {
+            return GetControllerSDK().IsStartMenuTouchedOnIndex(index);
+        }
+
+        public static bool IsStartMenuTouchedDownOnIndex(uint index)
+        {
+            return GetControllerSDK().IsStartMenuTouchedDownOnIndex(index);
+        }
+
+        public static bool IsStartMenuTouchedUpOnIndex(uint index)
+        {
+            return GetControllerSDK().IsStartMenuTouchedUpOnIndex(index);
         }
 
         public static Transform GetHeadset()

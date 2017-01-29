@@ -78,7 +78,8 @@ namespace VRTK
         public ClickMethods clickMethod = ClickMethods.Click_On_Button_Up;
         [Tooltip("Determines whether the UI click action should be triggered when the pointer is deactivated. If the pointer is hovering over a clickable element then it will invoke the click action on that element. Note: Only works with `Click Method =  Click_On_Button_Up`")]
         public bool attemptClickOnDeactivate = false;
-
+        [Tooltip("The amount of time the pointer can be over the same UI element before it automatically attempts to click it. 0f means no click attempt will be made.")]
+        public float clickAfterHoverDuration = 0f;
 
         [HideInInspector]
         public PointerEventData pointerEventData;
@@ -86,6 +87,21 @@ namespace VRTK
         public GameObject hoveringElement;
         [HideInInspector]
         public GameObject controllerRenderModel;
+        [HideInInspector]
+        public float hoverDurationTimer = 0f;
+        [HideInInspector]
+        public bool canClickOnHover = false;
+
+        /// <summary>
+        /// The GameObject of the front trigger activator of the canvas currently being activated by this pointer.
+        /// </summary>
+        [HideInInspector]
+        public GameObject autoActivatingCanvas = null;
+        /// <summary>
+        /// Determines if the UI Pointer has collided with a valid canvas that has collision click turned on.
+        /// </summary>
+        [HideInInspector]
+        public bool collisionClick = false;
 
         /// <summary>
         /// Emitted when the UI Pointer is colliding with a valid UI element.
@@ -108,21 +124,11 @@ namespace VRTK
         /// </summary>
         public event UIPointerEventHandler UIPointerElementDragEnd;
 
-        /// <summary>
-        /// The GameObject of the front trigger activator of the canvas currently being activated by this pointer.
-        /// </summary>
-        [HideInInspector]
-        public GameObject autoActivatingCanvas = null;
-        /// <summary>
-        /// Determines if the UI Pointer has collided with a valid canvas that has collision click turned on.
-        /// </summary>
-        [HideInInspector]
-        public bool collisionClick = false;
-
         private bool pointerClicked = false;
         private bool beamEnabledState = false;
         private bool lastPointerPressState = false;
         private bool lastPointerClickState = false;
+        private GameObject currentTarget;
 
         private EventSystem cachedEventSystem;
         private VRTK_EventSystemVRInput cachedEventSystemInput;
@@ -131,6 +137,18 @@ namespace VRTK
 
         public virtual void OnUIPointerElementEnter(UIPointerEventArgs e)
         {
+            if (e.currentTarget != currentTarget)
+            {
+                ResetHoverTimer();
+            }
+
+            if (clickAfterHoverDuration > 0f && hoverDurationTimer <= 0f)
+            {
+                canClickOnHover = true;
+                hoverDurationTimer = clickAfterHoverDuration;
+            }
+
+            currentTarget = e.currentTarget;
             if (UIPointerElementEnter != null)
             {
                 UIPointerElementEnter(this, e);
@@ -139,6 +157,10 @@ namespace VRTK
 
         public virtual void OnUIPointerElementExit(UIPointerEventArgs e)
         {
+            if (e.previousTarget == currentTarget)
+            {
+                ResetHoverTimer();
+            }
             if (UIPointerElementExit != null)
             {
                 UIPointerElementExit(this, e);
@@ -152,6 +174,11 @@ namespace VRTK
 
         public virtual void OnUIPointerElementClick(UIPointerEventArgs e)
         {
+            if (e.currentTarget == currentTarget)
+            {
+                ResetHoverTimer();
+            }
+
             if (UIPointerElementClick != null)
             {
                 UIPointerElementClick(this, e);
@@ -174,7 +201,7 @@ namespace VRTK
             }
         }
 
-        public UIPointerEventArgs SetUIPointerEvent(GameObject currentTarget, GameObject lastTarget = null)
+        public virtual UIPointerEventArgs SetUIPointerEvent(GameObject currentTarget, GameObject lastTarget = null)
         {
             UIPointerEventArgs e;
             e.controllerIndex = VRTK_DeviceFinder.GetControllerIndex(controller.gameObject);
@@ -189,7 +216,7 @@ namespace VRTK
         /// </summary>
         /// <param name="eventSystem">The global Unity event system to be used by the UI pointers.</param>
         /// <returns>A custom event system input class that is used to detect input from VR pointers.</returns>
-        public VRTK_EventSystemVRInput SetEventSystem(EventSystem eventSystem)
+        public virtual VRTK_EventSystemVRInput SetEventSystem(EventSystem eventSystem)
         {
             if (!eventSystem)
             {
@@ -230,7 +257,7 @@ namespace VRTK
         /// <summary>
         /// The RemoveEventSystem resets the Unity EventSystem back to the original state before the VRTK_EventSystemVRInput was swapped for it.
         /// </summary>
-        public void RemoveEventSystem()
+        public virtual void RemoveEventSystem()
         {
             var eventSystem = FindObjectOfType<EventSystem>();
 
@@ -274,7 +301,7 @@ namespace VRTK
         /// The PointerActive method determines if the ui pointer beam should be active based on whether the pointer alias is being held and whether the Hold Button To Use parameter is checked.
         /// </summary>
         /// <returns>Returns true if the ui pointer should be currently active.</returns>
-        public bool PointerActive()
+        public virtual bool PointerActive()
         {
             if (activationMode == ActivationMethods.Always_On || autoActivatingCanvas != null)
             {
@@ -308,7 +335,7 @@ namespace VRTK
         /// <param name="checkLastClick">If this is true then the last frame's state of the UI Click button is also checked to see if a valid click has happened.</param>
         /// <param name="lastClickState">This determines what the last frame's state of the UI Click button should be in for it to be a valid click.</param>
         /// <returns>Returns true if the UI Click button is in a valid state to action a click, returns false if it is not in a valid state.</returns>
-        public bool ValidClick(bool checkLastClick, bool lastClickState = false)
+        public virtual bool ValidClick(bool checkLastClick, bool lastClickState = false)
         {
             var controllerClicked = (collisionClick ? collisionClick : controller.uiClickPressed);
             var result = (checkLastClick ? controllerClicked && lastPointerClickState == lastClickState : controllerClicked);
@@ -321,7 +348,7 @@ namespace VRTK
         /// The GetOriginPosition method returns the relevant transform position for the pointer based on whether the pointerOriginTransform variable is valid.
         /// </summary>
         /// <returns>A Vector3 of the pointer transform position</returns>
-        public Vector3 GetOriginPosition()
+        public virtual Vector3 GetOriginPosition()
         {
             return (pointerOriginTransform ? pointerOriginTransform.position : transform.position);
         }
@@ -330,14 +357,14 @@ namespace VRTK
         /// The GetOriginPosition method returns the relevant transform forward for the pointer based on whether the pointerOriginTransform variable is valid.
         /// </summary>
         /// <returns>A Vector3 of the pointer transform forward</returns>
-        public Vector3 GetOriginForward()
+        public virtual Vector3 GetOriginForward()
         {
             return (pointerOriginTransform ? pointerOriginTransform.forward : transform.forward);
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
-            pointerOriginTransform = (pointerOriginTransform == null ? VRTK_SDK_Bridge.GenerateControllerPointerOrigin() : pointerOriginTransform);
+            pointerOriginTransform = (pointerOriginTransform == null ? VRTK_SDK_Bridge.GenerateControllerPointerOrigin(gameObject) : pointerOriginTransform);
 
             if (controller == null)
             {
@@ -351,12 +378,18 @@ namespace VRTK
             controllerRenderModel = VRTK_SDK_Bridge.GetControllerRenderModel(controller.gameObject);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             if (cachedEventSystemInput && cachedEventSystemInput.pointers.Contains(this))
             {
                 cachedEventSystemInput.pointers.Remove(this);
             }
+        }
+
+        private void ResetHoverTimer()
+        {
+            hoverDurationTimer = 0f;
+            canClickOnHover = false;
         }
 
         private void ConfigureEventSystem()
