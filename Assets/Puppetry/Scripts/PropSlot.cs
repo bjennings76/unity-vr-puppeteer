@@ -29,8 +29,8 @@ public class PropSlot : VRTK_InteractableObject {
 		var prefabBounds = default(Bounds);
 		var instance = m_Creator.Create(p => {
 			prefabBounds = UnityUtils.GetBounds(p.transform);
-			return Instantiate(p, GetPropParent());
-			//return Instantiate(p, m_PreviewInstance.transform.position, m_PreviewInstance.transform.rotation, GetPropParent());
+			//return Instantiate(p, GetPropParent());
+			return Instantiate(p, Dispenser.SpawnPoint.position, Dispenser.SpawnPoint.rotation, GetPropParent());
 		});
 		var existingCollider = instance.GetComponentInChildren<Collider>();
 
@@ -40,7 +40,9 @@ public class PropSlot : VRTK_InteractableObject {
 			boxCollider.center = prefabBounds.center;
 			var grabbableObject = instance.AddComponent<VRTK_InteractableObject>();
 			grabbableObject.isGrabbable = true;
+			grabbableObject.touchHighlightColor = touchHighlightColor;
 			grabbableObject.grabAttachMechanicScript = grabAttachMechanicScript;
+			grabbableObject.secondaryGrabActionScript = secondaryGrabActionScript;
 		}
 
 		return instance;
@@ -79,7 +81,7 @@ public class PropSlot : VRTK_InteractableObject {
 	private Transform GetPropParent() {
 		m_PropRoot = m_PropRoot ? m_PropRoot : Dispenser.SpawnPoint ? Dispenser.SpawnPoint : new GameObject("Props").transform;
 		var parent = new GameObject(m_Creator.Name + " Scaler").transform;
-		parent.SetParent(m_PropRoot, false);
+		parent.SetParent(m_PropRoot);
 		parent.ResetTransform();
 		parent.localScale = Vector3.one * m_Dispenser.PropType.Scale;
 		return parent;
