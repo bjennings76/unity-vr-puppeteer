@@ -1,13 +1,8 @@
-﻿// ---------------------------------------------------------------------
-// Copyright (c) 2016 Magic Leap. All Rights Reserved.
-// Magic Leap Confidential and Proprietary
-// ---------------------------------------------------------------------
-
-using System;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Invaders.Editor {
+namespace Utils {
 	[InitializeOnLoad]
 	public class AutoPlay : ScriptableObject {
 		private static AutoPlay m_Instance;

@@ -1,13 +1,8 @@
-﻿// ---------------------------------------------------------------------
-// Copyright (c) 2016 Magic Leap. All Rights Reserved.
-// Magic Leap Confidential and Proprietary
-// ---------------------------------------------------------------------
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Utils;
 
-namespace Invaders.Map {
+namespace Utils {
+	[RequireComponent(typeof(TriggerCollisionTracker))]
 	public class Spinner : MonoBehaviour {
 		[SerializeField] private float m_Push = 1.2f;
 		[SerializeField] private Rigidbody m_Rigidbody;
@@ -17,6 +12,7 @@ namespace Invaders.Map {
 		private float m_RotationDelta;
 		private float m_RotationTimeDelta;
 		private Vector3 m_Axis;
+		private TriggerCollisionTracker m_Tracker;
 
 		private Vector3 m_LookPos;
 		private Vector3 m_LookDir;
@@ -26,19 +22,10 @@ namespace Invaders.Map {
 
 		private void Awake() { m_Transform = transform; }
 
-		private void OnTriggerEnter(Collider other) {
-			m_Targets.Add(other.transform);
-
-			if (!enabled) return;
-
-			m_Rigidbody.isKinematic = true;
-			m_Axis = m_Transform.up;
-			InitNewTarget();
-		}
-
-		private void InitNewTarget() {
-			m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
-			m_LookDir = m_LookPos - m_Transform.position;
+		private void Start() {
+			m_Tracker = GetComponent<TriggerCollisionTracker>();
+			m_Tracker.OnEnter += OnEnter;
+			m_Tracker.OnExit += OnExit;
 		}
 
 		private void LateUpdate() {
@@ -55,7 +42,19 @@ namespace Invaders.Map {
 			m_Transform.Rotate(m_Axis, angle, Space.World);
 		}
 
-		private void OnTriggerExit(Collider other) {
+		private void OnEnter(Collider other)
+		{
+			m_Targets.Add(other.transform);
+
+			if (!enabled)
+				return;
+
+			m_Rigidbody.isKinematic = true;
+			m_Axis = m_Transform.up;
+			InitNewTarget();
+		}
+
+		private void OnExit(Collider other) {
 			var wasTarget = other.transform == Target;
 			m_Targets.Remove(other.transform);
 
@@ -64,6 +63,12 @@ namespace Invaders.Map {
 				m_Rigidbody.AddTorque(0, m_RotationDelta * m_Push * m_RotationTimeDelta * 100, 0, ForceMode.VelocityChange);
 			}
 			else if (wasTarget) { InitNewTarget(); }
+		}
+
+		private void InitNewTarget()
+		{
+			m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
+			m_LookDir = m_LookPos - m_Transform.position;
 		}
 
 		private static Vector3 ProjectPointOnPlane(Vector3 planeNormal, Vector3 planePoint, Vector3 point) { return planePoint + Vector3.ProjectOnPlane(point - planePoint, planeNormal); }
