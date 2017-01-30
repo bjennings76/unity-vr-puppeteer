@@ -15,24 +15,43 @@ public class PropSlot : MonoBehaviour {
 	private PropDispenser m_Dispenser;
 	private BoxCollider m_Box;
 	private VRTK_InteractableObject m_Interactable;
+	private bool m_Init;
+	private Transform m_Scaler;
+	private Spinner m_Spinner;
+	private static Transform m_PropRoot;
 
 	private Vector3 PreviewSize { get { return m_Box.size; } }
 	private Vector3 PreviewScale { get { return m_Box.transform.lossyScale; } }
 
 	private PropDispenser Dispenser { get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
-	private void Start() {
+	private static Transform PropRoot { get { return m_PropRoot ? m_PropRoot : (m_PropRoot = new GameObject("Props").transform); } }
+
+	private void Init() {
+		if (m_Init) return;
+		m_Init = true;
 		m_Box = m_SpawnPoint.GetComponent<BoxCollider>();
 		m_Box.enabled = false;
+		m_Spinner = GetComponentInParent<Spinner>();
+	}
+
+	public void Create(IPropCreator creator) {
+		m_Creator = creator;
+		Create();
 	}
 
 	public GameObject Create() {
+		Init();
+
 		UnityUtils.Destroy(m_Instance);
 		var bounds = m_Creator.GetBounds();
 		var scale = GetPreviewScale(bounds);
+		m_Scaler = GetPropScaler(scale);
+		var position = -bounds.center * scale + m_SpawnPoint.position;
+		var rotation = m_SpawnPoint.rotation;
 
 		m_Instance = m_Creator.Create(p => {
-			var instance = Instantiate(p, Vector3.zero, Quaternion.identity, GetPropScaler(scale));
+			var instance = Instantiate(p, position, rotation, m_Scaler);
 			instance.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Hide());
 			return instance;
 		});
@@ -40,38 +59,21 @@ public class PropSlot : MonoBehaviour {
 		GetCollideable(m_Instance, bounds);
 		m_Interactable = GetInteractable(m_Instance);
 		m_Interactable.InteractableObjectGrabbed += OnInstanceGrabbed;
-
-		var center = m_Instance.transform.InverseTransformPoint(bounds.center);
-		m_Instance.transform.localScale = new Vector3(scale, scale, scale);
-		m_Instance.transform.localPosition = -center * scale;
-
 		m_Label.text = GetName(m_Creator, Dispenser.PropType.TrimRegex);
-		DisableColliders(m_Instance);
 
 		return m_Instance;
-
-		//var prefabBounds = default(Bounds);
-
-		//var instance = m_Creator.Create(p =>
-		//{
-		//	prefabBounds = UnityUtils.GetBounds(p.transform);
-		//	return Instantiate(p, Dispenser.SpawnPoint.position, Dispenser.SpawnPoint.rotation, GetPropParent());
-		//});
-
-		//CheckCollideable(instance);
-		//CheckGrabbable(instance);
-
-		//return instance;
 	}
 
 	private void OnInstanceGrabbed(object sender, InteractableObjectEventArgs e) {
-		m_Instance.transform.DOScale(Vector3.one, 1).SetEase(Ease.OutElastic);
+		m_Instance.transform.DOScale(Vector3.one * m_Dispenser.PropType.Scale, 1).SetEase(Ease.OutElastic);
 		m_Interactable.InteractableObjectGrabbed -= OnInstanceGrabbed;
 		m_Interactable.InteractableObjectUngrabbed += OnInstanceUngrabbed;
 	}
 
 	private void OnInstanceUngrabbed(object sender, InteractableObjectEventArgs e) {
 		m_Interactable.InteractableObjectUngrabbed -= OnInstanceUngrabbed;
+		m_Instance.transform.SetParent(PropRoot);
+		UnityUtils.Destroy(m_Scaler);
 		m_Instance = null;
 		Create();
 	}
@@ -83,11 +85,6 @@ public class PropSlot : MonoBehaviour {
 
 		var scale = Mathf.Min(xScale, yScale, zScale);
 		return scale;
-	}
-
-	public void Create(IPropCreator creator) {
-		m_Creator = creator;
-		Create();
 	}
 
 	private static Collider GetCollideable(GameObject instance, Bounds bounds) {
@@ -111,18 +108,13 @@ public class PropSlot : MonoBehaviour {
 		return interactable;
 	}
 
-	//private static Transform m_PropRoot;
-
 	private Transform GetPropScaler(float scale) {
-		//m_PropRoot = m_PropRoot ? m_PropRoot : Dispenser.SpawnPoint ? Dispenser.SpawnPoint : new GameObject("Props").transform;
 		var scaler = new GameObject(m_Creator.Name + " Scaler").transform;
 		scaler.SetParent(m_SpawnPoint);
 		scaler.ResetTransform();
-		scaler.localScale = Vector3.one * scale; //m_Dispenser.PropType.Scale;
+		scaler.localScale = Vector3.one * scale;
 		return scaler;
 	}
 
 	private static string GetName(IPropCreator creator, string trimRegex) { return creator.Name.ReplaceRegex(trimRegex, "").ToSpacedName(); }
-
-	private static void DisableColliders(GameObject instance) { instance.GetComponentsInChildren<Collider>().ForEach(c => c.enabled = false); }
 }
