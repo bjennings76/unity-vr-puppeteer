@@ -344,6 +344,7 @@ GameObject:
   - component: {fileID: 4904138987685128}
   - component: {fileID: 54114997551784966}
   - component: {fileID: 59284283889886028}
+  - component: {fileID: 114285059364393608}
   - component: {fileID: 114371538619949640}
   m_Layer: 0
   m_Name: Spinner
@@ -612,8 +613,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1938025167930998}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.000048531536, y: -0.000034034252, z: 0.00012541725, w: 1}
+  m_LocalPosition: {x: -0.0015086253, y: -0.00007861853, z: -0.00003378}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4145028175881192}
@@ -698,7 +699,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1789319240717662}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_MotionVectors: 1
@@ -769,8 +770,8 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 3d76c71c5b2915f4e95af202b465e45f, type: 2}
   m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
+    firstSubMesh: 13
+    subMeshCount: 1
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -967,7 +968,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.0015086253, y: -0.00007861853, z: -0.00003378}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -1093,7 +1094,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1922973848293620}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
@@ -1124,7 +1125,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1883878405975660}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
@@ -1163,13 +1164,25 @@ MonoBehaviour:
   m_Hinge: {fileID: 59284283889886028}
   m_PropType: {fileID: 11400000, guid: 87706f25e9d89ef4190d491afdfcaae0, type: 2}
   m_SpawnPoint: {fileID: 4195380023158724}
+--- !u!114 &114285059364393608
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1938025167930998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fead30a3d5846447a7fb492f2ec2676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Collider: {fileID: 64942808698341686}
 --- !u!114 &114299635157660682
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1504416469367432}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
@@ -4231,7 +4244,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1248309572998288}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a56c42b305ee742817a2d966720a2e, type: 3}
   m_Name: 
