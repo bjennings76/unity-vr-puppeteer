@@ -120,13 +120,13 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: -0.002434492
+      value: 0.0832001
       inSlope: -0.8858949
       outSlope: -0.083044395
       tangentMode: 69
     - serializedVersion: 2
       time: 1
-      value: -0.08547889
+      value: 0.00015570223
       inSlope: -0.083044395
       outSlope: -0
       tangentMode: 69
