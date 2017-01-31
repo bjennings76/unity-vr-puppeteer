@@ -5,6 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - TeleportIgnore
+  - Cubes
+  - Spheres
+  - Leg
+  - Arm
+  - Saucers
+  - Torso
+  - Hands
   layers:
   - Default
   - TransparentFX
