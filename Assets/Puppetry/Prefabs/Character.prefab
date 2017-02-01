@@ -373,6 +373,7 @@ GameObject:
   - component: {fileID: 54119599932050014}
   - component: {fileID: 114274887984371188}
   - component: {fileID: 114400976338947274}
+  - component: {fileID: 135749089146282954}
   m_Layer: 0
   m_Name: Hand_Left_jnt
   m_TagString: Untagged
@@ -2246,7 +2247,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -2277,7 +2278,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -6072,6 +6073,18 @@ LineRenderer:
     alignment: 0
     textureMode: 0
   m_UseWorldSpace: 1
+--- !u!135 &135749089146282954
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1315158356346766}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: -0.11, y: 0, z: 0}
 --- !u!136 &136097024952825114
 CapsuleCollider:
   m_ObjectHideFlags: 1
