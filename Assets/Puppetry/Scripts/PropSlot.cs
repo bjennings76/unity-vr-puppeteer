@@ -17,7 +17,6 @@ public class PropSlot : MonoBehaviour {
 	private VRTK_InteractableObject m_Interactable;
 	private bool m_Init;
 	private Transform m_Scaler;
-	private Spinner m_Spinner;
 	private static Transform m_PropRoot;
 
 	private Vector3 PreviewSize { get { return m_Box.size; } }
@@ -32,7 +31,6 @@ public class PropSlot : MonoBehaviour {
 		m_Init = true;
 		m_Box = m_SpawnPoint.GetComponent<BoxCollider>();
 		m_Box.enabled = false;
-		m_Spinner = GetComponentInParent<Spinner>();
 	}
 
 	public void Create(IPropCreator creator) {
@@ -73,6 +71,7 @@ public class PropSlot : MonoBehaviour {
 	private void OnInstanceUngrabbed(object sender, InteractableObjectEventArgs e) {
 		m_Interactable.InteractableObjectUngrabbed -= OnInstanceUngrabbed;
 		m_Instance.transform.SetParent(PropRoot);
+		m_Instance.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Show());
 		UnityUtils.Destroy(m_Scaler);
 		m_Instance = null;
 		Create();
