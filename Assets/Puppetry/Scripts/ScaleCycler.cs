@@ -22,7 +22,7 @@ public class ScaleCycler : MonoBehaviour {
 		m_Pieces.ForEach(r => UnityUtils.Destroy(r.gameObject));
 		m_Pieces.Clear();
 
-		for (var i = 0; i < m_Count; i++) m_Pieces.Add(Instantiate(m_AttractorPrefab, transform));
+		for (var i = 0; i < m_Count; i++) m_Pieces.Add(Instantiate(m_AttractorPrefab, transform, false));
 	}
 
 	private void LateUpdate() {
