@@ -22,7 +22,7 @@ public class PropTypeEditor : Editor {
 		var assetGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] {path});
 		var assetPaths = assetGUIDs.Select(AssetDatabase.GUIDToAssetPath);
 		var gameObjects = assetPaths.Select(p => AssetDatabase.LoadAssetAtPath(p, typeof(GameObject))).OfType<GameObject>();
-		var propList = gameObjects.ToArray();
+		var propList = gameObjects.Select(go => new PrefabTweakConfig(go)).ToArray();
 		Target.Props = propList;
 	}
 }

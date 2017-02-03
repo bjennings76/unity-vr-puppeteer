@@ -94,7 +94,8 @@ public class PropDispenser : MonoBehaviour {
 		var list = new List<IPropCreator>();
 		m_LastPropType = m_PropType;
 
-		foreach (var prefab in PropType.Props) {
+		foreach (var propConfig in PropType.Props) {
+			var prefab = propConfig.Prefab;
 			var multiProp = prefab.GetComponent<IMultiProp>();
 			if (multiProp != null) list.AddRange(multiProp.GetPropCreators());
 			else list.Add(new PrefabPropCreator(prefab));

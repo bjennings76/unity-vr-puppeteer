@@ -7,5 +7,5 @@ public class PropType : ScriptableObject {
 	public float Scale = 1;
 	public string TrimRegex;
 	[Range(1, 20)] public int SlotCount = 8;
-	public GameObject[] Props;
+	public PrefabTweakConfig[] Props;
 }
