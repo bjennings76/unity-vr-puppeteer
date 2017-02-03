@@ -18,4 +18,4 @@ MonoBehaviour:
   TrimRegex: ^SF_Character_
   SlotCount: 8
   Props:
-  - {fileID: 1774800234531344, guid: e061099f005f1cb489df4dcc3dce7e0f, type: 2}
+  - m_Prefab: {fileID: 1774800234531344, guid: e061099f005f1cb489df4dcc3dce7e0f, type: 2}
