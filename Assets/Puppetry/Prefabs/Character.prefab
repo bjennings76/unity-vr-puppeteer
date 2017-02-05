@@ -3240,6 +3240,7 @@ MonoBehaviour:
   highlightObjectPrefab: {fileID: 1181933711128002, guid: 34b2163b67cb5a54f9cf5b2c1c608aa8,
     type: 2}
   snapType: 2
+  snapHandle: 1
   snapDuration: 0.1
   applyScalingOnSnap: 0
   highlightColor: {r: 0.8897059, g: 0, b: 0, a: 0}
@@ -6029,6 +6030,7 @@ MonoBehaviour:
   highlightObjectPrefab: {fileID: 1181933711128002, guid: 34b2163b67cb5a54f9cf5b2c1c608aa8,
     type: 2}
   snapType: 2
+  snapHandle: 2
   snapDuration: 0.1
   applyScalingOnSnap: 0
   highlightColor: {r: 0.8897059, g: 0, b: 0, a: 0}

@@ -1,4 +1,7 @@
 ﻿// Snap Drop Zone|Prefabs|0035
+
+using System;
+
 namespace VRTK
 {
     using UnityEngine;
@@ -57,10 +60,19 @@ namespace VRTK
             Use_Parenting
         }
 
+        public enum SnapHandle
+        {
+            Use_Pivot,
+            Use_RightSnapHandle,
+            Use_LeftSnapHandle
+        }
+
         [Tooltip("A game object that is used to draw the highlighted destination for within the drop zone. This object will also be created in the Editor for easy placement.")]
         public GameObject highlightObjectPrefab;
         [Tooltip("The Snap Type to apply when a valid interactable object is dropped within the snap zone.")]
         public SnapTypes snapType = SnapTypes.Use_Kinematic;
+        [Tooltip("The Snap Handle on the interactable object to prefer, if available.")]
+        public SnapHandle snapHandle = SnapHandle.Use_Pivot;
         [Tooltip("The amount of time it takes for the object being snapped to move into the new snapped position, rotation and scale.")]
         public float snapDuration = 0f;
         [Tooltip("If this is checked then the scaled size of the snap drop zone will be applied to the object that is snapped to it.")]
@@ -442,7 +454,7 @@ namespace VRTK
         private IEnumerator UpdateTransformDimensions(VRTK_InteractableObject ioCheck, GameObject endSettings, Vector3 endScale, float duration)
         {
             var elapsedTime = 0f;
-            var ioTransform = ioCheck.transform;
+            var ioTransform = GetHandle(ioCheck);
             var startPosition = ioTransform.position;
             var startRotation = ioTransform.rotation;
             var startScale = ioTransform.localScale;
@@ -524,8 +536,26 @@ namespace VRTK
             //Force touch one of the object's colliders on this trigger collider
             OnTriggerStay(objectToSnap.GetComponentInChildren<Collider>());
         }
+     
+        private Transform GetHandle(VRTK_InteractableObject ioCheck) {
+            if (ioCheck.grabAttachMechanicScript == null)
+            {
+                return ioCheck.transform;
+            }
 
-        private IEnumerator AttemptForceSnapAtEndOfFrame(GameObject objectToSnap)
+            switch (snapHandle) {
+                case SnapHandle.Use_Pivot:
+                    return ioCheck.transform;
+                case SnapHandle.Use_RightSnapHandle:
+                    return ioCheck.grabAttachMechanicScript.rightSnapHandle;
+                case SnapHandle.Use_LeftSnapHandle:
+                    return ioCheck.grabAttachMechanicScript.leftSnapHandle;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+      private IEnumerator AttemptForceSnapAtEndOfFrame(GameObject objectToSnap)
         {
             yield return new WaitForEndOfFrame();
             AttemptForceSnap(objectToSnap);
