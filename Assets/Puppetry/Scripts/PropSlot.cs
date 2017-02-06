@@ -42,7 +42,7 @@ public class PropSlot : MonoBehaviour {
 		Init();
 
 		UnityUtils.Destroy(m_Instance);
-		var bounds = m_Creator.GetBounds();
+		var bounds = m_Creator.GetPreviewBounds();
 		var scale = GetPreviewScale(bounds);
 		m_Scaler = GetPropScaler(scale);
 		var position = -bounds.center * scale + m_SpawnPoint.position;

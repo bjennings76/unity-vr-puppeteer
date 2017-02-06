@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utils;
 
@@ -12,15 +13,19 @@ public class PrefabPropCreator : IPropCreator {
 
 	public virtual GameObject Create(Func<GameObject, GameObject> instantiate) { return instantiate(m_Prefab); }
 
-	public Bounds GetBounds() {
-		return UnityUtils.GetBounds(m_Prefab.transform);
+	public Bounds GetPreviewBounds() {
+		var hiders = m_Prefab.GetComponentsInChildren<HideInPropPreview>(true).Where(h => h.gameObject.activeSelf).ToArray();
+		hiders.ForEach(h => h.gameObject.SetActive(false));
+		var bounds = UnityUtils.GetBounds(m_Prefab.transform);
+		hiders.ForEach(h => h.gameObject.SetActive(true));
+		return bounds;
 	}
 }
 
 public interface IPropCreator {
 	string Name { get; }
 	GameObject Create(Func<GameObject, GameObject> instantiate);
-	Bounds GetBounds();
+	Bounds GetPreviewBounds();
 }
 
 public interface IMultiProp {
