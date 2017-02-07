@@ -11,7 +11,7 @@ using PlayFab.ClientModels;
 using Object = UnityEngine.Object;
 
 /*
- 	In this demo, we demonstrate:
+	In this demo, we demonstrate:
 	1.	Automatic asset bundle dependency resolving & loading.
 		It shows how to use the manifest assetbundle like how to get the dependencies etc.
 	2.	Automatic unloading of asset bundles (When an asset bundle or a dependency thereof is no longer needed, the asset bundle is unloaded)
@@ -196,34 +196,34 @@ namespace AssetBundles
 	
 		static public AssetBundleLoadManifestOperation Initialize ()
 		{
-		        return Initialize(Utility.GetPlatformName());
+						return Initialize(Utility.GetPlatformName());
 		}
 
-	    public static void Initialize(bool isPlayFab, Action<AssetBundleLoadManifestOperation> callback)
-	    {
-	        if (isPlayFab)
-	        {
-	            var init = Initialize(Utility.GetPlatformName());
-	            callback(init);
-	        }
-	        else
-	        {
-	            PlayFabClientAPI.GetContentDownloadUrl(new PlayFab.ClientModels.GetContentDownloadUrlRequest()
-	            {
-	                Key = Utility.GetPlatformName(),
-	                HttpMethod = "GET"
-	            }, (result) =>
-	            {
-	                var urlParams = result.URL.Split('?');
-	                var init = Initialize(Utility.GetPlatformName(), string.Format("?{0}", urlParams[1]));
-	                callback(init);
-	            }, PlayFabErrorHandler.HandlePlayFabError);
-	        }
-	    }
+			public static void Initialize(bool isPlayFab, Action<AssetBundleLoadManifestOperation> callback)
+			{
+					if (isPlayFab)
+					{
+							var init = Initialize(Utility.GetPlatformName());
+							callback(init);
+					}
+					else
+					{
+							PlayFabClientAPI.GetContentDownloadUrl(new PlayFab.ClientModels.GetContentDownloadUrlRequest()
+							{
+									Key = Utility.GetPlatformName(),
+									HttpMethod = "GET"
+							}, (result) =>
+							{
+									var urlParams = result.URL.Split('?');
+									var init = Initialize(Utility.GetPlatformName(), string.Format("?{0}", urlParams[1]));
+									callback(init);
+							}, PlayFabErrorHandler.HandlePlayFabError);
+					}
+			}
 
 
 
-	    // Load AssetBundleManifest.
+			// Load AssetBundleManifest.
 		static public AssetBundleLoadManifestOperation Initialize (string manifestAssetBundleName, string urlParams = null)
 		{
 	#if UNITY_EDITOR
@@ -337,20 +337,20 @@ namespace AssetBundles
 	
 			WWW download = null;
 			string url = m_BaseDownloadingURL + assetBundleName + (!string.IsNullOrEmpty(urlParams) ? "?" : string.Empty) + (urlParams ?? string.Empty);
-		    
-            Debug.Log("Loading Bundle Url: " + url);
+				
+						Debug.Log("Loading Bundle Url: " + url);
 
 			// For manifest assetbundle, always download it as we don't have hash for it.
-		    if (isLoadingAssetBundleManifest)
-		    {
-		        download = new WWW(url);
-		    }
-		    else
-		    {
-		        download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(assetBundleName), 0);
-		    }
+				if (isLoadingAssetBundleManifest)
+				{
+						download = new WWW(url);
+				}
+				else
+				{
+						download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(assetBundleName), 0);
+				}
 
-		    m_DownloadingWWWs.Add(assetBundleName, download);
+				m_DownloadingWWWs.Add(assetBundleName, download);
 	
 			return false;
 		}
@@ -374,26 +374,26 @@ namespace AssetBundles
 				
 			// Record and load all dependencies.
 			m_Dependencies.Add(assetBundleName, dependencies);
-		    foreach (var dep in dependencies)
-		    {
-		        if (!isPlayFab)
-		        {
-		            LoadAssetBundleInternal(dep, false);
-		        }
-		        else
-		        {
-		            PlayFabClientAPI.GetContentDownloadUrl(new PlayFab.ClientModels.GetContentDownloadUrlRequest()
-		            {
-		                Key = dep,
-                        HttpMethod = "GET"                        
-		            }, (getContentResult) =>
-		            {
-		                var urlParams = getContentResult.URL.Split('?');
-		                m_BaseDownloadingURL = urlParams[0];
-                        LoadAssetBundleInternal(dep, false, urlParams[1]);
-		            },PlayFabErrorHandler.HandlePlayFabError);
-		        }
-		    }
+				foreach (var dep in dependencies)
+				{
+						if (!isPlayFab)
+						{
+								LoadAssetBundleInternal(dep, false);
+						}
+						else
+						{
+								PlayFabClientAPI.GetContentDownloadUrl(new PlayFab.ClientModels.GetContentDownloadUrlRequest()
+								{
+										Key = dep,
+												HttpMethod = "GET"                        
+								}, (getContentResult) =>
+								{
+										var urlParams = getContentResult.URL.Split('?');
+										m_BaseDownloadingURL = urlParams[0];
+												LoadAssetBundleInternal(dep, false, urlParams[1]);
+								},PlayFabErrorHandler.HandlePlayFabError);
+						}
+				}
 		}
 	
 		// Unload assetbundle and its dependencies.
@@ -451,7 +451,7 @@ namespace AssetBundles
 			foreach (var keyValue in m_DownloadingWWWs)
 			{
 				WWW download = keyValue.Value;
-	            
+							
 				// If downloading fails.
 				if (download.error != null)
 				{
@@ -532,27 +532,27 @@ namespace AssetBundles
 		}
 
 
-	    public static void LoadLevelAsync(string assetBundleName, string levelName, bool isAdditive, Action<AssetBundleLoadOperation> callback, bool isPlayFab = false)
-	    {
-	        if (!isPlayFab)
-	        {
-	            callback(LoadLevelAsync(assetBundleName, levelName, isAdditive));
-	        }
-	        else
-	        {
-                PlayFabClientAPI.GetContentDownloadUrl(new PlayFab.ClientModels.GetContentDownloadUrlRequest()
-                {
-                    Key = assetBundleName,
-                    HttpMethod = "GET"
-                }, (getContentResult) =>
-                {
-                    var urlParams = getContentResult.URL.Split('?');
-                    callback(LoadLevelAsync(assetBundleName, levelName, isAdditive, urlParams[1]));
-                }, PlayFabErrorHandler.HandlePlayFabError);
-	        }
-	    }
+			public static void LoadLevelAsync(string assetBundleName, string levelName, bool isAdditive, Action<AssetBundleLoadOperation> callback, bool isPlayFab = false)
+			{
+					if (!isPlayFab)
+					{
+							callback(LoadLevelAsync(assetBundleName, levelName, isAdditive));
+					}
+					else
+					{
+								PlayFabClientAPI.GetContentDownloadUrl(new PlayFab.ClientModels.GetContentDownloadUrlRequest()
+								{
+										Key = assetBundleName,
+										HttpMethod = "GET"
+								}, (getContentResult) =>
+								{
+										var urlParams = getContentResult.URL.Split('?');
+										callback(LoadLevelAsync(assetBundleName, levelName, isAdditive, urlParams[1]));
+								}, PlayFabErrorHandler.HandlePlayFabError);
+					}
+			}
 
-	    // Load level from the given assetBundle.
+			// Load level from the given assetBundle.
 		static public AssetBundleLoadOperation LoadLevelAsync (string assetBundleName, string levelName, bool isAdditive, string urlParams = null)
 		{
 			Log(LogType.Info, "Loading " + levelName + " from " + assetBundleName + " bundle");

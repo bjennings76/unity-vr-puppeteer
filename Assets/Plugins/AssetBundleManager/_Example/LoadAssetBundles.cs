@@ -14,9 +14,9 @@ public class LoadAssetBundles : MonoBehaviour
         PlayFabSettings.TitleId = TitleId;
     }
 
-	// Use this for initialization
-	void Start () {
-	    
+  // Use this for initialization
+  void Start () {
+      
         PlayFabClientAPI.LoginWithCustomID(new LoginWithCustomIDRequest()
         {
             CustomId = SystemInfo.deviceUniqueIdentifier,
@@ -48,7 +48,7 @@ public class LoadAssetBundles : MonoBehaviour
 
         
 
-	}
+  }
 
     IEnumerator LoadBundles(string contentUrl, string platformKey, string manifestFileName)
     {
