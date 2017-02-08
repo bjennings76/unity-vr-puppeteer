@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3048609647
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: actors
+      Dependencies: {}
