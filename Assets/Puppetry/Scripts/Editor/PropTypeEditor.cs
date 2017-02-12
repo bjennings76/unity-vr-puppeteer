@@ -45,15 +45,11 @@ public class PropTypeEditor : Editor {
 
 	private static bool OnPropGUI(PrefabTweakConfig config) {
 		GUILayout.Space(5);
-		EditorGUILayout.LabelField(config.Name, EditorStyles.boldLabel);
-		var newPrefab = (GameObject) EditorGUILayout.ObjectField("Prefab", config.Prefab, typeof(GameObject), false);
-		var newPos = EditorGUILayout.Vector3Field("Pivot Position", config.HandlePosition);
-		var newRot = EditorGUILayout.Vector3Field("Pivot Rotation", config.HandleRotation);
+		//EditorGUILayout.LabelField(config.Name, EditorStyles.boldLabel);
+		var newPrefab = (GameObject) EditorGUILayout.ObjectField(config.Name, config.Prefab, typeof(GameObject), false);
 
-		if (newPos.Approximately(config.HandlePosition) && newRot.Approximately(config.HandleRotation) && newPrefab == config.Prefab) return false;
+		if (newPrefab == config.Prefab) return false;
 		config.Prefab = newPrefab;
-		config.HandlePosition = newPos;
-		config.HandleRotation = newRot;
 		return true;
 	}
 }
