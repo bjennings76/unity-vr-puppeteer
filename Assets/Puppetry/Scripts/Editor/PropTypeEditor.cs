@@ -31,6 +31,8 @@ public class PropTypeEditor : Editor {
 		EditorGUILayout.LabelField("Props", EditorStyles.boldLabel);
 		if (Target.Props.Any(OnPropGUI)) { EditorUtility.SetDirty(Target); }
 
+		if (Target.Props.Any(p => p.Name.IsNullOrEmpty())) { Target.Props.ForEach(p => p.Name = m_Target.GetName(p.Prefab.name)); }
+
 		if (!populate) return;
 
 		m_LastReference = m_FolderReference;
@@ -38,7 +40,7 @@ public class PropTypeEditor : Editor {
 		var assetGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] {path});
 		var assetPaths = assetGUIDs.Select(AssetDatabase.GUIDToAssetPath);
 		var gameObjects = assetPaths.Select(p => AssetDatabase.LoadAssetAtPath(p, typeof(GameObject))).OfType<GameObject>();
-		var propList = gameObjects.Select(go => new PrefabTweakConfig(go)).ToArray();
+		var propList = gameObjects.Select(go => new PrefabTweakConfig(go, m_Target.GetName(go.name))).ToArray();
 		Target.Props = propList;
 		EditorUtility.SetDirty(Target);
 	}

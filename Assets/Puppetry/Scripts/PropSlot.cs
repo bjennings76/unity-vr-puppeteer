@@ -57,7 +57,7 @@ public class PropSlot : MonoBehaviour {
 		GetCollideable(m_Instance, bounds);
 		m_Interactable = GetInteractable(m_Instance);
 		m_Interactable.InteractableObjectGrabbed += OnInstanceGrabbed;
-		m_Label.text = GetName(m_Creator, Dispenser.PropType.TrimRegex);
+		m_Label.text = Dispenser.PropType.GetName(m_Creator.Name);
 
 		return m_Instance;
 	}
@@ -114,6 +114,4 @@ public class PropSlot : MonoBehaviour {
 		scaler.localScale = Vector3.one * scale;
 		return scaler;
 	}
-
-	private static string GetName(IPropCreator creator, string trimRegex) { return creator.Name.ReplaceRegex(trimRegex, "").ToSpacedName(); }
 }

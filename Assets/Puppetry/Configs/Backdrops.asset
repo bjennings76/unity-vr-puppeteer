@@ -19,11 +19,8 @@ MonoBehaviour:
   SlotCount: 8
   Props:
   - m_Prefab: {fileID: 1554788632851212, guid: 20319bbfac01d2146b1b25436c4c02da, type: 2}
-    m_HandlePosition: {x: 0, y: 0, z: 0}
-    m_HandleRotation: {x: 0, y: 0, z: 0}
+    m_Name: Castle 01
   - m_Prefab: {fileID: 1632223066513976, guid: 3cb52fb89c276974fb1729aa88c27eb6, type: 2}
-    m_HandlePosition: {x: 0, y: 0, z: 0}
-    m_HandleRotation: {x: 0, y: 0, z: 0}
+    m_Name: Castle 02
   - m_Prefab: {fileID: 1342049295333642, guid: 40d0df27f0dbd884b850690b28b17e8a, type: 2}
-    m_HandlePosition: {x: 0, y: 0, z: 0}
-    m_HandleRotation: {x: 0, y: 0, z: 0}
+    m_Name: Castle 03
