@@ -50,22 +50,10 @@ public class JointScaler : MonoBehaviour {
 
 	private class ScalableJoint {
 		private readonly Joint m_Joint;
-		private readonly Vector3 m_OriginalAnchor;
-		private readonly Vector3 m_OriginalConnectedAnchor;
-		private readonly Vector3 m_OriginalScale;
 
-		public ScalableJoint(Joint joint) {
-			m_Joint = joint;
-			m_OriginalAnchor = joint.anchor;
-			m_OriginalConnectedAnchor = joint.connectedAnchor;
-			m_OriginalScale = joint.transform.lossyScale;
-		}
+		public ScalableJoint(Joint joint) { m_Joint = joint; }
 
-		public virtual void Scale(float scale) {
-			//var ratio = m_Joint.transform.lossyScale.x / m_OriginalScale.x;
-			//m_Joint.anchor = m_OriginalAnchor * scale;
-			//m_Joint.connectedAnchor = m_OriginalConnectedAnchor * scale;
-		}
+		public virtual void Scale(float scale) { }
 
 		public Rigidbody Disconnect() {
 			var rb = m_Joint.connectedBody;
@@ -73,9 +61,7 @@ public class JointScaler : MonoBehaviour {
 			return rb;
 		}
 
-		public void Reconnect(Rigidbody rb) {
-			m_Joint.connectedBody = rb;
-		}
+		public void Reconnect(Rigidbody rb) { m_Joint.connectedBody = rb; }
 	}
 
 	private class ScalableSprintJoint : ScalableJoint {
@@ -97,8 +83,6 @@ public class JointScaler : MonoBehaviour {
 	}
 
 	private class ScalableCharacterJoint : ScalableJoint {
-		private readonly CharacterJoint m_CharacterJoint;
-
-		public ScalableCharacterJoint(CharacterJoint joint) : base(joint) { m_CharacterJoint = joint; }
+		public ScalableCharacterJoint(CharacterJoint joint) : base(joint) { }
 	}
 }
