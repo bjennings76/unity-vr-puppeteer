@@ -17,6 +17,7 @@ MonoBehaviour:
   Scale: 0.15
   TrimRegex: ^SF_Prop_
   SlotCount: 8
+  PopulationFolder: {fileID: 102900000, guid: 23f9de92707bd27469db3514d35d5e77, type: 3}
   Props:
   - m_Prefab: {fileID: 145978, guid: 44f7c229abed59d4a966dcdcc511cfb0, type: 2}
     m_Name: Anvil 01

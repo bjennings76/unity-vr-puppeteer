@@ -17,6 +17,7 @@ MonoBehaviour:
   Scale: 0.15
   TrimRegex: ^SF_Wep_
   SlotCount: 8
+  PopulationFolder: {fileID: 102900000, guid: f0f0df94cf0f4c748875c32a52a5d8da, type: 3}
   Props:
   - m_Prefab: {fileID: 142114, guid: 555fe218b31145540abfefa2086c482b, type: 2}
     m_Name: Black Sword 01

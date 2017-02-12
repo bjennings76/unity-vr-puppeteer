@@ -17,6 +17,7 @@ MonoBehaviour:
   Scale: 1
   TrimRegex: 
   SlotCount: 8
+  PopulationFolder: {fileID: 102900000, guid: 10dfe4cae03741646aac7f8ef282416f, type: 3}
   Props:
   - m_Prefab: {fileID: 1554788632851212, guid: 20319bbfac01d2146b1b25436c4c02da, type: 2}
     m_Name: Castle 01
