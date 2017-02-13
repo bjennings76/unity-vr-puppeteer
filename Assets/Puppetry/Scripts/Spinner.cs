@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Utils {
 	[RequireComponent(typeof(TriggerCollisionTracker))]
 	public class Spinner : MonoBehaviour {
 		[SerializeField] private float m_Push = 1.2f;
+		[SerializeField] private float m_Drag = 0.1f;
 		[SerializeField] private Rigidbody m_Rigidbody;
 
 		private readonly List<Transform> m_Targets = new List<Transform>();
@@ -17,6 +19,9 @@ namespace Utils {
 		private Vector3 m_LookPos;
 		private Vector3 m_LookDir;
 		private Transform m_Transform;
+		private float m_RotationSpeed;
+		private float m_LastRotationTime;
+		private bool m_WasTracking;
 
 		private Transform Target { get { return m_Targets.GetLast(); } }
 
@@ -29,27 +34,50 @@ namespace Utils {
 		}
 
 		private void LateUpdate() {
+			CheckTarget();
+			CheckRotate();
+		}
+
+		private void CheckRotate() {
+			if (Target) return;
+
+			if (m_WasTracking) {
+				m_WasTracking = false;
+				this.DOKill();
+				DOTween.To(() => m_RotationSpeed, s => m_RotationSpeed = s, 0f, m_Drag).SetSpeedBased().SetTarget(this);
+			}
+
+			LogRotation();
+			m_Transform.Rotate(m_Axis, m_RotationSpeed, Space.World);
+		}
+
+		private void LogRotation() {
 			m_RotationDelta = m_Transform.rotation.eulerAngles.y - m_LastRotation;
-			m_RotationTimeDelta = Time.deltaTime;
+			m_RotationTimeDelta = Time.time - m_LastRotationTime;
 			m_LastRotation = m_Transform.rotation.eulerAngles.y;
+			m_LastRotationTime = Time.time;
+		}
 
+		private void CheckTarget() {
 			if (!Target) return;
-
 			m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
 			var lastLook = m_LookDir;
 			m_LookDir = m_LookPos - m_Transform.position;
 			var angle = SignedAngleBetween(lastLook, m_LookDir, m_Axis);
 			m_Transform.Rotate(m_Axis, angle, Space.World);
+
+			LogRotation();
+			m_RotationSpeed = m_RotationDelta * m_Push * m_RotationTimeDelta * 100;
+			m_WasTracking = true;
 		}
 
-		private void OnEnter(Collider other)
-		{
+		private void FixedUpdate() { }
+
+		private void OnEnter(Collider other) {
 			m_Targets.Add(other.transform);
 
-			if (!enabled)
-				return;
+			if (!enabled) return;
 
-			m_Rigidbody.isKinematic = true;
 			m_Axis = m_Transform.up;
 			InitNewTarget();
 		}
@@ -58,15 +86,11 @@ namespace Utils {
 			var wasTarget = other.transform == Target;
 			m_Targets.Remove(other.transform);
 
-			if (!Target) {
-				m_Rigidbody.isKinematic = false;
-				m_Rigidbody.AddTorque(0, m_RotationDelta * m_Push * m_RotationTimeDelta * 100, 0, ForceMode.VelocityChange);
-			}
-			else if (wasTarget) { InitNewTarget(); }
+			if (!Target) m_Rigidbody.AddTorque(0, m_RotationDelta * m_Push * m_RotationTimeDelta * 100, 0, ForceMode.VelocityChange);
+			else if (wasTarget) InitNewTarget();
 		}
 
-		private void InitNewTarget()
-		{
+		private void InitNewTarget() {
 			m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
 			m_LookDir = m_LookPos - m_Transform.position;
 		}
