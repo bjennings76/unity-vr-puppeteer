@@ -4,9 +4,9 @@ using UnityEngine;
 using Utils;
 
 public class PropDispenser : MonoBehaviour {
-	[SerializeField] private HingeJoint m_Hinge;
 	[SerializeField] private PropType m_PropType;
 	[SerializeField] private Transform m_SpawnPoint;
+	[SerializeField] private Spinner m_Spinner;
 
 	private PropType m_LastPropType;
 
@@ -69,7 +69,7 @@ public class PropDispenser : MonoBehaviour {
 
 	private void UpdateRotation() {
 		var lastAngle = m_LastAngle;
-		var currentAngle = m_LastAngle = m_Hinge.angle;
+		var currentAngle = m_LastAngle = m_Spinner.Angle;
 		var currentSegment = GetSegment(currentAngle);
 		var lastSegment = GetSegment(lastAngle);
 
@@ -108,7 +108,7 @@ public class PropDispenser : MonoBehaviour {
 
 	private void PopulatePropSlots() {
 		XDebug.AssertRequiresComponent(PropType.SlotPrefab, this);
-		XDebug.AssertRequiresComponent(m_Hinge, this);
+		XDebug.AssertRequiresComponent(m_Spinner, this);
 
 		if (m_PropSlots != null && m_PropSlots.Any()) m_PropSlots.ForEach(s => UnityUtils.Destroy(s.gameObject));
 
@@ -117,7 +117,7 @@ public class PropDispenser : MonoBehaviour {
 		var angleStep = 360 / SlotCount;
 
 		for (var i = 0; i < SlotCount; i++) {
-			var slot = Instantiate(PropType.SlotPrefab, m_Hinge.transform, false);
+			var slot = Instantiate(PropType.SlotPrefab, m_Spinner.transform, false);
 			slot.transform.ResetTransform();
 			slot.transform.Rotate(0, angleStep * i, 0);
 			m_PropSlots.Add(slot);
