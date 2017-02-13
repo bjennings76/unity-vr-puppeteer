@@ -6,7 +6,6 @@ namespace Utils {
 	[RequireComponent(typeof(TriggerCollisionTracker))]
 	public class Spinner : MonoBehaviour {
 		[SerializeField] private float m_Push = 1.2f;
-		[SerializeField] private float m_Drag = 0.1f;
 		[SerializeField] private Rigidbody m_Rigidbody;
 
 		private readonly List<Transform> m_Targets = new List<Transform>();
@@ -22,6 +21,8 @@ namespace Utils {
 		private float m_RotationSpeed;
 		private float m_LastRotationTime;
 		private bool m_WasTracking;
+
+		public float Angle { get; private set; }
 
 		private Transform Target { get { return m_Targets.GetLast(); } }
 
@@ -44,7 +45,7 @@ namespace Utils {
 			if (m_WasTracking) {
 				m_WasTracking = false;
 				this.DOKill();
-				DOTween.To(() => m_RotationSpeed, s => m_RotationSpeed = s, 0f, m_Drag).SetSpeedBased().SetTarget(this);
+				DOTween.To(() => m_RotationSpeed, s => m_RotationSpeed = s, 0f, m_Rigidbody.angularDrag).SetSpeedBased().SetTarget(this);
 			}
 
 			LogRotation();
@@ -63,8 +64,8 @@ namespace Utils {
 			m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
 			var lastLook = m_LookDir;
 			m_LookDir = m_LookPos - m_Transform.position;
-			var angle = SignedAngleBetween(lastLook, m_LookDir, m_Axis);
-			m_Transform.Rotate(m_Axis, angle, Space.World);
+			Angle = SignedAngleBetween(lastLook, m_LookDir, m_Axis);
+			m_Transform.Rotate(m_Axis, Angle, Space.World);
 
 			LogRotation();
 			m_RotationSpeed = m_RotationDelta * m_Push * m_RotationTimeDelta * 100;
