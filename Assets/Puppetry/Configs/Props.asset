@@ -17,136 +17,269 @@ MonoBehaviour:
   Scale: 0.15
   TrimRegex: ^SF_Prop_
   SlotCount: 8
+  PopulationFolder: {fileID: 102900000, guid: 23f9de92707bd27469db3514d35d5e77, type: 3}
   Props:
   - m_Prefab: {fileID: 145978, guid: 44f7c229abed59d4a966dcdcc511cfb0, type: 2}
+    m_Name: Anvil 01
   - m_Prefab: {fileID: 116922, guid: b57d9ac0df33e5e4e99617617b1a3c31, type: 2}
+    m_Name: Archway 01
   - m_Prefab: {fileID: 149060, guid: 867a55685bc836e458326d78857048b5, type: 2}
+    m_Name: Archway 02
   - m_Prefab: {fileID: 159254, guid: ee139cd519a451449956f62bac8cea95, type: 2}
+    m_Name: Axe Stump 01
   - m_Prefab: {fileID: 135848, guid: ea276be5ca4c07e47b8aa711e0fa37d9, type: 2}
+    m_Name: Barrel 01
   - m_Prefab: {fileID: 116824, guid: 483d3a78e77298348a7bc7981951f63b, type: 2}
+    m_Name: Barrel 02
   - m_Prefab: {fileID: 169662, guid: e8d6e498307688b4c95c1f03b5b2af4e, type: 2}
+    m_Name: Barrel Ale 01
   - m_Prefab: {fileID: 156990, guid: 69fa40d1da2f2014eadb8de2a1591155, type: 2}
+    m_Name: Barrel Ale 02
   - m_Prefab: {fileID: 123250, guid: 92f30941a27b01849af5de13aa09a2a4, type: 2}
+    m_Name: Barrel Cabbages 01
   - m_Prefab: {fileID: 197706, guid: 1f82c73cb98663b4c8cbdf680c3fbee3, type: 2}
+    m_Name: Barrel Coal 01
   - m_Prefab: {fileID: 152384, guid: 3a9ac4a8cd2529b48b9e7534014b6f2c, type: 2}
+    m_Name: Barrel Gold 01
   - m_Prefab: {fileID: 160408, guid: 1dac7ed88bc635044998578fa386e728, type: 2}
+    m_Name: Barrel Water 01
   - m_Prefab: {fileID: 150466, guid: 0cf779d041ce9984e8025470bf10f6c2, type: 2}
+    m_Name: Barrel Stack 01
   - m_Prefab: {fileID: 187216, guid: 5be8d8a9e63601242a98b36721d6f536, type: 2}
+    m_Name: Barrel Stack 02
   - m_Prefab: {fileID: 139500, guid: ce376cc3262bffd4c91480b27fc6fd9a, type: 2}
+    m_Name: Barrel Stack 03
   - m_Prefab: {fileID: 193550, guid: c6070233f28702a438fc085c3695aa47, type: 2}
+    m_Name: Bridge 01
   - m_Prefab: {fileID: 182008, guid: ebfcf0bc2c023584fa3656c4bff977ec, type: 2}
+    m_Name: Bridge Stone 01
   - m_Prefab: {fileID: 116556, guid: 7418c28a3252bf84a91e593ffc27d49f, type: 2}
+    m_Name: Bridge Stone Ramp 01
   - m_Prefab: {fileID: 154756, guid: 3b0e199b3dcf76e48936915bd055867d, type: 2}
+    m_Name: Bucket 01
   - m_Prefab: {fileID: 123520, guid: e2a5e245901538b4bbe5a2ddce4d20e9, type: 2}
+    m_Name: Bucket 02
   - m_Prefab: {fileID: 145312, guid: e0f4d37d77316b044a82a055bc69ae3d, type: 2}
+    m_Name: Bucket 03
   - m_Prefab: {fileID: 128104, guid: e6515758319d76e4da639685628bbc8a, type: 2}
+    m_Name: Cabbage 01
   - m_Prefab: {fileID: 162720, guid: b398f5c6c1efb5e4eb81ba0cb11ec243, type: 2}
+    m_Name: Cabbage 02
   - m_Prefab: {fileID: 122686, guid: f123b0e86250dcb46ba02793ce806726, type: 2}
+    m_Name: Cage 01
   - m_Prefab: {fileID: 140148, guid: 277ad9ae6a37e5c49a911467e9d16624, type: 2}
+    m_Name: Cart Food 01
   - m_Prefab: {fileID: 100412, guid: f5df14fae1373f14db8344cb2024e81f, type: 2}
+    m_Name: Chest 01
   - m_Prefab: {fileID: 130618, guid: fee4adf52b64cc947b37974b6cc29a40, type: 2}
+    m_Name: Crate 01
   - m_Prefab: {fileID: 156450, guid: d0aa0bcf66714c54faa71500fa28e09e, type: 2}
+    m_Name: Crate 02
   - m_Prefab: {fileID: 131948, guid: f0575f243c1e6ea489392185ed7ab2e0, type: 2}
+    m_Name: Crate 03
   - m_Prefab: {fileID: 100472, guid: b4790959fee11e34dadbf1a2ca54226e, type: 2}
+    m_Name: Crate Stack 01
   - m_Prefab: {fileID: 144650, guid: 34d24984b60ffd3489f331d128ef0fbb, type: 2}
+    m_Name: Crops Bale 01
   - m_Prefab: {fileID: 167832, guid: 49e6018c2d6709a43ac448aef2e032ed, type: 2}
+    m_Name: Crops Cabbage 01
   - m_Prefab: {fileID: 114786, guid: ac8b1d2a1b1a58a4daad0914eeeabda0, type: 2}
+    m_Name: Crops Corn 01
   - m_Prefab: {fileID: 120050, guid: f0ad821e6cde9664b99ead7fa7828171, type: 2}
+    m_Name: Crops Pumpkin 01
   - m_Prefab: {fileID: 197178, guid: b33243cded6c66c4ab41347fc933752c, type: 2}
+    m_Name: Crops Wheat 01
   - m_Prefab: {fileID: 188770, guid: fe5273d8c33aa4e40a1c4e57dbfd3099, type: 2}
+    m_Name: Crops Wheat Cut 01
   - m_Prefab: {fileID: 154714, guid: a6f16611a8f69374292b9e72bfe3d32f, type: 2}
+    m_Name: Crops Wheat Stack 01
   - m_Prefab: {fileID: 147030, guid: ba5b6cf32d19f6741859de62b30387c1, type: 2}
+    m_Name: Elven Bench 01
   - m_Prefab: {fileID: 180636, guid: 7d004fca558aa0b40be22bf551b12a1c, type: 2}
+    m_Name: Elven Chest 01
   - m_Prefab: {fileID: 186556, guid: a26196893aa343647bf91c048bd6159c, type: 2}
+    m_Name: Fence Long 01
   - m_Prefab: {fileID: 104792, guid: ccf356b8cc5613f41b7be466d81a35ea, type: 2}
+    m_Name: Fence Long 02
   - m_Prefab: {fileID: 103974, guid: c94ec3960cb42d54aaf4962b646847dc, type: 2}
+    m_Name: Fence Stone 01
   - m_Prefab: {fileID: 194146, guid: 6d68e0471a7a80348bd61a32b8c3c7a5, type: 2}
+    m_Name: Fence Stone 02
   - m_Prefab: {fileID: 180396, guid: ef799085b0a479a40b7801f741321908, type: 2}
+    m_Name: Fence Stone End 01
   - m_Prefab: {fileID: 134988, guid: f61eac853436d3c499c8e062eb67bfbd, type: 2}
+    m_Name: Fence Stone End 02
   - m_Prefab: {fileID: 129514, guid: 103a15828ecccf64ab05c9b16c7e7264, type: 2}
+    m_Name: Fence Wood 01
   - m_Prefab: {fileID: 135026, guid: ab1d19ae819ae9441becffd48a629af0, type: 2}
+    m_Name: Fence Wood 02
   - m_Prefab: {fileID: 100236, guid: dc4e95196fd6ff847be16c60f651f48e, type: 2}
+    m_Name: Fence Wood 03
   - m_Prefab: {fileID: 143094, guid: eaa2f958751d0194abd1792f5a230555, type: 2}
+    m_Name: Fence Wood Gate 01
   - m_Prefab: {fileID: 127986, guid: 9ffa7bc63f3e6a54aba5d5d64f562c12, type: 2}
+    m_Name: Firepit 01
   - m_Prefab: {fileID: 112016, guid: 888c6acb38002814c89667609b2659f5, type: 2}
+    m_Name: Firepit 02
   - m_Prefab: {fileID: 132944, guid: 0cd84dbe025609241bb669f508c43f98, type: 2}
+    m_Name: Firepit 03
   - m_Prefab: {fileID: 112750, guid: e4dcd401781751f43819a6ffc2916ff2, type: 2}
+    m_Name: Flag 01
   - m_Prefab: {fileID: 177726, guid: 9249acaf33cfa5a4caf99e6f85c20a90, type: 2}
+    m_Name: Flag 02
   - m_Prefab: {fileID: 116744, guid: e19bcaa8411e331408aee1af9f3a66d0, type: 2}
+    m_Name: Flag 03
   - m_Prefab: {fileID: 144366, guid: 5fcf3301dfbbb3b4798b54f9da2d611e, type: 2}
+    m_Name: Flag 04
   - m_Prefab: {fileID: 177452, guid: 8413c761132407049a81d56442aa44b7, type: 2}
+    m_Name: Flag 05
   - m_Prefab: {fileID: 148490, guid: fed5cb71a910d59408d6c6f06af4477b, type: 2}
+    m_Name: Flag 06
   - m_Prefab: {fileID: 114468, guid: 4e4539edc0e4c6c43aead508592aa8d6, type: 2}
+    m_Name: Flag 07
   - m_Prefab: {fileID: 127212, guid: 47c1d19b7063b8140a66555ef51f2039, type: 2}
+    m_Name: Flag 08
   - m_Prefab: {fileID: 165778, guid: 4e16c8e2bc3b66846a3710aba785a8a4, type: 2}
+    m_Name: Flag 09
   - m_Prefab: {fileID: 178616, guid: add814ec25559034487622808b58bab4, type: 2}
+    m_Name: Flag 010
   - m_Prefab: {fileID: 142190, guid: e46bac02cdece9c4388e9b1f6a06c0ff, type: 2}
+    m_Name: Flag 011
   - m_Prefab: {fileID: 153706, guid: c3e795e423301784f9aae16cb3289ed8, type: 2}
+    m_Name: Flag 012
   - m_Prefab: {fileID: 137546, guid: 58fc8075cbbaab24693bcd3b6036e429, type: 2}
+    m_Name: Flag String 01
   - m_Prefab: {fileID: 181640, guid: f9bb1b126eace614689d08c44a14b7c4, type: 2}
+    m_Name: Forge 01
   - m_Prefab: {fileID: 190266, guid: 9c7443a270d220440bf436841de09582, type: 2}
+    m_Name: Gallows 01
   - m_Prefab: {fileID: 120252, guid: 3cb0f7d160ecc70489ee11af43612cf7, type: 2}
+    m_Name: Goblin Anvil
   - m_Prefab: {fileID: 162130, guid: 4841e94700c105c4f8f219f157c93d70, type: 2}
+    m_Name: Goblin Chest 01
   - m_Prefab: {fileID: 177122, guid: 367e99c9f8d1557478c632e31826f6eb, type: 2}
+    m_Name: Goblin Crane 01
   - m_Prefab: {fileID: 165682, guid: d7c0c3743dc34414bbff2b13805bc792, type: 2}
+    m_Name: Goblin Deadboar 01
   - m_Prefab: {fileID: 162376, guid: ffc1fa69a27b968418be43711e3d6a11, type: 2}
+    m_Name: Goblin Deadboar 02
   - m_Prefab: {fileID: 178200, guid: 97768fb8e0c983442bdd46e01743d986, type: 2}
+    m_Name: Goblin Dig Wheel 01
   - m_Prefab: {fileID: 159590, guid: 00417576c24facf478970ca12241595e, type: 2}
+    m_Name: Goblin Fence 01
   - m_Prefab: {fileID: 149916, guid: b5f18a5552d030e4888cb25a0a923da7, type: 2}
+    m_Name: Goblin Forge 01
   - m_Prefab: {fileID: 104570, guid: 0d7b4c05cd29c0a4d88a781918a6713d, type: 2}
+    m_Name: Goblin Ladder 01
   - m_Prefab: {fileID: 112872, guid: 33e2fe4064b32f1488dd7456c9f66b03, type: 2}
+    m_Name: Goblin Log Pile 01
   - m_Prefab: {fileID: 107742, guid: 724b39c02272b324c9d893bed2821dd6, type: 2}
+    m_Name: Goblin Log Pile 02
   - m_Prefab: {fileID: 134326, guid: e3dd5ae7fef5a16408f1f48b07898179, type: 2}
+    m_Name: Goblin Pole 01
   - m_Prefab: {fileID: 136874, guid: 9005fc399fee5cb4a856a1648ef8b43c, type: 2}
+    m_Name: Goblin Seat 01
   - m_Prefab: {fileID: 181044, guid: 49e8b5cf68968ef47a513793872af43f, type: 2}
+    m_Name: Goblin Seat 02
   - m_Prefab: {fileID: 158174, guid: ca4f940bc4414304b8e9ef8da71ab136, type: 2}
+    m_Name: Goblin Spike 01
   - m_Prefab: {fileID: 139830, guid: 2bb8f3e109ba68f4694f66dacf43b4bc, type: 2}
+    m_Name: Goblin Spike 02
   - m_Prefab: {fileID: 137660, guid: 7c6429af66aabb747907d6e40d2449d2, type: 2}
+    m_Name: Goblin Spike 03
   - m_Prefab: {fileID: 153856, guid: 9b1b11a906a8be847980fb4a0f61714a, type: 2}
+    m_Name: Goblin Spike 04
   - m_Prefab: {fileID: 159610, guid: f845dde629ec1ed4f87270f18e06de7a, type: 2}
+    m_Name: Goblin Throne 01
   - m_Prefab: {fileID: 110534, guid: e8083a212f0fd9e41bd4acb92f21d12c, type: 2}
+    m_Name: Gold Bar 01
   - m_Prefab: {fileID: 142260, guid: bd6e6555cb45b0546a98e3d67ed09573, type: 2}
+    m_Name: Gold Bar 02
   - m_Prefab: {fileID: 116960, guid: f8ff394bc85a387479a757c834e51114, type: 2}
+    m_Name: Grave 01
   - m_Prefab: {fileID: 191860, guid: 0d76499cc822cf4449c0aa69122deeb4, type: 2}
+    m_Name: Grave 02
   - m_Prefab: {fileID: 184682, guid: 9f532ed8b6689a340a3ddd144e6cfce3, type: 2}
+    m_Name: Graveyard Fence 01
   - m_Prefab: {fileID: 178406, guid: 90f6c826f54b0254ba570add963dcb44, type: 2}
+    m_Name: Graveyard Fence 02
   - m_Prefab: {fileID: 116578, guid: 935fe9339976fed4db92ebc4fcdf1d67, type: 2}
+    m_Name: Graveyard Fence 03
   - m_Prefab: {fileID: 107204, guid: fafe26c490c632d48bbca10de4bc5b59, type: 2}
+    m_Name: Grind Stone 01
   - m_Prefab: {fileID: 112498, guid: c402b2dbeb3947243b87b8c4ce8b324c, type: 2}
+    m_Name: Guillotine 01
   - m_Prefab: {fileID: 192388, guid: 908a3bb2cf3f82745ba3bf7c13e0b65b, type: 2}
+    m_Name: Hanging Cages 01
   - m_Prefab: {fileID: 179482, guid: cc7d8c003e2d94e4b832305b98ed6e76, type: 2}
+    m_Name: Human Stairs
   - m_Prefab: {fileID: 189972, guid: 15d805f1f86fdec4aab88ab72530eba3, type: 2}
+    m_Name: Pillar 01
   - m_Prefab: {fileID: 171814, guid: ddc8ea362c5eb6a44a6e46aeeadaf1cf, type: 2}
+    m_Name: Pumpkin 01
   - m_Prefab: {fileID: 194354, guid: f4438f3ee1d88ce4eb2432ce5087299f, type: 2}
+    m_Name: Sign Post 01
   - m_Prefab: {fileID: 149272, guid: cff0581daae319142bf4aef838a7051e, type: 2}
+    m_Name: Sign Post 02
   - m_Prefab: {fileID: 197014, guid: 40d19899bcd718c43a5c3fe8c15e332e, type: 2}
+    m_Name: Sign Post 03
   - m_Prefab: {fileID: 145376, guid: 2360b001fc44427439b74d4cf7b0426d, type: 2}
+    m_Name: Skull Pole 01
   - m_Prefab: {fileID: 117022, guid: 53f1e948b6f320c4e86866b17f95d031, type: 2}
+    m_Name: Standing Stone 01
   - m_Prefab: {fileID: 101534, guid: efd5024def68ed245ac01544690769f6, type: 2}
+    m_Name: Standing Stone 02
   - m_Prefab: {fileID: 131630, guid: 6e550d72684ecf945bdb2b6998de47bb, type: 2}
+    m_Name: Standing Stone 03
   - m_Prefab: {fileID: 120044, guid: 40bddab881162da4ca7d00131c23cd26, type: 2}
+    m_Name: Standing Stone 04
   - m_Prefab: {fileID: 139756, guid: cefa1184d4d119e47b14dab23b701e0a, type: 2}
+    m_Name: Standing Stone 05
   - m_Prefab: {fileID: 193930, guid: a589b232c5eaac84cba827157c32a3ba, type: 2}
+    m_Name: Standing Stone 06
   - m_Prefab: {fileID: 137478, guid: 2738b3468332ad1489435292141ee650, type: 2}
+    m_Name: Stocks 01
   - m_Prefab: {fileID: 162472, guid: 8001303f6d5da674db5b3b87d913bb9d, type: 2}
+    m_Name: Stone Circle 01
   - m_Prefab: {fileID: 163788, guid: 857745b42b76e1540830a75719469463, type: 2}
+    m_Name: Sword In Stone 01
   - m_Prefab: {fileID: 169392, guid: 9776edcd765e22545919ed84d2f85f90, type: 2}
+    m_Name: Target 01
   - m_Prefab: {fileID: 151132, guid: afb1de9cca85ce248a75f02d1af04389, type: 2}
+    m_Name: Torch 01
   - m_Prefab: {fileID: 179550, guid: 1e7fa1d914316e24ea89c6b6e8fc0206, type: 2}
+    m_Name: Torch 02
   - m_Prefab: {fileID: 170386, guid: 7dd1406ddff7e0840b1838dcbd1f608e, type: 2}
+    m_Name: Training Dummy 01
   - m_Prefab: {fileID: 176824, guid: 09dd50c2b32a8844eb908044d03a99f5, type: 2}
+    m_Name: Training Dummy 02
   - m_Prefab: {fileID: 185630, guid: 915d57cf7bbb57c4aac3e318f25b7800, type: 2}
+    m_Name: Undead Anvil 01
   - m_Prefab: {fileID: 174246, guid: 61b75a7c91dbf604287b8d02081b338a, type: 2}
+    m_Name: Undead Chest 01
   - m_Prefab: {fileID: 145202, guid: cb0a8ce8ec002a74e8c92ce757cb226e, type: 2}
+    m_Name: Undead Forge 01
   - m_Prefab: {fileID: 123018, guid: b10fce5081ce4a140b76f31053efb8a5, type: 2}
+    m_Name: Undead Graves 01
   - m_Prefab: {fileID: 125244, guid: 9395c63d26f2f4c4db61bbf3d525a62b, type: 2}
+    m_Name: Undead Graves 02
   - m_Prefab: {fileID: 187362, guid: bfbc2fe56d786ae45abb765207686102, type: 2}
+    m_Name: Undead Graves 03
   - m_Prefab: {fileID: 110076, guid: 4067ab5bb64a9dc4d91ab57b84c52b4b, type: 2}
+    m_Name: Undead Graves 04
   - m_Prefab: {fileID: 175336, guid: 41f8f8ed82dfc2646befdcc48e148665, type: 2}
+    m_Name: Undead Graves 05
   - m_Prefab: {fileID: 165748, guid: cdabf0b6d14d47941a4422af45d43f4e, type: 2}
+    m_Name: Walkway 01
   - m_Prefab: {fileID: 179856, guid: 3643249ab68dd444ca80f17c71e0079f, type: 2}
+    m_Name: Walkway 02
   - m_Prefab: {fileID: 163654, guid: e134c3380667bae489e259536cdf7f4b, type: 2}
+    m_Name: Washingline 01
   - m_Prefab: {fileID: 160786, guid: 7da17baa919d3ec4f866129c5784a452, type: 2}
+    m_Name: Water Trough 01
   - m_Prefab: {fileID: 150466, guid: 56c9d953084f58a4fb64e5da0ad00e1d, type: 2}
+    m_Name: Well 01
   - m_Prefab: {fileID: 116226, guid: 086079326264aac4eb4ab7cd5cfec5ec, type: 2}
+    m_Name: Wheel 01
   - m_Prefab: {fileID: 166210, guid: f052f6651bacebe4a8dbf87094c4c490, type: 2}
+    m_Name: Wheel 02

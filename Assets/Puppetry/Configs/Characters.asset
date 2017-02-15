@@ -16,6 +16,8 @@ MonoBehaviour:
     type: 2}
   Scale: 1
   TrimRegex: ^SF_Character_
-  SlotCount: 8
+  SlotCount: 4
+  PopulationFolder: {fileID: 102900000, guid: 9a2ff4540a73c994d9f8e0cc1eee18f8, type: 3}
   Props:
   - m_Prefab: {fileID: 1774800234531344, guid: e061099f005f1cb489df4dcc3dce7e0f, type: 2}
+    m_Name: Character
