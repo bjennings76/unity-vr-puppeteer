@@ -21,7 +21,7 @@ public class JointRenderer : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (!m_Joint) return;
+		if (!m_Joint || !m_Joint.connectedBody) return;
 		var sourceAnchor = transform.TransformPoint(m_Joint.anchor);
 		var targetAnchor = m_Joint.connectedBody.transform.TransformPoint(m_Joint.connectedAnchor);
 		m_Line.SetPositions(new[] {sourceAnchor, targetAnchor});

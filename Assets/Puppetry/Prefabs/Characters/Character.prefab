@@ -354,6 +354,7 @@ GameObject:
   - component: {fileID: 138702750040398668}
   - component: {fileID: 114251078425952004}
   - component: {fileID: 114207284375921506}
+  - component: {fileID: 114769513951309332}
   m_Layer: 5
   m_Name: Base Stick
   m_TagString: Untagged
@@ -2460,7 +2461,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -2491,7 +2492,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -4928,6 +4929,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ObjectToUnlock: {fileID: 54197909777189394}
+  m_ObjectToReset: {fileID: 4551005981172946}
   m_StayUnlockedVelocity: 2
 --- !u!114 &114467244478224150
 MonoBehaviour:
@@ -6077,6 +6079,17 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+--- !u!114 &114769513951309332
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1294394784675670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e3d1a55c15554418ac8ac0754b29d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114788335004261038
 MonoBehaviour:
   m_ObjectHideFlags: 1

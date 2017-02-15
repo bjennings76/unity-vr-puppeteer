@@ -1,28 +1,29 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using Utils;
 using VRTK;
 
 public class UnlockOnGrab : MonoBehaviour {
 	[SerializeField] private Rigidbody m_ObjectToUnlock;
+	[SerializeField] private Transform m_ObjectToReset;
 	[SerializeField] private float m_StayUnlockedVelocity = 3f;
 
 	private Transform m_InteractingObject;
-	private Vector3 m_LastInteractingObjectPosition;
 	private Collider[] m_Colliders;
 	private Renderer[] m_Renderers;
-
-	private float Velocity { get { return m_InteractingObject ? (m_InteractingObject.position - m_LastInteractingObjectPosition).magnitude / Time.deltaTime : 0; } }
+	private JointLocker[] m_Joints;
+	private Vector3 m_ResetObjectPosition;
+	private Quaternion m_ResetObjectRotation;
 
 	private void Start() {
+		if (m_ObjectToReset) {
+			m_ResetObjectPosition = m_ObjectToReset.localPosition;
+			m_ResetObjectRotation = m_ObjectToReset.localRotation;
+		}
 		GetComponentsInChildren<VRTK_InteractableObject>().ForEach(RegisterInteractable);
 		m_Colliders = m_ObjectToUnlock.GetComponentsInChildren<Collider>();
 		m_Renderers = m_ObjectToUnlock.GetComponentsInChildren<Renderer>();
-	}
-
-	private void Update() {
-		if (m_InteractingObject) {
-			m_LastInteractingObjectPosition = m_InteractingObject.position;
-		}
+		m_Joints = m_ObjectToUnlock.GetComponentsInChildren<Joint>().Where(j => !j.GetComponent<SkipJointLock>()).Select(j => new JointLocker(j)).ToArray();
 	}
 
 	private void RegisterInteractable(VRTK_InteractableObject interactable) {
@@ -35,7 +36,6 @@ public class UnlockOnGrab : MonoBehaviour {
 		SetLock(false);
 		if (!e.interactingObject) return;
 		m_InteractingObject = e.interactingObject.transform;
-		m_LastInteractingObjectPosition = m_InteractingObject.position;
 	}
 
 	private void OnUngrabbed(object sender, InteractableObjectEventArgs e) {
@@ -46,8 +46,25 @@ public class UnlockOnGrab : MonoBehaviour {
 	}
 
 	private void SetLock(bool value) {
+		if (value && m_ObjectToReset) {
+			m_ObjectToReset.localPosition = m_ResetObjectPosition;
+			m_ObjectToReset.localRotation = m_ResetObjectRotation;
+		}
 		m_ObjectToUnlock.isKinematic = value;
 		m_Colliders.ForEach(c => c.enabled = value);
 		m_Renderers.ForEach(r => r.enabled = value);
+		m_Joints.ForEach(j => j.enabled = value);
+	}
+
+	private class JointLocker {
+		private readonly Joint m_Joint;
+		private readonly Rigidbody m_ConnectedBody;
+
+		public bool enabled { set { m_Joint.connectedBody = value ? m_ConnectedBody : null; } }
+
+		public JointLocker(Joint joint) {
+			m_Joint = joint;
+			m_ConnectedBody = joint.connectedBody;
+		}
 	}
 }
