@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
@@ -24,6 +25,8 @@ public class PropSlot : MonoBehaviour {
 
 	private PropDispenser Dispenser { get { return m_Dispenser ? m_Dispenser : (m_Dispenser = GetComponentInParent<PropDispenser>()); } }
 
+	private PropType PropType { get { return Dispenser ? Dispenser.PropType : null; } }
+
 	private static Transform PropRoot { get { return m_PropRoot ? m_PropRoot : (m_PropRoot = new GameObject("Props").transform); } }
 
 	private void Init() {
@@ -42,9 +45,25 @@ public class PropSlot : MonoBehaviour {
 		Init();
 
 		UnityUtils.Destroy(m_Instance);
+		var scale = 1f;
 		var bounds = m_Creator.GetPreviewBounds();
-		var scale = GetPreviewScale(bounds);
+
+		switch (PropType.ScaleStyle) {
+			case PropType.PreviewScaleStyle.BoundingBox:
+				scale = GetPreviewScale(bounds);
+				break;
+			case PropType.PreviewScaleStyle.ActualSize:
+				scale = PropType.Scale;
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+
 		m_Scaler = GetPropScaler(scale);
+
+		if (PropType.ScaleStyle == PropType.PreviewScaleStyle.BoundingBox) {
+		}
+
 		var position = -bounds.center * scale + m_SpawnPoint.position;
 		var rotation = m_SpawnPoint.rotation;
 
@@ -57,13 +76,13 @@ public class PropSlot : MonoBehaviour {
 		GetCollideable(m_Instance, bounds);
 		m_Interactable = GetInteractable(m_Instance);
 		m_Interactable.InteractableObjectGrabbed += OnInstanceGrabbed;
-		m_Label.text = Dispenser.PropType.GetName(m_Creator.Name);
+		m_Label.text = PropType.GetName(m_Creator.Name);
 
 		return m_Instance;
 	}
 
 	private void OnInstanceGrabbed(object sender, InteractableObjectEventArgs e) {
-		m_Instance.transform.DOScale(Vector3.one * m_Dispenser.PropType.Scale, 1).SetEase(Ease.OutElastic);
+		if (PropType.ScaleStyle != PropType.PreviewScaleStyle.ActualSize) m_Instance.transform.DOScale(Vector3.one * PropType.Scale, 1).SetEase(Ease.OutElastic);
 		m_Interactable.InteractableObjectGrabbed -= OnInstanceGrabbed;
 		m_Interactable.InteractableObjectUngrabbed += OnInstanceUngrabbed;
 	}
