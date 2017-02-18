@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Utils;
 
-public class ModelSwapperMultiProp : MonoBehaviour, IMultiProp {
+public class ModelSwapperMultiProp : Prop, IMultiProp {
 	[SerializeField] private ModelSwapper m_ModelSwapper;
 
 	public IEnumerable<IPropCreator> GetPropCreators() { return m_ModelSwapper.Models.Select((m, i) => new ModelSwapperProp(gameObject, i, m.name) as IPropCreator); }
