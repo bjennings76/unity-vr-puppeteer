@@ -64,7 +64,7 @@ public class PropSlot : MonoBehaviour {
 		if (PropType.ScaleStyle == PropType.PreviewScaleStyle.BoundingBox) {
 		}
 
-		var position = -bounds.center * scale + m_SpawnPoint.position;
+		var position = PropType.MountOnPivot ? m_SpawnPoint.position : -bounds.center * scale + m_SpawnPoint.position;
 		var rotation = m_SpawnPoint.rotation;
 
 		m_Instance = m_Creator.Create(p => {

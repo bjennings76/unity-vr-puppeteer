@@ -15,6 +15,7 @@ public class PropType : ScriptableObject {
 	public Sprite Icon;
 	public PropSlot SlotPrefab;
 	public float Scale = 1;
+	public bool MountOnPivot;
 	public string TrimRegex;
 	[Range(1, 20)] public int SlotCount = 8;
 	public PreviewScaleStyle ScaleStyle;
