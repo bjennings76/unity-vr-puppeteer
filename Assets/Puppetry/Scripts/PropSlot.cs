@@ -15,7 +15,7 @@ public class PropSlot : MonoBehaviour {
 	private IPropCreator m_Creator;
 	private PropDispenser m_Dispenser;
 	private BoxCollider m_Box;
-	private VRTK_InteractableObject m_Interactable;
+	private VRTK_InteractableObject[] m_Interactables;
 	private bool m_Init;
 	private Transform m_Scaler;
 	private static Transform m_PropRoot;
@@ -41,11 +41,11 @@ public class PropSlot : MonoBehaviour {
 		Create();
 	}
 
-	public GameObject Create() {
+	public void Create() {
 		Init();
 
 		UnityUtils.Destroy(m_Instance);
-		var scale = 1f;
+		float scale;
 		var bounds = m_Creator.GetPreviewBounds();
 
 		switch (PropType.ScaleStyle) {
@@ -61,37 +61,35 @@ public class PropSlot : MonoBehaviour {
 
 		m_Scaler = GetPropScaler(scale);
 
-		if (PropType.ScaleStyle == PropType.PreviewScaleStyle.BoundingBox) {
-		}
-
 		var position = PropType.MountOnPivot ? m_SpawnPoint.position : -bounds.center * scale + m_SpawnPoint.position;
 		var rotation = m_SpawnPoint.rotation;
 
 		m_Instance = m_Creator.Create(p => {
 			var instance = Instantiate(p, position, rotation, m_Scaler);
-			instance.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Hide());
+			instance.GetComponentsInChildren<HideInPropPreview>(true).ForEach(c => c.Hide());
 			return instance;
 		});
 
 		GetCollideable(m_Instance, bounds);
-		m_Interactable = GetInteractable(m_Instance);
-		m_Interactable.InteractableObjectGrabbed += OnInstanceGrabbed;
+		SetUpInteractable(m_Instance);
+		m_Interactables = m_Instance.GetComponentsInChildren<VRTK_InteractableObject>();
+		m_Interactables.ForEach(i => i.InteractableObjectGrabbed += OnInstanceGrabbed);
 		m_Label.text = PropType.GetName(m_Creator.Name);
-
-		return m_Instance;
 	}
 
 	private void OnInstanceGrabbed(object sender, InteractableObjectEventArgs e) {
 		if (PropType.ScaleStyle != PropType.PreviewScaleStyle.ActualSize) m_Instance.transform.DOScale(Vector3.one * PropType.Scale, 1).SetEase(Ease.OutElastic);
-		m_Interactable.InteractableObjectGrabbed -= OnInstanceGrabbed;
-		m_Interactable.InteractableObjectUngrabbed += OnInstanceUngrabbed;
+		m_Interactables.ForEach(i => {
+			i.InteractableObjectGrabbed -= OnInstanceGrabbed;
+			i.InteractableObjectUngrabbed += OnInstanceUngrabbed;
+		});
 	}
 
 	private void OnInstanceUngrabbed(object sender, InteractableObjectEventArgs e) {
-		m_Interactable.InteractableObjectUngrabbed -= OnInstanceUngrabbed;
+		m_Interactables.ForEach(i => i.InteractableObjectUngrabbed -= OnInstanceUngrabbed);
 		m_Instance.transform.SetParent(PropRoot);
-		m_Instance.GetComponentsInChildren<HideInPropPreview>().ForEach(c => c.Show());
-		UnityUtils.Destroy(m_Scaler);
+		m_Instance.GetComponentsInChildren<HideInPropPreview>(true).ForEach(c => c.Show());
+		UnityUtils.Destroy(m_Scaler.gameObject);
 		m_Instance = null;
 		Create();
 	}
@@ -114,16 +112,15 @@ public class PropSlot : MonoBehaviour {
 		return boxCollider;
 	}
 
-	private static VRTK_InteractableObject GetInteractable(GameObject instance) {
+	private static void SetUpInteractable(GameObject instance) {
 		var interactable = instance.GetComponentInChildren<VRTK_InteractableObject>();
-		if (interactable) return interactable;
+		if (interactable) return;
 		interactable = instance.AddComponent<VRTK_InteractableObject>();
 		interactable.isGrabbable = true;
 		interactable.touchHighlightColor = Color.yellow;
 		interactable.grabAttachMechanicScript = interactable.GetOrAddComponent<VRTK_ChildOfControllerGrabAttach>();
 		interactable.grabAttachMechanicScript.precisionGrab = true;
 		interactable.secondaryGrabActionScript = interactable.GetOrAddComponent<VRTK_SwapControllerGrabAction>();
-		return interactable;
 	}
 
 	private Transform GetPropScaler(float scale) {

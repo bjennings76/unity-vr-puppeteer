@@ -20,10 +20,10 @@ public class UnlockOnGrab : MonoBehaviour {
 			m_ResetObjectPosition = m_ObjectToReset.localPosition;
 			m_ResetObjectRotation = m_ObjectToReset.localRotation;
 		}
-		GetComponentsInChildren<VRTK_InteractableObject>().ForEach(RegisterInteractable);
-		m_Colliders = m_ObjectToUnlock.GetComponentsInChildren<Collider>();
-		m_Renderers = m_ObjectToUnlock.GetComponentsInChildren<Renderer>();
-		m_Joints = m_ObjectToUnlock.GetComponentsInChildren<Joint>().Where(j => !j.GetComponent<SkipJointLock>()).Select(j => new JointLocker(j)).ToArray();
+		GetComponentsInChildren<VRTK_InteractableObject>(true).ForEach(RegisterInteractable);
+		m_Colliders = m_ObjectToUnlock.GetComponentsInChildren<Collider>(true);
+		m_Renderers = m_ObjectToUnlock.GetComponentsInChildren<Renderer>(true);
+		m_Joints = m_ObjectToUnlock.GetComponentsInChildren<Joint>(true).Where(j => !j.GetComponent<SkipJointLock>()).Select(j => new JointLocker(j)).ToArray();
 	}
 
 	private void RegisterInteractable(VRTK_InteractableObject interactable) {
