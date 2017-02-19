@@ -21,8 +21,9 @@ namespace Utils {
 		private float m_RotationSpeed;
 		private float m_LastRotationTime;
 		private bool m_WasTracking;
+		private float m_Angle;
 
-		public float Angle { get; private set; }
+		public float Angle { get { return m_Angle; } private set { m_Angle = MathUtils.ClampAngle(value); } }
 
 		private Transform Target { get { return m_Targets.GetLast(); } }
 
@@ -45,11 +46,13 @@ namespace Utils {
 			if (m_WasTracking) {
 				m_WasTracking = false;
 				this.DOKill();
-				DOTween.To(() => m_RotationSpeed, s => m_RotationSpeed = s, 0f, m_Rigidbody.angularDrag).SetSpeedBased().SetTarget(this);
+				var duration = Mathf.Clamp(m_RotationSpeed / (m_Rigidbody.angularDrag > 0 ? m_Rigidbody.angularDrag : 1), 0, 5);
+				DOTween.To(() => m_RotationSpeed, s => m_RotationSpeed = s, 0f, duration).SetTarget(this).SetEase(Ease.OutQuad);
 			}
 
 			LogRotation();
 			m_Transform.Rotate(m_Axis, m_RotationSpeed, Space.World);
+			Angle += m_RotationSpeed;
 		}
 
 		private void LogRotation() {
@@ -64,8 +67,9 @@ namespace Utils {
 			m_LookPos = ProjectPointOnPlane(m_Axis, m_Transform.position, Target.position);
 			var lastLook = m_LookDir;
 			m_LookDir = m_LookPos - m_Transform.position;
-			Angle = SignedAngleBetween(lastLook, m_LookDir, m_Axis);
-			m_Transform.Rotate(m_Axis, Angle, Space.World);
+			var rotationAmount = SignedAngleBetween(lastLook, m_LookDir, m_Axis);
+			m_Transform.Rotate(m_Axis, rotationAmount, Space.World);
+			Angle += rotationAmount;
 
 			LogRotation();
 			m_RotationSpeed = m_RotationDelta * m_Push * m_RotationTimeDelta * 100;
@@ -104,6 +108,6 @@ namespace Utils {
 			return angle * sign;
 		}
 
-		private void OnDrawGizmos() { XDebug.DrawText(transform.position, m_RotationDelta.ToString("N2")); }
+		private void OnDrawGizmos() { XDebug.DrawText(transform.position, string.Format("{0:N2}: Δ{1:N2}", Angle, m_RotationDelta)); }
 	}
 }
