@@ -654,7 +654,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -1757,8 +1757,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 384e5766c4d99474d80afc2529ff7932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Push: 1.2
+  m_MaxSpeed: 5
+  m_Push: 1
   m_Rigidbody: {fileID: 54114997551784966}
+  m_Collider: {fileID: 64942808698341686}
+  m_FrameAverageCount: 3
 --- !u!114 &114613828560232816
 MonoBehaviour:
   m_ObjectHideFlags: 1
