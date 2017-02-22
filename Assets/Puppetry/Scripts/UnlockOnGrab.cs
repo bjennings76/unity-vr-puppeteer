@@ -45,7 +45,7 @@ public class UnlockOnGrab : MonoBehaviour {
 		m_InteractingObject = null;
 	}
 
-	private void SetLock(bool value) {
+	public void SetLock(bool value) {
 		if (value && m_ObjectToReset) {
 			m_ObjectToReset.localPosition = m_ResetObjectPosition;
 			m_ObjectToReset.localRotation = m_ResetObjectRotation;
