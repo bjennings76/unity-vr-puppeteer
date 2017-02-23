@@ -79,9 +79,9 @@ public class PuppetPossession : MonoBehaviour {
 		sourcePivot = sourcePivot ? sourcePivot : target.transform;
 		var targetRigidbody = target.GetOrAddComponent<Rigidbody>();
 		targetRigidbody.isKinematic = true;
-		var sourcePositionOffset = source.transform.position - sourcePivot.position;
 		var sourceRotationOffset = Quaternion.Inverse(sourcePivot.rotation) * source.transform.rotation;
 		source.transform.rotation = target.transform.rotation * sourceRotationOffset;
+		var sourcePositionOffset = source.transform.position - sourcePivot.position;
 		source.transform.position = target.transform.position + sourcePositionOffset;
 		var joint = source.GetOrAddComponent<FixedJoint>();
 		joint.connectedBody = targetRigidbody;
