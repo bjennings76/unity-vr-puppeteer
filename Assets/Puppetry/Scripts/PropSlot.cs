@@ -75,10 +75,14 @@ public class PropSlot : MonoBehaviour {
 		m_Interactables = m_Instance.GetComponentsInChildren<VRTK_InteractableObject>();
 		m_Interactables.ForEach(i => i.InteractableObjectGrabbed += OnInstanceGrabbed);
 		m_Label.text = PropType.GetName(m_Creator.Name);
+
+		var prop = m_Instance.GetOrAddComponent<Prop>();
+		prop.InPreview = true;
 	}
 
 	private void OnInstanceGrabbed(object sender, InteractableObjectEventArgs e) {
 		if (PropType.ScaleStyle != PropType.PreviewScaleStyle.ActualSize) m_Instance.transform.DOScale(Vector3.one * PropType.Scale, 1).SetEase(Ease.OutElastic);
+		m_Instance.GetComponent<Prop>().InPreview = false;
 		m_Interactables.ForEach(i => {
 			i.InteractableObjectGrabbed -= OnInstanceGrabbed;
 			i.InteractableObjectUngrabbed += OnInstanceUngrabbed;
