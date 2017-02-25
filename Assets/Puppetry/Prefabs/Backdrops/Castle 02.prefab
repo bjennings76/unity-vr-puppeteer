@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4265472156318142}
   - component: {fileID: 212076756893592408}
+  - component: {fileID: 114663505943520742}
   m_Layer: 0
   m_Name: Castle 02
   m_TagString: Untagged
@@ -34,12 +35,26 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1632223066513976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.000000029802322, y: 0.88, z: 2.81}
+  m_LocalScale: {x: 0.30318627, y: 0.3031862, z: 0.3031862}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114663505943520742
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1632223066513976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8226b780f458b1448b3f07b9311f244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Root: {fileID: 0}
+  m_PositionOffset: {x: 0.00000002741248, y: 0.88, z: -0.19000006}
+  m_RotationOffset: {x: 0, y: 0, z: 0, w: 1}
 --- !u!212 &212076756893592408
 SpriteRenderer:
   m_ObjectHideFlags: 1
