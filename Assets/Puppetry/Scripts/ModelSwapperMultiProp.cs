@@ -20,11 +20,10 @@ public class ModelSwapperMultiProp : Prop, IMultiProp {
 
 		public override string Name { get { return m_Name; } }
 
-		public override GameObject Create(Func<GameObject, GameObject> instantiate) {
+		public override Prop Create(Func<GameObject, Prop> instantiate) {
 			var instance = base.Create(instantiate);
 			var modelSwapper = instance.GetComponentInChildren<ModelSwapper>();
 			modelSwapper.Index = m_Index;
-			instance.GetOrAddComponent<Prop>();
 			return instance;
 		}
 	}

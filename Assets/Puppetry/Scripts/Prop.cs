@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using Utils;
 
@@ -14,6 +15,14 @@ public class Prop : MonoBehaviour {
 			PreviewChanged();
 		}
 	}
+
+	public PropType PropType { get; set; }
+
+	public virtual void PreviewGrabbed() {
+		if (PropType.ScaleStyle != PropType.PreviewScaleStyle.ActualSize) transform.DOScale(Vector3.one * PropType.Scale, 1).SetEase(Ease.OutElastic);
+	}
+
+	public virtual void PreviewReleased() { }
 
 	protected virtual void PreviewChanged() {
 		m_LastInPreview = m_InPreview;

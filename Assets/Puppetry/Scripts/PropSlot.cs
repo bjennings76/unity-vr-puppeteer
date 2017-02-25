@@ -11,7 +11,7 @@ public class PropSlot : MonoBehaviour {
 	[SerializeField] private Transform m_SpawnPoint;
 	[SerializeField] private Text m_Label;
 
-	private GameObject m_Instance;
+	private Prop m_Instance;
 	private IPropCreator m_Creator;
 	private PropDispenser m_Dispenser;
 	private BoxCollider m_Box;
@@ -44,7 +44,8 @@ public class PropSlot : MonoBehaviour {
 	public void Create() {
 		Init();
 
-		UnityUtils.Destroy(m_Instance);
+		if (m_Instance) UnityUtils.Destroy(m_Instance.gameObject);
+
 		float scale;
 		var bounds = m_Creator.GetPreviewBounds();
 
@@ -68,20 +69,20 @@ public class PropSlot : MonoBehaviour {
 			var instance = Instantiate(p, m_Scaler, false);
 			instance.transform.position = position;
 			instance.transform.rotation = rotation;
-			var prop = instance.GetOrAddComponent<Prop>();
-			prop.InPreview = true;
-			return instance;
+			return instance.GetOrAddComponent<Prop>();
 		});
 
-		GetCollideable(m_Instance, bounds);
-		SetUpInteractable(m_Instance);
+		m_Instance.InPreview = true;
+		m_Instance.PropType = PropType;
+		GetCollideable(m_Instance.gameObject, bounds);
+		SetUpInteractable(m_Instance.gameObject);
 		m_Interactables = m_Instance.GetComponentsInChildren<VRTK_InteractableObject>();
 		m_Interactables.ForEach(i => i.InteractableObjectGrabbed += OnInstanceGrabbed);
 		m_Label.text = PropType.GetName(m_Creator.Name);
 	}
 
 	private void OnInstanceGrabbed(object sender, InteractableObjectEventArgs e) {
-		if (PropType.ScaleStyle != PropType.PreviewScaleStyle.ActualSize) m_Instance.transform.DOScale(Vector3.one * PropType.Scale, 1).SetEase(Ease.OutElastic);
+		m_Instance.PreviewGrabbed();
 		m_Interactables.ForEach(i => {
 			i.InteractableObjectGrabbed -= OnInstanceGrabbed;
 			i.InteractableObjectUngrabbed += OnInstanceUngrabbed;
@@ -89,9 +90,11 @@ public class PropSlot : MonoBehaviour {
 	}
 
 	private void OnInstanceUngrabbed(object sender, InteractableObjectEventArgs e) {
+		m_Instance.PreviewReleased();
+
 		m_Interactables.ForEach(i => i.InteractableObjectUngrabbed -= OnInstanceUngrabbed);
 		m_Instance.transform.SetParent(PropRoot);
-		m_Instance.GetComponent<Prop>().InPreview = false;
+		m_Instance.InPreview = false;
 		UnityUtils.Destroy(m_Scaler.gameObject);
 		m_Instance = null;
 		Create();

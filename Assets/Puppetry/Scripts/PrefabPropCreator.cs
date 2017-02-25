@@ -11,11 +11,7 @@ public class PrefabPropCreator : IPropCreator {
 
 	public PrefabPropCreator(GameObject prefab) { m_Prefab = prefab; }
 
-	public virtual GameObject Create(Func<GameObject, GameObject> instantiate) {
-		var instance = instantiate(m_Prefab);
-		instance.GetOrAddComponent<Prop>();
-		return instance;
-	}
+	public virtual Prop Create(Func<GameObject, Prop> instantiate) { return instantiate(m_Prefab); }
 
 	public Bounds GetPreviewBounds() {
 		var hiders = m_Prefab.GetComponentsInChildren<HideInPropPreview>(true).Where(h => h.gameObject.activeSelf).ToArray();
@@ -28,7 +24,7 @@ public class PrefabPropCreator : IPropCreator {
 
 public interface IPropCreator {
 	string Name { get; }
-	GameObject Create(Func<GameObject, GameObject> instantiate);
+	Prop Create(Func<GameObject, Prop> instantiate);
 	Bounds GetPreviewBounds();
 }
 
