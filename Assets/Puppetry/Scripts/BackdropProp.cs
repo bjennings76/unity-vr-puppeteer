@@ -14,17 +14,21 @@ public class BackdropProp : Prop {
 
 	private BackdropRoot Root { get { return m_Root ? m_Root : (m_Root = FindObjectOfType<BackdropRoot>()); } }
 
-	private void Start() {
-		if (Application.isEditor) InPreview = false;
+	protected override void Update() {
+		base.Update();
+		if (Root && !Application.isPlaying) {
+			TrackPropMovement();
+			TrackRootMovement();
+		}
 	}
 
-	private void Update() {
-		if (!Root || InPreview) return;
-		TrackRootMovement();
-		TrackPropMovement();
+	protected override void PreviewChanged() {
+		base.PreviewChanged();
+		if (!InPreview) MatchRoot();
 	}
 
 	private void MatchRoot() {
+		Root.SetBackdrop(this);
 		transform.position = Root.transform.TransformPoint(m_PositionOffset);
 		transform.rotation = Root.transform.rotation * m_RotationOffset;
 	}

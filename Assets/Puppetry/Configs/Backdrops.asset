@@ -15,8 +15,10 @@ MonoBehaviour:
   SlotPrefab: {fileID: 114643173349212206, guid: 5f4a9b3056e02f547a13c6703db289a1,
     type: 2}
   Scale: 1
+  MountOnPivot: 1
   TrimRegex: 
   SlotCount: 8
+  ScaleStyle: 0
   PopulationFolder: {fileID: 102900000, guid: 10dfe4cae03741646aac7f8ef282416f, type: 3}
   Props:
   - m_Prefab: {fileID: 1554788632851212, guid: 20319bbfac01d2146b1b25436c4c02da, type: 2}

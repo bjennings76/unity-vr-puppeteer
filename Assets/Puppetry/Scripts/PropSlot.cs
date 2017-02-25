@@ -65,8 +65,11 @@ public class PropSlot : MonoBehaviour {
 		var rotation = m_SpawnPoint.rotation;
 
 		m_Instance = m_Creator.Create(p => {
-			var instance = Instantiate(p, position, rotation, m_Scaler);
-			instance.GetComponentsInChildren<HideInPropPreview>(true).ForEach(c => c.Hide());
+			var instance = Instantiate(p, m_Scaler, false);
+			instance.transform.position = position;
+			instance.transform.rotation = rotation;
+			var prop = instance.GetOrAddComponent<Prop>();
+			prop.InPreview = true;
 			return instance;
 		});
 
@@ -75,14 +78,10 @@ public class PropSlot : MonoBehaviour {
 		m_Interactables = m_Instance.GetComponentsInChildren<VRTK_InteractableObject>();
 		m_Interactables.ForEach(i => i.InteractableObjectGrabbed += OnInstanceGrabbed);
 		m_Label.text = PropType.GetName(m_Creator.Name);
-
-		var prop = m_Instance.GetOrAddComponent<Prop>();
-		prop.InPreview = true;
 	}
 
 	private void OnInstanceGrabbed(object sender, InteractableObjectEventArgs e) {
 		if (PropType.ScaleStyle != PropType.PreviewScaleStyle.ActualSize) m_Instance.transform.DOScale(Vector3.one * PropType.Scale, 1).SetEase(Ease.OutElastic);
-		m_Instance.GetComponent<Prop>().InPreview = false;
 		m_Interactables.ForEach(i => {
 			i.InteractableObjectGrabbed -= OnInstanceGrabbed;
 			i.InteractableObjectUngrabbed += OnInstanceUngrabbed;
@@ -92,7 +91,7 @@ public class PropSlot : MonoBehaviour {
 	private void OnInstanceUngrabbed(object sender, InteractableObjectEventArgs e) {
 		m_Interactables.ForEach(i => i.InteractableObjectUngrabbed -= OnInstanceUngrabbed);
 		m_Instance.transform.SetParent(PropRoot);
-		m_Instance.GetComponentsInChildren<HideInPropPreview>(true).ForEach(c => c.Show());
+		m_Instance.GetComponent<Prop>().InPreview = false;
 		UnityUtils.Destroy(m_Scaler.gameObject);
 		m_Instance = null;
 		Create();
