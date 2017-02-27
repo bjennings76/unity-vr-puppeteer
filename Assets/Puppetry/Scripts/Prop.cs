@@ -3,7 +3,7 @@ using UnityEngine;
 using Utils;
 
 public class Prop : MonoBehaviour {
-	[SerializeField] private bool m_InPreview = true;
+	[SerializeField] private bool m_InPreview;
 
 	private HideInPropPreview[] m_HideInPreviewBits;
 	private bool m_LastInPreview;

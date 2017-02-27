@@ -39,6 +39,14 @@ public class BackdropProp : Prop {
 		transform.rotation = Root.transform.rotation * m_RotationOffset;
 	}
 
+	public override void PreviewReleased() {
+		base.PreviewReleased();
+
+		// Remove all interaction bits.
+		GetComponentsInChildren<Collider>().ForEach(c => UnityUtils.Destroy(c));
+		GetComponentsInChildren<Rigidbody>().ForEach(rb => UnityUtils.Destroy(rb));
+	}
+
 	private void TrackPropMovement() {
 		if (transform.position.Approximately(m_LastBackgroundPosition) && 
 			transform.localScale.Approximately(m_LastBackgroundScale) &&

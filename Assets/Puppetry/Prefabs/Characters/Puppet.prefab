@@ -3185,7 +3185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0dedcbb7ad802f4c8a40a0ecfd5f553, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InPreview: 1
+  m_InPreview: 0
   m_ModelSwapper: {fileID: 114043542774523724}
 --- !u!114 &114180034499723008
 MonoBehaviour:

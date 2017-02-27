@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8226b780f458b1448b3f07b9311f244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InPreview: 1
+  m_InPreview: 0
   m_Root: {fileID: 0}
   m_PositionOffset: {x: 0.00000005482496, y: 0.8800001, z: -0.18999963}
   m_ScaleOffset: {x: -0.7767801, y: -0.77678007, z: -0.77678007}

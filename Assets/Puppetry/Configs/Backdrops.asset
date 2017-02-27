@@ -27,3 +27,5 @@ MonoBehaviour:
     m_Name: Castle 02
   - m_Prefab: {fileID: 1342049295333642, guid: 40d0df27f0dbd884b850690b28b17e8a, type: 2}
     m_Name: Castle 03
+  - m_Prefab: {fileID: 1144653202535630, guid: 6b050e629060d5b488c5145ee83eee12, type: 2}
+    m_Name: Elven Castle
