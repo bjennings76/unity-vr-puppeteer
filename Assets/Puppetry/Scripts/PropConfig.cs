@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 
 [CreateAssetMenu(fileName = "PropType")]
-public class PropType : ScriptableObject {
+public class PropConfig : ScriptableObject {
 	public enum PreviewScaleStyle {
 		BoundingBox,
 		ActualSize

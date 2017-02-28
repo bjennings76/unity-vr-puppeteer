@@ -1,6 +1,5 @@
 using UnityEngine;
 
 public class HideInPropPreview : MonoBehaviour {
-	public void Hide() { gameObject.SetActive(false); }
-	public void Show() { gameObject.SetActive(true); }
+	public void SetActive(bool value) { gameObject.SetActive(value); }
 }

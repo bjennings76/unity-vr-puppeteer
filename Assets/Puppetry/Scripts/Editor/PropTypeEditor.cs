@@ -3,11 +3,11 @@ using UnityEditor;
 using UnityEngine;
 using Utils;
 
-[CustomEditor(typeof(PropType))]
+[CustomEditor(typeof(PropConfig))]
 public class PropTypeEditor : Editor {
-	private PropType m_Target;
+	private PropConfig m_Target;
 
-	private PropType Target { get { return m_Target ? m_Target : (m_Target = target as PropType); } }
+	private PropConfig Target { get { return m_Target ? m_Target : (m_Target = target as PropConfig); } }
 
 	public override void OnInspectorGUI() {
 		EditorGUILayout.Space();
