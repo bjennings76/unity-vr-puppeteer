@@ -12,7 +12,7 @@ public class Prop : MonoBehaviour {
 	private bool m_LastInPreview;
 	private PropConfig m_Config;
 
-	private bool InPreview {
+	protected bool InPreview {
 		get { return m_InPreview; }
 		set {
 			if (m_InPreview == value) return;

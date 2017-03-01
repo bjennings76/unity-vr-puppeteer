@@ -13,5 +13,6 @@ public class BackdropRoot : Singleton<BackdropRoot> {
 		if (m_CurrentBackdrop == backdrop) return;
 		if (m_CurrentBackdrop) UnityUtils.Destroy(m_CurrentBackdrop.gameObject);
 		m_CurrentBackdrop = backdrop;
+		backdrop.transform.SetParent(transform, true);
 	}
 }
