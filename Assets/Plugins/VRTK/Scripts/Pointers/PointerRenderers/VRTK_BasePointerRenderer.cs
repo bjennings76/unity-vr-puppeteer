@@ -113,6 +113,15 @@ namespace VRTK
         }
 
         /// <summary>
+        /// The ResetPointerObjects method is used to destroy any existing pointer objects and recreate them at runtime.
+        /// </summary>
+        public virtual void ResetPointerObjects()
+        {
+            DestroyPointerObjects();
+            CreatePointerObjects();
+        }
+
+        /// <summary>
         /// The Toggle Method is used to enable or disable the pointer renderer.
         /// </summary>
         /// <param name="pointerState">The activation state of the pointer.</param>
@@ -192,6 +201,15 @@ namespace VRTK
         public virtual bool IsCursorVisible()
         {
             return (cursorVisibility == VisibilityStates.AlwaysOn || cursorVisible);
+        }
+
+        /// <summary>
+        /// The IsValidCollision method determines if the pointer is currently in it's valid collision state.
+        /// </summary>
+        /// <returns>Returns true if the pointer is in a valid collision, returns false if the pointer is in an invalid collision state.</returns>
+        public virtual bool IsValidCollision()
+        {
+            return (currentColor != invalidCollisionColor);
         }
 
         protected abstract void CreatePointerObjects();
@@ -382,7 +400,7 @@ namespace VRTK
 
         protected virtual void ChangeColor(Color givenColor)
         {
-            if ((playareaCursor && playareaCursor.IsActive() && playareaCursor.HasCollided()) || !ValidDestination())
+            if ((playareaCursor && playareaCursor.IsActive() && playareaCursor.HasCollided()) || !ValidDestination() || (controllingPointer && !controllingPointer.CanSelect()))
             {
                 givenColor = invalidCollisionColor;
             }

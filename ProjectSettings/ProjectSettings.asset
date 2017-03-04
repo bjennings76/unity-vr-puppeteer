@@ -384,7 +384,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: VRTK_SDK_STEAMVR;XDEBUG;ENABLE_PLAYFABSERVER_API
+    1: ENABLE_PLAYFABSERVER_API;XDEBUG
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
