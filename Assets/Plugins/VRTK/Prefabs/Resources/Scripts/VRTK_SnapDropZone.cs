@@ -65,6 +65,8 @@ namespace VRTK
         public float snapDuration = 0f;
         [Tooltip("If this is checked then the scaled size of the snap drop zone will be applied to the object that is snapped to it.")]
         public bool applyScalingOnSnap = false;
+        [Tooltip("If the offset from the snap point should be maintained.")]
+        public bool maintainOffsetToSnap;
         [Tooltip("The colour to use when showing the snap zone is active.")]
         public Color highlightColor;
         [Tooltip("The highlight object will always be displayed when the snap drop zone is available even if a valid item isn't being hovered over.")]
@@ -449,18 +451,21 @@ namespace VRTK
             var storedKinematicState = ioCheck.isKinematic;
             ioCheck.isKinematic = true;
 
+            var endPosition = maintainOffsetToSnap ? startPosition : endSettings.transform.position;
+            var endRotation = maintainOffsetToSnap ? startRotation : endSettings.transform.rotation;
+
             while (elapsedTime <= duration)
             {
                 elapsedTime += Time.deltaTime;
-                ioTransform.position = Vector3.Lerp(startPosition, endSettings.transform.position, (elapsedTime / duration));
-                ioTransform.rotation = Quaternion.Lerp(startRotation, endSettings.transform.rotation, (elapsedTime / duration));
+                ioTransform.position = Vector3.Lerp(startPosition, endPosition, (elapsedTime / duration));
+                ioTransform.rotation = Quaternion.Lerp(startRotation, endRotation, (elapsedTime / duration));
                 ioTransform.localScale = Vector3.Lerp(startScale, endScale, (elapsedTime / duration));
                 yield return null;
             }
 
             //Force all to the last setting in case anything has moved during the transition
-            ioTransform.position = endSettings.transform.position;
-            ioTransform.rotation = endSettings.transform.rotation;
+            ioTransform.position = endPosition;
+            ioTransform.rotation = endRotation;
             ioTransform.localScale = endScale;
 
             ioCheck.isKinematic = storedKinematicState;
