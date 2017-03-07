@@ -654,7 +654,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -956,6 +956,7 @@ MonoBehaviour:
   disableWhenIdle: 1
   touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
+  ignoredColliders: []
   isGrabbable: 0
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
@@ -971,7 +972,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  m_Type: {fileID: 11400000, guid: 907d69cb45c922f42b16d738beccabf4, type: 2}
+  m_Config: {fileID: 0}
   m_Dispenser: {fileID: 114216985138838482}
 --- !u!114 &114153405579932248
 MonoBehaviour:
@@ -1672,6 +1673,7 @@ MonoBehaviour:
   disableWhenIdle: 1
   touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
+  ignoredColliders: []
   isGrabbable: 0
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
@@ -1687,7 +1689,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  m_Type: {fileID: 11400000, guid: 87706f25e9d89ef4190d491afdfcaae0, type: 2}
+  m_Config: {fileID: 0}
   m_Dispenser: {fileID: 114216985138838482}
 --- !u!114 &114216985138838482
 MonoBehaviour:
@@ -1700,7 +1702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8165754eb2e697c499bc4078d83ef5f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PropType: {fileID: 11400000, guid: 907d69cb45c922f42b16d738beccabf4, type: 2}
+  m_PropConfig: {fileID: 11400000, guid: 87706f25e9d89ef4190d491afdfcaae0, type: 2}
   m_SpawnPoint: {fileID: 4195380023158724}
   m_Spinner: {fileID: 114371538619949640}
 --- !u!114 &114285059364393608
@@ -1729,6 +1731,7 @@ MonoBehaviour:
   disableWhenIdle: 1
   touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
+  ignoredColliders: []
   isGrabbable: 0
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
@@ -1744,7 +1747,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  m_Type: {fileID: 11400000, guid: a822ce0281bf704479e26dbb0a830139, type: 2}
+  m_Config: {fileID: 0}
   m_Dispenser: {fileID: 114216985138838482}
 --- !u!114 &114371538619949640
 MonoBehaviour:
@@ -3623,6 +3626,7 @@ MonoBehaviour:
   disableWhenIdle: 1
   touchHighlightColor: {r: 1, g: 1, b: 0, a: 0}
   allowedTouchControllers: 0
+  ignoredColliders: []
   isGrabbable: 0
   holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
@@ -3638,7 +3642,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  m_Type: {fileID: 11400000, guid: e9600f650a690fe4ba4ffa1690ea4d7c, type: 2}
+  m_Config: {fileID: 0}
   m_Dispenser: {fileID: 114216985138838482}
 --- !u!114 &114862252177171594
 MonoBehaviour:
@@ -3652,6 +3656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
+  unhighlightOnDisable: 1
   emissionDarken: 50
   customMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!212 &212057664683720174
