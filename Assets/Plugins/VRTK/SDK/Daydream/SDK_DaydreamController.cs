@@ -46,6 +46,15 @@ namespace VRTK
         }
 
         /// <summary>
+        /// The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
+        /// </summary>
+        /// <param name="index">The index of the controller.</param>
+        /// <param name="options">A dictionary of generic options that can be used to within the fixed update.</param>
+        public override void ProcessFixedUpdate(uint index, Dictionary<string, object> options)
+        {
+        }
+
+        /// <summary>
         /// The GetControllerDefaultColliderPath returns the path to the prefab that contains the collider objects for the default controller of this SDK.
         /// </summary>
         /// <param name="hand">The controller hand to check for</param>
@@ -163,7 +172,7 @@ namespace VRTK
             controller = GetSDKManagerControllerRightHand(actual);
             if ((controller == null) && actual)
             {
-                controller = GameObject.Find("GvrControllerPointer/Controller");
+                controller = VRTK_SharedMethods.FindEvenInactiveGameObject<GvrControllerVisualManager>("/Controller");
             }
             if (controller != null)
             {
@@ -235,7 +244,21 @@ namespace VRTK
             var model = GetSDKManagerControllerModelForHand(hand);
             if (!model)
             {
-                model = GameObject.Find("DaydreamCameraRig/GvrControllerPointer/Controller"); //TODO: CAMERA_RIG constant at top?
+                GameObject controller = null;
+                switch (hand)
+                {
+                    case ControllerHand.Left:
+                        controller = GetControllerLeftHand(true);
+                        break;
+                    case ControllerHand.Right:
+                        controller = GetControllerRightHand(true);
+                        break;
+                }
+
+                if (controller != null)
+                {
+                    model = controller;
+                }
             }
             return model;
         }

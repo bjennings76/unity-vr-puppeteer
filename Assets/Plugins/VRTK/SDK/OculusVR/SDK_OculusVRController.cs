@@ -18,7 +18,6 @@ namespace VRTK
 #endif
     {
 #if VRTK_DEFINE_SDK_OCULUSVR
-        private bool floorLevelSet = false;
         private SDK_OculusVRBoundaries cachedBoundariesSDK;
         private VRTK_TrackedController cachedLeftController;
         private VRTK_TrackedController cachedRightController;
@@ -39,7 +38,8 @@ namespace VRTK
         private float[] hairTriggerLimit = new float[2];
         private float[] hairGripLimit = new float[2];
 
-        private OVRHapticsClip hapticsProceduralClip = new OVRHapticsClip();
+        private OVRHapticsClip hapticsProceduralClipLeft = new OVRHapticsClip();
+        private OVRHapticsClip hapticsProceduralClipRight = new OVRHapticsClip();
 
         /// <summary>
         /// The ProcessUpdate method enables an SDK to run logic for every Unity Update
@@ -48,7 +48,6 @@ namespace VRTK
         /// <param name="options">A dictionary of generic options that can be used to within the update.</param>
         public override void ProcessUpdate(uint index, Dictionary<string, object> options)
         {
-
             if (index < uint.MaxValue)
             {
                 var device = GetTrackedObject(GetControllerByIndex(index));
@@ -58,6 +57,15 @@ namespace VRTK
                 UpdateHairValues(index, GetTriggerAxisOnIndex(index).x, GetTriggerHairlineDeltaOnIndex(index), ref previousHairTriggerState[index], ref currentHairTriggerState[index], ref hairTriggerLimit[index]);
                 UpdateHairValues(index, GetGripAxisOnIndex(index).x, GetGripHairlineDeltaOnIndex(index), ref previousHairGripState[index], ref currentHairGripState[index], ref hairGripLimit[index]);
             }
+        }
+
+        /// <summary>
+        /// The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
+        /// </summary>
+        /// <param name="index">The index of the controller.</param>
+        /// <param name="options">A dictionary of generic options that can be used to within the fixed update.</param>
+        public override void ProcessFixedUpdate(uint index, Dictionary<string, object> options)
+        {
         }
 
         /// <summary>
@@ -127,8 +135,8 @@ namespace VRTK
         /// <returns>The index of the given controller.</returns>
         public override uint GetControllerIndex(GameObject controller)
         {
-            var trackedObject = GetTrackedObject(controller);
-            return (trackedObject ? trackedObject.index : uint.MaxValue);
+            VRTK_TrackedController trackedObject = GetTrackedObject(controller);
+            return (trackedObject != null ? trackedObject.index : uint.MaxValue);
         }
 
         /// <summary>
@@ -186,7 +194,7 @@ namespace VRTK
             var controller = GetSDKManagerControllerLeftHand(actual);
             if (!controller && actual)
             {
-                controller = GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
+                controller = VRTK_SharedMethods.FindEvenInactiveGameObject<OVRCameraRig>("/TrackingSpace/LeftHandAnchor");
             }
             return controller;
         }
@@ -201,7 +209,7 @@ namespace VRTK
             var controller = GetSDKManagerControllerRightHand(actual);
             if (!controller && actual)
             {
-                controller = GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
+                controller = VRTK_SharedMethods.FindEvenInactiveGameObject<OVRCameraRig>("/TrackingSpace/RightHandAnchor");
             }
             return controller;
         }
@@ -265,33 +273,32 @@ namespace VRTK
         /// <returns>The GameObject that has the model alias within it.</returns>
         public override GameObject GetControllerModel(ControllerHand hand)
         {
-            var model = GetSDKManagerControllerModelForHand(hand);
-            if (!model)
+            GameObject model = GetSDKManagerControllerModelForHand(hand);
+            if (model == null)
             {
-                var avatarObject = GetAvatar();
-                var avatarName = (avatarObject ? avatarObject.name : "");
+                GameObject avatarObject = GetAvatar();
                 switch (hand)
                 {
                     case ControllerHand.Left:
-                        if (avatarName != "")
+                        if (avatarObject != null)
                         {
-                            model = GameObject.Find(avatarName + "/controller_left");
+                            model = avatarObject.transform.Find("controller_left").gameObject;
                         }
                         else
                         {
-                            model = GameObject.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
-                            model = (model.transform.childCount > 0 ? model.transform.GetChild(0).gameObject : null);
+                            model = GetControllerLeftHand(true);
+                            model = (model != null && model.transform.childCount > 0 ? model.transform.GetChild(0).gameObject : null);
                         }
                         break;
                     case ControllerHand.Right:
-                        if (avatarName != "")
+                        if (avatarObject != null)
                         {
-                            model = GameObject.Find(avatarName + "/controller_right");
+                            model = avatarObject.transform.Find("controller_right").gameObject;
                         }
                         else
                         {
-                            model = GameObject.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
-                            model = (model.transform.childCount > 0 ? model.transform.GetChild(0).gameObject : null);
+                            model = GetControllerRightHand(true);
+                            model = (model != null && model.transform.childCount > 0 ? model.transform.GetChild(0).gameObject : null);
                         }
                         break;
                 }
@@ -329,14 +336,18 @@ namespace VRTK
             if (index < uint.MaxValue)
             {
                 var controller = GetControllerByIndex(index);
-                hapticsProceduralClip.WriteSample((byte)(strength * byte.MaxValue));
+
                 if (IsControllerLeftHand(controller))
                 {
-                    OVRHaptics.LeftChannel.Preempt(hapticsProceduralClip);
+                    hapticsProceduralClipLeft.Reset();
+                    hapticsProceduralClipLeft.WriteSample((byte)(strength * byte.MaxValue));
+                    OVRHaptics.LeftChannel.Preempt(hapticsProceduralClipLeft);
                 }
                 else if (IsControllerRightHand(controller))
                 {
-                    OVRHaptics.RightChannel.Preempt(hapticsProceduralClip);
+                    hapticsProceduralClipRight.Reset();
+                    hapticsProceduralClipRight.WriteSample((byte)(strength * byte.MaxValue));
+                    OVRHaptics.RightChannel.Preempt(hapticsProceduralClipRight);
                 }
             }
         }
@@ -905,21 +916,6 @@ namespace VRTK
                 {
                     cachedRightController = sdkManager.actualRightController.GetComponent<VRTK_TrackedController>();
                     cachedRightController.index = 1;
-                }
-            }
-
-            SetFloorLevel();
-        }
-
-        private void SetFloorLevel()
-        {
-            if (!floorLevelSet)
-            {
-                floorLevelSet = true;
-                var ovrManager = FindObjectOfType<OVRManager>();
-                if (ovrManager)
-                {
-                    ovrManager.trackingOriginType = OVRManager.TrackingOrigin.FloorLevel;
                 }
             }
         }

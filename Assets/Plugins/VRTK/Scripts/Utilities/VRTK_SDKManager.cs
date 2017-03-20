@@ -3,7 +3,6 @@ namespace VRTK
 {
     using UnityEngine;
 #if UNITY_EDITOR
-    using UnityEngine.SceneManagement;
     using UnityEditor;
     using UnityEditor.Callbacks;
 #endif
@@ -60,7 +59,23 @@ namespace VRTK
         /// <summary>
         /// The singleton instance to access the SDK Manager variables from.
         /// </summary>
-        public static VRTK_SDKManager instance;
+        public static VRTK_SDKManager instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    var sdkManager = FindObjectOfType<VRTK_SDKManager>();
+                    if (sdkManager)
+                    {
+                        sdkManager.CreateInstance();
+                    }
+                }
+
+                return _instance;
+            }
+        }
+        private static VRTK_SDKManager _instance;
 
         [Tooltip("If this is true then the instance of the SDK Manager won't be destroyed on every scene load.")]
         public bool persistOnLoad;
@@ -95,8 +110,8 @@ namespace VRTK
 #endif
                 cachedSystemSDK = null;
 
-                cachedSystemSDKInfo = value;
-                HandleSDKInfoSetter();
+                cachedSystemSDKInfo = new VRTK_SDKInfo(value);
+                PopulateObjectReferences(false);
             }
         }
         /// <summary>
@@ -123,8 +138,8 @@ namespace VRTK
 #endif
                 cachedBoundariesSDK = null;
 
-                cachedBoundariesSDKInfo = value;
-                HandleSDKInfoSetter();
+                cachedBoundariesSDKInfo = new VRTK_SDKInfo(value);
+                PopulateObjectReferences(false);
             }
         }
         /// <summary>
@@ -151,8 +166,8 @@ namespace VRTK
 #endif
                 cachedHeadsetSDK = null;
 
-                cachedHeadsetSDKInfo = value;
-                HandleSDKInfoSetter();
+                cachedHeadsetSDKInfo = new VRTK_SDKInfo(value);
+                PopulateObjectReferences(false);
             }
         }
         /// <summary>
@@ -179,10 +194,15 @@ namespace VRTK
 #endif
                 cachedControllerSDK = null;
 
-                cachedControllerSDKInfo = value;
-                HandleSDKInfoSetter();
+                cachedControllerSDKInfo = new VRTK_SDKInfo(value);
+                PopulateObjectReferences(false);
             }
         }
+
+        /// <summary>
+        /// The active (i.e. to be added to the <see cref="PlayerSettings"/>) scripting define symbol predicate attributes that have no associated SDK classes.
+        /// </summary>
+        public List<SDK_ScriptingDefineSymbolPredicateAttribute> activeScriptingDefineSymbolsWithoutSDKClasses;
 
         [Tooltip("A reference to the GameObject that is the user's boundary or play area, most likely provided by the SDK's Camera Rig.")]
         public GameObject actualBoundaries;
@@ -300,6 +320,13 @@ namespace VRTK
                 return;
             }
 
+            actualBoundaries = null;
+            actualHeadset = null;
+            actualLeftController = null;
+            actualRightController = null;
+            modelAliasLeftController = null;
+            modelAliasRightController = null;
+
             SDK_BaseBoundaries boundariesSDK = GetBoundariesSDK();
             SDK_BaseHeadset headsetSDK = GetHeadsetSDK();
             SDK_BaseController controllerSDK = GetControllerSDK();
@@ -353,32 +380,43 @@ namespace VRTK
                 newSymbolsByTargetGroup[targetGroup] = new HashSet<string>(nonSDKSymbols);
             }
 
-            //get scripting define symbols for active SDKs and check whether the predicates allow us to add the symbols
-            var activeSymbols = new[] { systemSDKInfo.description.symbol, boundariesSDKInfo.description.symbol, headsetSDKInfo.description.symbol, controllerSDKInfo.description.symbol };
-            foreach (string activeSymbol in activeSymbols)
+            Func<VRTK_SDKInfo, string> symbolSelector = info => info.description.symbol;
+            var sdkSymbols = new HashSet<string>(
+                AvailableSystemSDKInfos.Select(symbolSelector)
+                                       .Concat(AvailableBoundariesSDKInfos.Select(symbolSelector))
+                                       .Concat(AvailableHeadsetSDKInfos.Select(symbolSelector))
+                                       .Concat(AvailableControllerSDKInfos.Select(symbolSelector))
+            );
+            var activeSymbols = new HashSet<string>(activeScriptingDefineSymbolsWithoutSDKClasses.Select(attribute => attribute.symbol));
+
+            //get scripting define symbols and check whether the predicates allow us to add the symbols
+            foreach (ScriptingDefineSymbolPredicateInfo predicateInfo in AvailableScriptingDefineSymbolPredicateInfos)
             {
-                foreach (ScriptingDefineSymbolPredicateInfo predicateInfo in AvailableScriptingDefineSymbolPredicateInfos)
+                string symbol = predicateInfo.attribute.symbol;
+                if (!sdkSymbols.Contains(symbol) && !activeSymbols.Contains(symbol))
                 {
-                    MethodInfo methodInfo = predicateInfo.methodInfo;
-                    if (predicateInfo.attribute.symbol != activeSymbol || !(bool)methodInfo.Invoke(null, null))
+                    continue;
+                }
+
+                MethodInfo methodInfo = predicateInfo.methodInfo;
+                if (!(bool)methodInfo.Invoke(null, null))
+                {
+                    continue;
+                }
+
+                //add symbols from all predicate attributes on the method since multiple ones are allowed
+                var allAttributes = (SDK_ScriptingDefineSymbolPredicateAttribute[])methodInfo.GetCustomAttributes(typeof(SDK_ScriptingDefineSymbolPredicateAttribute), false);
+                foreach (SDK_ScriptingDefineSymbolPredicateAttribute attribute in allAttributes)
+                {
+                    BuildTargetGroup buildTargetGroup = attribute.buildTargetGroup;
+                    HashSet<string> newSymbols;
+                    if (!newSymbolsByTargetGroup.TryGetValue(buildTargetGroup, out newSymbols))
                     {
-                        continue;
+                        newSymbols = new HashSet<string>();
+                        newSymbolsByTargetGroup[buildTargetGroup] = newSymbols;
                     }
 
-                    //add symbols from all predicate attributes on the method since multiple ones are allowed
-                    var allAttributes = (SDK_ScriptingDefineSymbolPredicateAttribute[])methodInfo.GetCustomAttributes(typeof(SDK_ScriptingDefineSymbolPredicateAttribute), false);
-                    foreach (SDK_ScriptingDefineSymbolPredicateAttribute attribute in allAttributes)
-                    {
-                        BuildTargetGroup buildTargetGroup = attribute.buildTargetGroup;
-                        HashSet<string> newSymbols;
-                        if (!newSymbolsByTargetGroup.TryGetValue(buildTargetGroup, out newSymbols))
-                        {
-                            newSymbols = new HashSet<string>();
-                            newSymbolsByTargetGroup[buildTargetGroup] = newSymbols;
-                        }
-
-                        newSymbols.Add(attribute.symbol);
-                    }
+                    newSymbols.Add(attribute.symbol);
                 }
             }
 
@@ -481,6 +519,7 @@ namespace VRTK
             SetupHeadset();
             SetupControllers();
             GetBoundariesSDK().InitBoundaries();
+            gameObject.AddComponent<VRTK_InstanceMethods>();
         }
 
         /// <summary>
@@ -593,12 +632,6 @@ namespace VRTK
 
             RemoveLegacyScriptingDefineSymbols();
 
-            var sdkManager = FindObjectOfType<VRTK_SDKManager>();
-            if (sdkManager)
-            {
-                sdkManager.CreateInstance();
-            }
-
             if (instance != null && !instance.ManageScriptingDefineSymbols(false, false))
             {
                 instance.PopulateObjectReferences(false);
@@ -663,9 +696,10 @@ namespace VRTK
 
         private void CreateInstance()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = this;
+                _instance = this;
+                VRTK_SDK_Bridge.InvalidateCaches();
 
                 string sdkErrorDescriptions = string.Join("\n- ", GetSimplifiedSDKErrorDescriptions());
                 if (!string.IsNullOrEmpty(sdkErrorDescriptions))
@@ -679,7 +713,7 @@ namespace VRTK
                     DontDestroyOnLoad(gameObject);
                 }
             }
-            else if (instance != this)
+            else if (_instance != this)
             {
                 Destroy(gameObject);
             }
@@ -704,21 +738,6 @@ namespace VRTK
             {
                 Debug.LogError(sdkErrorDescription);
             }
-        }
-
-        /// <summary>
-        /// Handles the various SDK info setters by making sure to automatically manage the scripting define symbols or populate the object references if the SDK Manager is set to do so.
-        /// </summary>
-        private void HandleSDKInfoSetter()
-        {
-#if UNITY_EDITOR
-            if (!ManageScriptingDefineSymbols(false, false))
-            {
-                PopulateObjectReferences(false);
-            }
-#else
-            PopulateObjectReferences(false);
-#endif
         }
 
         /// <summary>

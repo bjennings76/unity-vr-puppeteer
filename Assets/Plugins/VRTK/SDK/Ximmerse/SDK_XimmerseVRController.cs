@@ -5,6 +5,7 @@ namespace VRTK
     using UnityEngine;
     using System.Collections.Generic;
     using Ximmerse.InputSystem;
+    using Ximmerse.VR;
 #endif
 
     /// <summary>
@@ -58,6 +59,15 @@ namespace VRTK
                 UpdateHairValues(index, GetTriggerAxisOnIndex(index).x, GetTriggerHairlineDeltaOnIndex(index), ref previousHairTriggerState[index], ref currentHairTriggerState[index], ref hairTriggerLimit[index]);
                 UpdateHairValues(index, GetGripAxisOnIndex(index).x, GetGripHairlineDeltaOnIndex(index), ref previousHairGripState[index], ref currentHairGripState[index], ref hairGripLimit[index]);
             }
+        }
+
+        /// <summary>
+        /// The ProcessFixedUpdate method enables an SDK to run logic for every Unity FixedUpdate
+        /// </summary>
+        /// <param name="index">The index of the controller.</param>
+        /// <param name="options">A dictionary of generic options that can be used to within the fixed update.</param>
+        public override void ProcessFixedUpdate(uint index, Dictionary<string, object> options)
+        {
         }
 
         /// <summary>
@@ -190,7 +200,7 @@ namespace VRTK
             var controller = GetSDKManagerControllerLeftHand(actual);
             if (!controller && actual)
             {
-                controller = GameObject.Find("VRCameraRig/TrackingSpace/LeftHandAnchor");
+                controller = VRTK_SharedMethods.FindEvenInactiveGameObject<VRContext>("/TrackingSpace/LeftHandAnchor");
             }
             return controller;
         }
@@ -205,7 +215,7 @@ namespace VRTK
             var controller = GetSDKManagerControllerRightHand(actual);
             if (!controller && actual)
             {
-                controller = GameObject.Find("VRCameraRig/TrackingSpace/RightHandAnchor");
+                controller = VRTK_SharedMethods.FindEvenInactiveGameObject<VRContext>("/TrackingSpace/RightHandAnchor");
             }
             return controller;
         }
@@ -272,14 +282,20 @@ namespace VRTK
             var model = GetSDKManagerControllerModelForHand(hand);
             if (!model)
             {
+                GameObject controller = null;
                 switch (hand)
                 {
                     case ControllerHand.Left:
-                        model = GameObject.Find("VRCameraRig/TrackingSpace/LeftHandAnchor");
+                        controller = GetControllerLeftHand(true);
                         break;
                     case ControllerHand.Right:
-                        model = GameObject.Find("VRCameraRig/TrackingSpace/RightHandAnchor");
+                        controller = GetControllerRightHand(true);
                         break;
+                }
+
+                if (controller != null)
+                {
+                    model = controller;
                 }
             }
             return model;

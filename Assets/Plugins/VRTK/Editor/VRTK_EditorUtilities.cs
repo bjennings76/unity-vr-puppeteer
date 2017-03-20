@@ -4,7 +4,7 @@
     using UnityEditor;
     using System;
 
-    public class VRTK_EditorUtilities : MonoBehaviour
+    public static class VRTK_EditorUtilities
     {
         public static GUIContent BuildGUIContent<T>(string fieldName, string displayOverride = null)
         {
@@ -30,6 +30,18 @@
             }
 
             EditorGUILayout.LabelField(header, EditorStyles.boldLabel);
+        }
+
+        public static GUIStyle CreateStyle(GUIStyle styleType, Color contentColor, Color backgroundColor)
+        {
+            GUIStyle generatedStyle = new GUIStyle(styleType);
+            generatedStyle.normal.textColor = contentColor;
+            Texture2D backgroundTexture = new Texture2D(1, 1);
+            backgroundTexture.SetPixel(1, 1, backgroundColor);
+            backgroundTexture.Apply();
+            generatedStyle.normal.background = backgroundTexture;
+
+            return generatedStyle;
         }
     }
 }
