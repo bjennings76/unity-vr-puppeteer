@@ -284,11 +284,11 @@
             Type sdkManagerType = typeof(VRTK_SDKManager);
             string baseName = baseType.Name.Remove(0, typeof(SDK_Base).Name.Length);
 
-            var availableSDKInfos = (ReadOnlyCollection<VRTK_SDKInfo>)sdkManagerType
+            var availableSDKInfos = (System.Collections.Generic.ReadOnlyCollection<VRTK_SDKInfo>)sdkManagerType
                 .GetProperty(string.Format("Available{0}SDKInfos", baseName), BindingFlags.Public | BindingFlags.Static)
                 .GetGetMethod()
                 .Invoke(null, null);
-            var installedSDKInfos = (ReadOnlyCollection<VRTK_SDKInfo>)sdkManagerType
+            var installedSDKInfos = (System.Collections.Generic.ReadOnlyCollection<VRTK_SDKInfo>)sdkManagerType
                 .GetProperty(string.Format("Installed{0}SDKInfos", baseName), BindingFlags.Public | BindingFlags.Static)
                 .GetGetMethod()
                 .Invoke(null, null);
