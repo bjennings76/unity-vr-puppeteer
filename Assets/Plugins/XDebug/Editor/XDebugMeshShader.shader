@@ -1,4 +1,6 @@
-﻿Shader "Hidden/XDebug/MeshShader" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Hidden/XDebug/MeshShader" {
 	SubShader{
 		Tags{ "RenderType" = "Transparent" "IgnoreProjector" = "True" "Queue" = "Transparent" }
 
@@ -35,9 +37,9 @@
 
 			v2f vert(appdata v) {
 				v2f o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex + _Up*v.scale.x);
+				o.pos = UnityObjectToClipPos(v.vertex + _Up*v.scale.x);
 
-				float3 normal = normalize(mul(UNITY_MATRIX_MVP, v.normal));
+				float3 normal = normalize(UnityObjectToClipPos(v.normal));
 				float3 lightDir = normalize(mul(UNITY_MATRIX_VP, _LightDir));
 				float lit = dot(normal, -lightDir);
 
@@ -91,7 +93,7 @@
 
             v2f vert(appdata v) {
 				v2f o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex + _Up*v.scale.x);
+				o.pos = UnityObjectToClipPos(v.vertex + _Up*v.scale.x);
 				
 				//float3 normal = normalize(mul(_Object2World, v.normal));
 				//float3 lightDir = _LightDir;// normalize(mul(UNITY_MATRIX_VP, _LightDir));

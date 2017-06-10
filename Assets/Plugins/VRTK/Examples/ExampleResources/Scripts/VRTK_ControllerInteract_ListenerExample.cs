@@ -8,7 +8,7 @@
         {
             if (GetComponent<VRTK_InteractTouch>() == null || GetComponent<VRTK_InteractGrab>() == null)
             {
-                Debug.LogError("VRTK_ControllerInteracts_ListenerExample is required to be attached to a Controller that has the VRTK_InteractTouch and VRTK_InteractGrab script attached to it");
+                VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_GAMEOBJECT, "VRTK_ControllerInteract_ListenerExample", "VRTK_InteractTouch and VRTK_InteractGrab", "the Controller Alias"));
                 return;
             }
 
@@ -21,14 +21,14 @@
 
         private void DebugLogger(uint index, string action, GameObject target)
         {
-            Debug.Log("Controller on index '" + index + "' is " + action + " an object named " + target.name);
+            VRTK_Logger.Info("Controller on index '" + index + "' is " + action + " an object named " + target.name);
         }
 
         private void DoInteractTouch(object sender, ObjectInteractEventArgs e)
         {
             if (e.target)
             {
-                DebugLogger(e.controllerIndex, "TOUCHING", e.target);
+                DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHING", e.target);
             }
         }
 
@@ -36,7 +36,7 @@
         {
             if (e.target)
             {
-                DebugLogger(e.controllerIndex, "NO LONGER TOUCHING", e.target);
+                DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "NO LONGER TOUCHING", e.target);
             }
         }
 
@@ -44,7 +44,7 @@
         {
             if (e.target)
             {
-                DebugLogger(e.controllerIndex, "GRABBING", e.target);
+                DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRABBING", e.target);
             }
         }
 
@@ -52,7 +52,7 @@
         {
             if (e.target)
             {
-                DebugLogger(e.controllerIndex, "NO LONGER GRABBING", e.target);
+                DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "NO LONGER GRABBING", e.target);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿Shader "Hidden/XDebug/WireShader" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Hidden/XDebug/WireShader" {
 	SubShader {
 		Pass {
 
@@ -31,7 +33,7 @@
 
             v2f vert(appdata v) {
 				v2f o;
-                o.pos = mul (UNITY_MATRIX_MVP, v.vertex + _Up*v.scale.x);
+                o.pos = UnityObjectToClipPos (v.vertex + _Up*v.scale.x);
 				o.color = v.color*_Color;
 				o.color.a *= 0.1;
 				return o;
@@ -75,7 +77,7 @@
 
             v2f vert(appdata v) {
 				v2f o;
-                o.pos = mul (UNITY_MATRIX_MVP, v.vertex + _Up*v.scale.x);
+                o.pos = UnityObjectToClipPos (v.vertex + _Up*v.scale.x);
 				o.color = v.color * _Color;
 				return o;
 

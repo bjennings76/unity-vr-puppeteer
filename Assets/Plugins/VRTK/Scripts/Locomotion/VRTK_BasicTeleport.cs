@@ -23,9 +23,10 @@ namespace VRTK
     /// <example>
     /// `VRTK/Examples/004_CameraRig_BasicTeleport` uses the `VRTK_SimplePointer` script on the Controllers to initiate a laser pointer by pressing the `Touchpad` on the controller and when the laser pointer is deactivated (release the `Touchpad`) then the user is teleported to the location of the laser pointer tip as this is where the pointer destination marker position is set to.
     /// </example>
+    [AddComponentMenu("VRTK/Scripts/Locomotion/VRTK_BasicTeleport")]
     public class VRTK_BasicTeleport : MonoBehaviour
     {
-        [Header("Base Options")]
+        [Header("Base Settings")]
 
         [Tooltip("The colour to fade to when blinking on teleport.")]
         public Color blinkToColor = Color.black;
@@ -113,7 +114,7 @@ namespace VRTK
             }
 
             bool validNavMeshLocation = false;
-            if (target)
+            if (target != null)
             {
                 NavMeshHit hit;
                 validNavMeshLocation = NavMesh.SamplePosition(destinationPosition, out hit, navMeshLimitDistance, NavMesh.AllAreas);
@@ -123,7 +124,42 @@ namespace VRTK
                 validNavMeshLocation = true;
             }
 
-            return (validNavMeshLocation && target && !(VRTK_PolicyList.Check(target.gameObject, targetListPolicy)));
+            return (validNavMeshLocation && target != null && !(VRTK_PolicyList.Check(target.gameObject, targetListPolicy)));
+        }
+
+        /// <summary>
+        /// The ForceTeleport/1 method forces the teleport to update position without needing to listen for a Destination Marker event.
+        /// </summary>
+        /// <param name="teleportArgs">The pseudo Destination Marker event for the teleport action.</param>
+        public virtual void ForceTeleport(DestinationMarkerEventArgs teleportArgs)
+        {
+            DoTeleport(this, teleportArgs);
+        }
+
+        /// <summary>
+        /// The ForceTeleport/3 method forces the teleport to update position without needing to listen for a Destination Marker event.
+        ///  It will build a destination marker out of the provided parameters.
+        /// </summary>
+        /// <param name="target">The Transform of the destination object.</param>
+        /// <param name="destinationPosition">The world position to teleport to.</param>
+        /// <param name="destinationRotation">The world rotation to teleport to.</param>
+        /// <param name="forceDestinationPosition">If true then the given destination position should not be altered by anything consuming the payload.</param>
+        public virtual void ForceTeleport(Transform target, Vector3 destinationPosition, Quaternion? destinationRotation = null, bool forceDestinationPosition = false)
+        {
+            DestinationMarkerEventArgs teleportArgs = new DestinationMarkerEventArgs();
+            teleportArgs.distance = Vector3.Distance(new Vector3(headset.position.x, playArea.position.y, headset.position.z), destinationPosition);
+            teleportArgs.target = target;
+            teleportArgs.raycastHit = new RaycastHit();
+            teleportArgs.destinationPosition = destinationPosition;
+            teleportArgs.destinationRotation = destinationRotation;
+            teleportArgs.forceDestinationPosition = forceDestinationPosition;
+            teleportArgs.enableTeleport = true;
+            ForceTeleport(teleportArgs);
+        }
+
+        protected virtual void Awake()
+        {
+            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
         }
 
         protected virtual void OnEnable()
@@ -148,6 +184,11 @@ namespace VRTK
             VRTK_ObjectCache.registeredTeleporters.Remove(this);
         }
 
+        protected virtual void OnDestroy()
+        {
+            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
+        }
+
         protected virtual void Blink(float transitionSpeed)
         {
             fadeInTime = transitionSpeed;
@@ -162,18 +203,44 @@ namespace VRTK
         {
             if (enableTeleport && ValidLocation(e.target, e.destinationPosition) && e.enableTeleport)
             {
-                OnTeleporting(sender, e);
+                StartTeleport(sender, e);
                 Vector3 newPosition = GetNewPosition(e.destinationPosition, e.target, e.forceDestinationPosition);
                 CalculateBlinkDelay(blinkTransitionSpeed, newPosition);
                 Blink(blinkTransitionSpeed);
-                SetNewPosition(newPosition, e.target, e.forceDestinationPosition);
-                OnTeleported(sender, e);
+                Vector3 updatedPosition = SetNewPosition(newPosition, e.target, e.forceDestinationPosition);
+                Quaternion updatedRotation = SetNewRotation(e.destinationRotation);
+                ProcessOrientation(sender, e, updatedPosition, updatedRotation);
+                EndTeleport(sender, e);
             }
         }
 
-        protected virtual void SetNewPosition(Vector3 position, Transform target, bool forceDestinationPosition)
+        protected virtual void StartTeleport(object sender, DestinationMarkerEventArgs e)
+        {
+            OnTeleporting(sender, e);
+        }
+
+        protected virtual void ProcessOrientation(object sender, DestinationMarkerEventArgs e, Vector3 updatedPosition, Quaternion updatedRotation)
+        {
+        }
+
+        protected virtual void EndTeleport(object sender, DestinationMarkerEventArgs e)
+        {
+            OnTeleported(sender, e);
+        }
+
+        protected virtual Vector3 SetNewPosition(Vector3 position, Transform target, bool forceDestinationPosition)
         {
             playArea.position = CheckTerrainCollision(position, target, forceDestinationPosition);
+            return playArea.position;
+        }
+
+        protected virtual Quaternion SetNewRotation(Quaternion? rotation)
+        {
+            if (rotation != null)
+            {
+                playArea.rotation = (Quaternion)rotation;
+            }
+            return playArea.rotation;
         }
 
         protected virtual Vector3 GetNewPosition(Vector3 tipPosition, Transform target, bool returnOriginalPosition)
@@ -192,11 +259,12 @@ namespace VRTK
 
         protected virtual Vector3 CheckTerrainCollision(Vector3 position, Transform target, bool useHeadsetForPosition)
         {
-            if (adjustYForTerrain && target.GetComponent<Terrain>())
+            Terrain targetTerrain = target.GetComponent<Terrain>();
+            if (adjustYForTerrain && targetTerrain != null)
             {
-                var checkPosition = (useHeadsetForPosition ? new Vector3(headset.position.x, position.y, headset.position.z) : position);
-                var terrainHeight = Terrain.activeTerrain.SampleHeight(checkPosition);
-                position.y = (terrainHeight > position.y ? position.y : Terrain.activeTerrain.GetPosition().y + terrainHeight);
+                Vector3 checkPosition = (useHeadsetForPosition ? new Vector3(headset.position.x, position.y, headset.position.z) : position);
+                float terrainHeight = targetTerrain.SampleHeight(checkPosition);
+                position.y = (terrainHeight > position.y ? position.y : targetTerrain.GetPosition().y + terrainHeight);
             }
             return position;
         }
@@ -246,12 +314,12 @@ namespace VRTK
 
         protected virtual void InitDestinationMarkerListeners(bool state)
         {
-            var leftHand = VRTK_DeviceFinder.GetControllerLeftHand();
-            var rightHand = VRTK_DeviceFinder.GetControllerRightHand();
+            GameObject leftHand = VRTK_DeviceFinder.GetControllerLeftHand();
+            GameObject rightHand = VRTK_DeviceFinder.GetControllerRightHand();
 
             InitDestinationSetListener(leftHand, state);
             InitDestinationSetListener(rightHand, state);
-            foreach (var destinationMarker in VRTK_ObjectCache.registeredDestinationMarkers)
+            foreach (VRTK_DestinationMarker destinationMarker in VRTK_ObjectCache.registeredDestinationMarkers)
             {
                 if (destinationMarker.gameObject != leftHand && destinationMarker.gameObject != rightHand)
                 {

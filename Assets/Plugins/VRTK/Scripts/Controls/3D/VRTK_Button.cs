@@ -21,6 +21,7 @@ namespace VRTK
     /// <example>
     /// `VRTK/Examples/025_Controls_Overview` shows a collection of pressable buttons that are interacted with by activating the rigidbody on the controller by pressing the grab button without grabbing an object.
     /// </example>
+    [AddComponentMenu("VRTK/Scripts/Controls/3D/VRTK_Button")]
     public class VRTK_Button : VRTK_Control
     {
 
@@ -28,9 +29,6 @@ namespace VRTK
         [Obsolete("`VRTK_Control.ButtonEvents` has been replaced with delegate events. `VRTK_Button_UnityEvents` is now required to access Unity events. This method will be removed in a future version of VRTK.")]
         public class ButtonEvents
         {
-            /// <summary>
-            /// Emitted when the button is successfully pushed.
-            /// </summary>
             public UnityEvent OnPush;
         }
 
@@ -69,9 +67,14 @@ namespace VRTK
         public ButtonEvents events;
 
         /// <summary>
-        /// Emitted when the 3D Button has reached it's activation distance.
+        /// Emitted when the 3D Button has reached its activation distance.
         /// </summary>
         public event Button3DEventHandler Pushed;
+
+        /// <summary>
+        /// Emitted when the 3D Button's position has become less than activation distance after being pressed.
+        /// </summary>
+        public event Button3DEventHandler Released;
 
         protected const float MAX_AUTODETECT_ACTIVATION_LENGTH = 4f; // full hight of button
         protected ButtonDirection finalDirection;
@@ -87,6 +90,14 @@ namespace VRTK
             if (Pushed != null)
             {
                 Pushed(this, e);
+            }
+        }
+
+        public virtual void OnReleased(Control3DEventArgs e)
+        {
+            if (Released != null)
+            {
+                Released(this, e);
             }
         }
 
@@ -271,17 +282,23 @@ namespace VRTK
                 {
                     value = 1;
 
+#pragma warning disable 0618
                     /// <obsolete>
                     /// This is an obsolete call that will be removed in a future version
                     /// </obsolete>
                     events.OnPush.Invoke();
+#pragma warning restore 0618
 
                     OnPushed(SetControlEvent());
                 }
             }
             else
             {
-                value = 0;
+                if(oldState == 1)
+                {
+                    value = 0;
+                    OnReleased(SetControlEvent());
+                }
             }
         }
 

@@ -23,8 +23,8 @@ public class PuppetPossession : MonoBehaviour {
 	private UnlockOnGrab m_Locker;
 	private Vector3 m_StartPosition;
 
-	private static Transform Boundaries { get { return VRTK_SDKManager.instance.actualBoundaries.transform; } }
-	private static Transform Headset { get { return VRTK_SDKManager.instance.actualHeadset.transform; } }
+	private static Transform Boundaries { get { return VRTK_SDKManager.instance.loadedSetup.actualBoundaries.transform; } }
+	private static Transform Headset { get { return VRTK_SDKManager.instance.loadedSetup.actualHeadset.transform; } }
 
 	private void Start() {
 		m_Interactables = GetComponentsInChildren<VRTK_InteractableObject>();

@@ -97,11 +97,11 @@
             {
                 slide.Fire();
                 FireBullet();
-                VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(controllerEvents.gameObject), 0.63f, 0.2f, 0.01f);
+                VRTK_ControllerHaptics.TriggerHapticPulse(VRTK_ControllerReference.GetControllerReference(controllerEvents.gameObject), 0.63f, 0.2f, 0.01f);
             }
             else
             {
-                VRTK_SharedMethods.TriggerHapticPulse(VRTK_DeviceFinder.GetControllerIndex(controllerEvents.gameObject), 0.08f, 0.1f, 0.01f);
+                VRTK_ControllerHaptics.TriggerHapticPulse(VRTK_ControllerReference.GetControllerReference(controllerEvents.gameObject), 0.08f, 0.1f, 0.01f);
             }
         }
 
@@ -111,13 +111,13 @@
             bullet = transform.Find("Bullet").gameObject;
             bullet.SetActive(false);
 
-            trigger = transform.FindChild("TriggerHolder").gameObject;
+            trigger = transform.Find("TriggerHolder").gameObject;
 
-            slide = transform.FindChild("Slide").GetComponent<RealGun_Slide>();
+            slide = transform.Find("Slide").GetComponent<RealGun_Slide>();
             slideRigidbody = slide.GetComponent<Rigidbody>();
             slideCollider = slide.GetComponent<Collider>();
 
-            safetySwitch = transform.FindChild("SafetySwitch").GetComponent<RealGun_SafetySwitch>();
+            safetySwitch = transform.Find("SafetySwitch").GetComponent<RealGun_SafetySwitch>();
             safetySwitchRigidbody = safetySwitch.GetComponent<Rigidbody>();
             safetySwitchCollider = safetySwitch.GetComponent<Collider>();
         }

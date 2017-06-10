@@ -15,6 +15,7 @@ namespace VRTK
     /// <example>
     /// `VRTK/Examples/034_Controls_InteractingWithUnityUI` uses the `VRTK_UICanvas` script on two of the canvases to show how the UI Pointer can interact with them.
     /// </example>
+    [AddComponentMenu("VRTK/Scripts/UI/VRTK_UICanvas")]
     public class VRTK_UICanvas : MonoBehaviour
     {
         [Tooltip("Determines if a UI Click action should happen when a UI Pointer game object collides with this canvas.")]
@@ -68,7 +69,7 @@ namespace VRTK
 
             if (!canvas || canvas.renderMode != RenderMode.WorldSpace)
             {
-                Debug.LogError("A VRTK_UICanvas requires to be placed on a Canvas that is set to `Render Mode = World Space`.");
+                VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_GAMEOBJECT, "VRTK_UICanvas", "Canvas", "the same", " that is set to `Render Mode = World Space`"));
                 return;
             }
 
@@ -116,7 +117,7 @@ namespace VRTK
 
         protected virtual IEnumerator CreateDraggablePanel(Canvas canvas, Vector2 canvasSize)
         {
-            if (canvas && !canvas.transform.FindChild(CANVAS_DRAGGABLE_PANEL))
+            if (canvas && !canvas.transform.Find(CANVAS_DRAGGABLE_PANEL))
             {
                 yield return null;
 
@@ -137,7 +138,7 @@ namespace VRTK
         protected virtual void CreateActivator(Canvas canvas, Vector2 canvasSize)
         {
             //if autoActivateWithinDistance is greater than 0 then create the front collider sub object
-            if (autoActivateWithinDistance > 0f && canvas && !canvas.transform.FindChild(ACTIVATOR_FRONT_TRIGGER_GAMEOBJECT))
+            if (autoActivateWithinDistance > 0f && canvas && !canvas.transform.Find(ACTIVATOR_FRONT_TRIGGER_GAMEOBJECT))
             {
                 var canvasRectTransform = canvas.GetComponent<RectTransform>();
                 Vector2 pivot = canvasRectTransform.pivot;
@@ -196,13 +197,13 @@ namespace VRTK
             }
 
             StopCoroutine(draggablePanelCreation);
-            var draggablePanel = canvas.transform.FindChild(CANVAS_DRAGGABLE_PANEL);
+            var draggablePanel = canvas.transform.Find(CANVAS_DRAGGABLE_PANEL);
             if (draggablePanel)
             {
                 Destroy(draggablePanel.gameObject);
             }
 
-            var frontTrigger = canvas.transform.FindChild(ACTIVATOR_FRONT_TRIGGER_GAMEOBJECT);
+            var frontTrigger = canvas.transform.Find(ACTIVATOR_FRONT_TRIGGER_GAMEOBJECT);
             if (frontTrigger)
             {
                 Destroy(frontTrigger.gameObject);

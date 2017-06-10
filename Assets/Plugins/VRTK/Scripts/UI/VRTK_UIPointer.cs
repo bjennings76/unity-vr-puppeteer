@@ -7,14 +7,17 @@ namespace VRTK
     /// <summary>
     /// Event Payload
     /// </summary>
-    /// <param name="controllerIndex">The index of the controller that was used.</param>
+    /// <param name="controllerIndex">**OBSOLETE** The index of the controller that was used.</param>
+    /// <param name="controllerReference">The reference to the controller that was used.</param>
     /// <param name="isActive">The state of whether the UI Pointer is currently active or not.</param>
     /// <param name="currentTarget">The current UI element that the pointer is colliding with.</param>
     /// <param name="previousTarget">The previous UI element that the pointer was colliding with.</param>
     /// <param name="raycastResult">The raw raycast result of the UI ray collision.</param>
     public struct UIPointerEventArgs
     {
+        [System.Obsolete("`UIPointerEventArgs.controllerIndex` has been replaced with `UIPointerEventArgs.controllerReference`. This parameter will be removed in a future version of VRTK.")]
         public uint controllerIndex;
+        public VRTK_ControllerReference controllerReference;
         public bool isActive;
         public GameObject currentTarget;
         public GameObject previousTarget;
@@ -39,6 +42,7 @@ namespace VRTK
     /// <example>
     /// `VRTK/Examples/034_Controls_InteractingWithUnityUI` uses the `VRTK_UIPointer` script on the right Controller to allow for the interaction with Unity UI elements using a Simple Pointer beam. The left Controller controls a Simple Pointer on the headset to demonstrate gaze interaction with Unity UI elements.
     /// </example>
+    [AddComponentMenu("VRTK/Scripts/UI/VRTK_UIPointer")]
     public class VRTK_UIPointer : MonoBehaviour
     {
         /// <summary>
@@ -113,6 +117,23 @@ namespace VRTK
         public bool collisionClick = false;
 
         /// <summary>
+        /// Emitted when the UI activation button is pressed.
+        /// </summary>
+        public event ControllerInteractionEventHandler ActivationButtonPressed;
+        /// <summary>
+        /// Emitted when the UI activation button is released.
+        /// </summary>
+        public event ControllerInteractionEventHandler ActivationButtonReleased;
+        /// <summary>
+        /// Emitted when the UI selection button is pressed.
+        /// </summary>
+        public event ControllerInteractionEventHandler SelectionButtonPressed;
+        /// <summary>
+        /// Emitted when the UI selection button is released.
+        /// </summary>
+        public event ControllerInteractionEventHandler SelectionButtonReleased;
+
+        /// <summary>
         /// Emitted when the UI Pointer is colliding with a valid UI element.
         /// </summary>
         public event UIPointerEventHandler UIPointerElementEnter;
@@ -138,9 +159,17 @@ namespace VRTK
         protected bool lastPointerPressState = false;
         protected bool lastPointerClickState = false;
         protected GameObject currentTarget;
+        protected VRTK_ControllerReference controllerReference
+        {
+            get
+            {
+                return VRTK_ControllerReference.GetControllerReference((controller != null ? controller.gameObject : null));
+            }
+        }
 
         protected EventSystem cachedEventSystem;
         protected VRTK_VRInputModule cachedVRInputModule;
+        protected Transform originalPointerOriginTransform;
 
         public virtual void OnUIPointerElementEnter(UIPointerEventArgs e)
         {
@@ -208,10 +237,45 @@ namespace VRTK
             }
         }
 
+        public virtual void OnActivationButtonPressed(ControllerInteractionEventArgs e)
+        {
+            if (ActivationButtonPressed != null)
+            {
+                ActivationButtonPressed(this, e);
+            }
+        }
+
+        public virtual void OnActivationButtonReleased(ControllerInteractionEventArgs e)
+        {
+            if (ActivationButtonReleased != null)
+            {
+                ActivationButtonReleased(this, e);
+            }
+        }
+
+        public virtual void OnSelectionButtonPressed(ControllerInteractionEventArgs e)
+        {
+            if (SelectionButtonPressed != null)
+            {
+                SelectionButtonPressed(this, e);
+            }
+        }
+
+        public virtual void OnSelectionButtonReleased(ControllerInteractionEventArgs e)
+        {
+            if (SelectionButtonReleased != null)
+            {
+                SelectionButtonReleased(this, e);
+            }
+        }
+
         public virtual UIPointerEventArgs SetUIPointerEvent(RaycastResult currentRaycastResult, GameObject currentTarget, GameObject lastTarget = null)
         {
             UIPointerEventArgs e;
-            e.controllerIndex = (controller != null ? VRTK_DeviceFinder.GetControllerIndex(controller.gameObject) : uint.MaxValue);
+#pragma warning disable 0618
+            e.controllerIndex = VRTK_ControllerReference.GetRealIndex(controllerReference);
+#pragma warning restore 0618
+            e.controllerReference = controllerReference;
             e.isActive = PointerActive();
             e.currentTarget = currentTarget;
             e.previousTarget = lastTarget;
@@ -228,7 +292,7 @@ namespace VRTK
         {
             if (!eventSystem)
             {
-                Debug.LogError("A VRTK_UIPointer requires an EventSystem");
+                VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_SCENE, "VRTK_UIPointer", "EventSystem"));
                 return null;
             }
 
@@ -249,7 +313,7 @@ namespace VRTK
 
             if (!vrtkEventSystem)
             {
-                Debug.LogError("A VRTK_UIPointer requires an EventSystem");
+                VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_SCENE, "VRTK_UIPointer", "EventSystem"));
                 return;
             }
 
@@ -268,12 +332,12 @@ namespace VRTK
             }
             else if (activationMode == ActivationMethods.HoldButton)
             {
-                return (controller != null ? controller.IsButtonPressed(activationButton) : false);
+                return IsActivationButtonPressed();
             }
             else
             {
                 pointerClicked = false;
-                if (controller != null && controller.IsButtonPressed(activationButton) && !lastPointerPressState)
+                if (IsActivationButtonPressed() && !lastPointerPressState)
                 {
                     pointerClicked = true;
                 }
@@ -289,10 +353,19 @@ namespace VRTK
         }
 
         /// <summary>
-        /// The SelectionButtonActive method is used to determine if the configured selection button is currently in the active state.
+        /// The IsActivationButtonPressed method is used to determine if the configured activation button is currently in the active state.
+        /// </summary>
+        /// <returns>Returns true if the activation button is active.</returns>
+        public virtual bool IsActivationButtonPressed()
+        {
+            return (controller != null ? controller.IsButtonPressed(activationButton) : false);
+        }
+
+        /// <summary>
+        /// The IsSelectionButtonPressed method is used to determine if the configured selection button is currently in the active state.
         /// </summary>
         /// <returns>Returns true if the selection button is active.</returns>
-        public virtual bool SelectionButtonActive()
+        public virtual bool IsSelectionButtonPressed()
         {
             return (controller != null ? controller.IsButtonPressed(selectionButton) : false);
         }
@@ -305,7 +378,7 @@ namespace VRTK
         /// <returns>Returns true if the UI Click button is in a valid state to action a click, returns false if it is not in a valid state.</returns>
         public virtual bool ValidClick(bool checkLastClick, bool lastClickState = false)
         {
-            var controllerClicked = (collisionClick ? collisionClick : SelectionButtonActive());
+            var controllerClicked = (collisionClick ? collisionClick : IsSelectionButtonPressed());
             var result = (checkLastClick ? controllerClicked && lastPointerClickState == lastClickState : controllerClicked);
             lastPointerClickState = controllerClicked;
             return result;
@@ -329,9 +402,15 @@ namespace VRTK
             return (pointerOriginTransform ? pointerOriginTransform.forward : transform.forward);
         }
 
+        protected virtual void Awake()
+        {
+            originalPointerOriginTransform = pointerOriginTransform;
+            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
+        }
+
         protected virtual void OnEnable()
         {
-            pointerOriginTransform = (pointerOriginTransform == null ? VRTK_SDK_Bridge.GenerateControllerPointerOrigin(gameObject) : pointerOriginTransform);
+            pointerOriginTransform = (originalPointerOriginTransform == null ? VRTK_SDK_Bridge.GenerateControllerPointerOrigin(gameObject) : originalPointerOriginTransform);
 
             controller = (controller != null ? controller : GetComponent<VRTK_ControllerEvents>());
             ConfigureEventSystem();
@@ -342,7 +421,10 @@ namespace VRTK
 
             if (controller != null)
             {
-                controllerRenderModel = VRTK_SDK_Bridge.GetControllerRenderModel(controller.gameObject);
+                controller.SubscribeToButtonAliasEvent(activationButton, true, DoActivationButtonPressed);
+                controller.SubscribeToButtonAliasEvent(activationButton, false, DoActivationButtonReleased);
+                controller.SubscribeToButtonAliasEvent(selectionButton, true, DoSelectionButtonPressed);
+                controller.SubscribeToButtonAliasEvent(selectionButton, false, DoSelectionButtonReleased);
             }
         }
 
@@ -352,14 +434,51 @@ namespace VRTK
             {
                 cachedVRInputModule.pointers.Remove(this);
             }
+
+            if (controller != null)
+            {
+                controller.UnsubscribeToButtonAliasEvent(activationButton, true, DoActivationButtonPressed);
+                controller.UnsubscribeToButtonAliasEvent(activationButton, false, DoActivationButtonReleased);
+                controller.UnsubscribeToButtonAliasEvent(selectionButton, true, DoSelectionButtonPressed);
+                controller.UnsubscribeToButtonAliasEvent(selectionButton, false, DoSelectionButtonReleased);
+            }
+        }
+
+        protected virtual void OnDestroy()
+        {
+            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
         }
 
         protected virtual void LateUpdate()
         {
             if (controller != null)
             {
-                pointerEventData.pointerId = (int)VRTK_DeviceFinder.GetControllerIndex(controller.gameObject);
+                pointerEventData.pointerId = (int)VRTK_ControllerReference.GetRealIndex(controllerReference);
             }
+            if (controllerRenderModel == null && VRTK_ControllerReference.IsValid(controllerReference))
+            {
+                controllerRenderModel = VRTK_SDK_Bridge.GetControllerRenderModel(controllerReference);
+            }
+        }
+
+        protected virtual void DoActivationButtonPressed(object sender, ControllerInteractionEventArgs e)
+        {
+            OnActivationButtonPressed(controller.SetControllerEvent());
+        }
+
+        protected virtual void DoActivationButtonReleased(object sender, ControllerInteractionEventArgs e)
+        {
+            OnActivationButtonReleased(controller.SetControllerEvent());
+        }
+
+        protected virtual void DoSelectionButtonPressed(object sender, ControllerInteractionEventArgs e)
+        {
+            OnSelectionButtonPressed(controller.SetControllerEvent());
+        }
+
+        protected virtual void DoSelectionButtonReleased(object sender, ControllerInteractionEventArgs e)
+        {
+            OnSelectionButtonReleased(controller.SetControllerEvent());
         }
 
         protected virtual void ResetHoverTimer()

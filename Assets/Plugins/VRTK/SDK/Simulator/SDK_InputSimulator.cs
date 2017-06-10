@@ -103,7 +103,7 @@ namespace VRTK
         private Transform leftHand;
         private Transform currentHand;
         private Vector3 oldPos;
-        private Transform myCamera;
+        private Transform neck;
         private SDK_ControllerSim rightController;
         private SDK_ControllerSim leftController;
         private static GameObject cachedCameraRig;
@@ -122,13 +122,18 @@ namespace VRTK
                 cachedCameraRig = VRTK_SharedMethods.FindEvenInactiveGameObject<SDK_InputSimulator>();
                 if (!cachedCameraRig)
                 {
-                    Debug.LogError("No GameObject with `SDK_InputSimulator` is found in the scene, have you added the `VRTK/Prefabs/VRSimulatorCameraRig` prefab to the scene?");
+                    VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_SCENE, "VRSimulatorCameraRig", "SDK_InputSimulator", ". check that the `VRTK/Prefabs/VRSimulatorCameraRig` prefab been added to the scene."));
                 }
             }
             return cachedCameraRig;
         }
 
         private void Awake()
+        {
+            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
+        }
+
+        private void OnEnable()
         {
             hintCanvas = transform.Find("Control Hints").gameObject;
             hintText = hintCanvas.GetComponentInChildren<Text>();
@@ -139,7 +144,7 @@ namespace VRTK
             leftHand.gameObject.SetActive(false);
             currentHand = rightHand;
             oldPos = Input.mousePosition;
-            myCamera = transform.Find("Camera");
+            neck = transform.Find("Neck");
             leftHand.Find("Hand").GetComponent<Renderer>().material.color = Color.red;
             rightHand.Find("Hand").GetComponent<Renderer>().material.color = Color.green;
             rightController = rightHand.GetComponent<SDK_ControllerSim>();
@@ -168,6 +173,7 @@ namespace VRTK
 
         private void OnDestroy()
         {
+            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
             destroyed = true;
         }
 
@@ -284,11 +290,11 @@ namespace VRTK
 
             if (IsAcceptingMouseInput())
             {
-                Vector3 rot = transform.rotation.eulerAngles;
+                Vector3 rot = transform.localRotation.eulerAngles;
                 rot.y += (mouseDiff * playerRotationMultiplier).x;
                 transform.localRotation = Quaternion.Euler(rot);
 
-                rot = myCamera.rotation.eulerAngles;
+                rot = neck.rotation.eulerAngles;
 
                 if (rot.x > 180)
                 {
@@ -299,7 +305,7 @@ namespace VRTK
                 {
                     rot.x += (mouseDiff * playerRotationMultiplier).y * -1;
                     rot.x = Mathf.Clamp(rot.x, -79, 79);
-                    myCamera.rotation = Quaternion.Euler(rot);
+                    neck.rotation = Quaternion.Euler(rot);
                 }
             }
         }

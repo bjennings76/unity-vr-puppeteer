@@ -9,7 +9,7 @@
 
         private void Start()
         {
-            arrow = transform.FindChild("Arrow").gameObject;
+            arrow = transform.Find("Arrow").gameObject;
             obj = GetComponent<VRTK_InteractableObject>();
         }
 
@@ -20,7 +20,7 @@
             if (handle != null && obj != null && handle.aim.IsHeld() && obj.IsGrabbed())
             {
                 handle.nockSide = collider.transform;
-                arrow.transform.parent = handle.arrowNockingPoint;
+                arrow.transform.SetParent(handle.arrowNockingPoint);
 
                 CopyNotchToArrow();
 

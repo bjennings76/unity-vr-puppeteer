@@ -11,22 +11,22 @@
 
         public void Button_Red()
         {
-            Debug.Log("Red Button Clicked");
+            VRTK_Logger.Info("Red Button Clicked");
         }
 
         public void Button_Pink()
         {
-            Debug.Log("Pink Button Clicked");
+            VRTK_Logger.Info("Pink Button Clicked");
         }
 
         public void Toggle(bool state)
         {
-            Debug.Log("The toggle state is " + (state ? "on" : "off"));
+            VRTK_Logger.Info("The toggle state is " + (state ? "on" : "off"));
         }
 
         public void Dropdown(int value)
         {
-            Debug.Log("Dropdown option selected was ID " + value);
+            VRTK_Logger.Info("Dropdown option selected was ID " + value);
         }
 
         public void SetDropText(BaseEventData data)
@@ -60,7 +60,7 @@
             canvasRT.eulerAngles = new Vector3(0f, 270f, 0f);
 
             var newButtonGO = new GameObject("TempButton", typeof(RectTransform));
-            newButtonGO.transform.parent = newCanvasGO.transform;
+            newButtonGO.transform.SetParent(newCanvasGO.transform);
             newButtonGO.layer = 5;
 
             var buttonRT = newButtonGO.GetComponent<RectTransform>();
@@ -78,7 +78,7 @@
             canvasButton.colors = buttonColourBlock;
 
             var newTextGO = new GameObject("BtnText", typeof(RectTransform));
-            newTextGO.transform.parent = newButtonGO.transform;
+            newTextGO.transform.SetParent(newButtonGO.transform);
             newTextGO.layer = 5;
 
             var textRT = newTextGO.GetComponent<RectTransform>();

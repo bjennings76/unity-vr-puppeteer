@@ -9,6 +9,7 @@ namespace VRTK.SecondaryControllerGrabActions
     /// <example>
     /// `VRTK/Examples/043_Controller_SecondaryControllerActions` demonstrates the ability to grab an object with one controller and scale it by grabbing and pulling with the second controller.
     /// </example>
+    [AddComponentMenu("VRTK/Scripts/Interactions/Secondary Controller Grab Actions/VRTK_AxisScaleGrabAction")]
     public class VRTK_AxisScaleGrabAction : VRTK_BaseGrabAction
     {
         [Tooltip("The distance the secondary controller must move away from the original grab position before the secondary controller auto ungrabs the object.")]
@@ -47,6 +48,7 @@ namespace VRTK.SecondaryControllerGrabActions
         /// </summary>
         public override void ProcessUpdate()
         {
+            base.ProcessUpdate();
             CheckForceStopDistance(ungrabDistance);
         }
 
@@ -55,6 +57,7 @@ namespace VRTK.SecondaryControllerGrabActions
         /// </summary>
         public override void ProcessFixedUpdate()
         {
+            base.ProcessFixedUpdate();
             if (initialised)
             {
                 if (uniformScaling)
@@ -70,7 +73,7 @@ namespace VRTK.SecondaryControllerGrabActions
 
         protected virtual void ApplyScale(Vector3 newScale)
         {
-            var existingScale = grabbedObject.transform.localScale;
+            Vector3 existingScale = grabbedObject.transform.localScale;
 
             float finalScaleX = (lockXAxis ? existingScale.x : newScale.x);
             float finalScaleY = (lockYAxis ? existingScale.y : newScale.y);

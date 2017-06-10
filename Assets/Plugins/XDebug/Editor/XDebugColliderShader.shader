@@ -1,4 +1,6 @@
-﻿Shader "Hidden/XDebug/ColliderShader" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Hidden/XDebug/ColliderShader" {
 	SubShader {
 		Pass {
 
@@ -34,7 +36,7 @@
 
             v2f vert(appdata v) {
 				v2f o;
-                o.pos = mul (UNITY_MATRIX_MVP, v.vertex + _Up*v.scale.x);
+                o.pos = UnityObjectToClipPos (v.vertex + _Up*v.scale.x);
 				float3 normal = normalize(mul((float3x3)UNITY_MATRIX_MV, v.normal));
 				float3 lightDir = normalize(mul((float3x3)UNITY_MATRIX_V, _LightDir));
 				float lit = dot(normal, -lightDir);
@@ -89,7 +91,7 @@
 
             v2f vert(appdata v) {
 				v2f o;
-                o.pos = mul (UNITY_MATRIX_MVP, v.vertex + _Up*v.scale.x);
+                o.pos = UnityObjectToClipPos (v.vertex + _Up*v.scale.x);
 
 				float3 normal = normalize(mul((float3x3)UNITY_MATRIX_MV, v.normal));
 				float3 lightDir = normalize(mul((float3x3)UNITY_MATRIX_V, _LightDir));
