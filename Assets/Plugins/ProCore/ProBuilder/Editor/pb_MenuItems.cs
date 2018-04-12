@@ -1,65 +1,103 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using ProBuilder2.Common;
 using ProBuilder2.EditorCommon;
 
 public class pb_MenuItems : EditorWindow
 {
-	const string DOCUMENTATION_URL = "http://www.protoolsforunity3d.com/docs/probuilder/";
+	// const string DOCUMENTATION_URL = "http://www.protoolsforunity3d.com/docs/probuilder/";
+	const string DOCUMENTATION_URL = "http://procore3d.github.io/probuilder2/";
 
-	static pb_Editor editor { get { return pb_Editor.instance; } }
+	private static pb_Editor editor { get { return pb_Editor.instance; } }
 
 #region WINDOW
 
-	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/About", false, 0)]
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/About", false, pb_Constant.MENU_ABOUT)]
 	public static void MenuInitAbout()
 	{
-		pb_AboutWindow.Init("Assets/ProCore/ProBuilder/About/pc_AboutEntry_ProBuilder.txt", true);
+		pb_AboutWindow.Init(true);
 	}
 
-	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Documentation", false, 0)]
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Documentation", false, pb_Constant.MENU_ABOUT)]
 	public static void MenuInitDocumentation()
 	{
 		Application.OpenURL(DOCUMENTATION_URL);
 	}
 
-	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/" + pb_Constant.PRODUCT_NAME + " Window", false, pb_Constant.MENU_WINDOW + 0)]
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/" + pb_Constant.PRODUCT_NAME + " Window", false, pb_Constant.MENU_EDITOR)]
 	public static void OpenEditorWindow()
 	{
 		pb_Editor.MenuOpenWindow();
 	}
-
-	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Shape Window %#k", false, pb_Constant.MENU_WINDOW + 2)]
-	public static void ShapeMenu()
-	{
-		EditorWindow.GetWindow(typeof(pb_Geometry_Interface), true, "Shape Menu", true);
-	}
-
-	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Vertex Color Palette", false, pb_Constant.MENU_WINDOW + 3)]
-	public static void InitVertexColorEditor()
-	{
-		// bool openInDockableWindow = !pb_Preferences_Internal.GetBool(pb_Constant.pbDefaultOpenInDockableWindow);
-		EditorWindow.GetWindow<pb_Vertex_Color_Toolbar>(true, "Vertex Colors", true);
-	}
-
-	/**
-	 * Finds a pb_Editor window (or makes one), then closes it.
-	 */
-	public static void ForceCloseEditor()
-	{
-		EditorWindow.GetWindow<pb_Editor>().Close();
-	}
 #endregion
 
-#region ProBuilder/Edit
+#region CONTEXT SENSITIVE SHORTCUTS
 
-	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Editor/Lightmap Settings Window", false, pb_Constant.MENU_EDITOR + 3)]
-	public static void LightmapWindowInit()
+	static pb_Object[] selection { get { return Selection.transforms.GetComponents<pb_Object>(); } }
+
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Extrude %e", true)]
+	private static bool MenuVerifyExtrude()
 	{
-		pb_Lightmap_Editor.Init(editor);
+		pb_Editor e = pb_Editor.instance;
+
+		return 	e != null &&
+				e.editLevel == EditLevel.Geometry &&
+				selection != null &&
+				selection.Length > 0 &&
+				(selection.Any(x => x.SelectedEdgeCount > 0) || selection.Any(x => x.SelectedFaces.Length > 0));
 	}
+
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Extrude %e", false, pb_Constant.MENU_GEOMETRY + 3)]
+	private static void MenuDoExtrude()
+	{
+		pb_Menu_Commands.MenuExtrude(selection, false);
+	}
+
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Selection/Select Loop &l", true, pb_Constant.MENU_SELECTION)]
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Selection/Select Ring &r", true, pb_Constant.MENU_SELECTION)]
+	private static bool MenuVerifyRingLoop()
+	{
+		if (editor == null || editor.editLevel != EditLevel.Geometry)
+			return false;
+
+		if (editor.selectionMode == SelectMode.Edge)
+			return pb_Selection.Top().Any(x => x.SelectedEdgeCount > 0);
+		else if (editor.selectionMode == SelectMode.Face)
+			return pb_Selection.Top().Any(x => x.SelectedFaceCount > 0);
+		return false;
+	}
+
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Selection/Select Loop &l", false, pb_Constant.MENU_SELECTION)]
+	private static void MenuSelectLoop()
+	{
+		switch (editor.selectionMode)
+		{
+			case SelectMode.Edge:
+				pb_Menu_Commands.MenuLoopSelection(selection);
+				break;
+
+			case SelectMode.Face:
+				pb_Menu_Commands.MenuLoopFaces(selection);
+				break;
+		}
+	}
+
+	[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Selection/Select Ring &r", false, pb_Constant.MENU_SELECTION)]
+	private static void MenuSelectRing()
+	{
+		switch (editor.selectionMode)
+		{
+			case SelectMode.Edge:
+				pb_Menu_Commands.MenuRingSelection(selection);
+				break;
+
+			case SelectMode.Face:
+				pb_Menu_Commands.MenuRingFaces(selection);
+				break;
+		}
+	}
+
 #endregion
 
 #region VERTEX COLORS

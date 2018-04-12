@@ -9,21 +9,10 @@ namespace ProBuilder2.Actions
 {
 	/**
 	 * Menu interface for flip edges actions.
+	 *
+	 * Deprecated as of 2.6.0.
+	 * This file remains only for backwards compatibility; you may
+	 * safely delete it.
 	 */
-	public class pb_FlipEdge : Editor
-	{
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Flip Face Edge", true,  pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_FACE + 2)]
-		public static bool VerifyFlipEdges()
-		{
-			return pb_Editor.instance != null && pb_Editor.instance.selectedFaceCount > 0;
-		}
-
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Flip Face Edge", false,  pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_FACE + 2)]
-		public static void FlipEdges()
-		{
-			pb_Menu_Commands.MenuFlipEdges(pbUtil.GetComponents<pb_Object>(Selection.transforms));
-
-			EditorWindow.FocusWindowIfItsOpen(typeof(SceneView));
-		}
-	}
+	public class pb_FlipEdge : Editor {}
 }

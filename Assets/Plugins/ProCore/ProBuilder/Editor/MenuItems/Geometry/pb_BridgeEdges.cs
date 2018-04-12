@@ -11,20 +11,11 @@ namespace ProBuilder2.Actions
 {
 	/**
 	 * Menu interface for Bridge edges functions.
+	 *
+	 * Deprecated as of 2.6.0.
+	 * This file remains only for backwards compatibility; you may
+	 * safely delete it.
 	 */
-	public class pb_BridgeEdges : Editor
-	{
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Bridge Edges &b", true, pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_EDGE)]
-		public static bool VerifyBridgeEdges()
-		{
-			return pb_Editor.instance != null && pb_Editor.instance.selectedEdgeCount == 2;
-		}
-
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Bridge Edges &b", false, pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_EDGE)]
-		public static void BridgeEdges()
-		{
-			pb_Menu_Commands.MenuBridgeEdges(pbUtil.GetComponents<pb_Object>(Selection.transforms));
-		}
-	}
+	public class pb_BridgeEdges : Editor {}
 }
 #endif

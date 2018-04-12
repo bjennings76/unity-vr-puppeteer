@@ -8,31 +8,10 @@ namespace ProBuilder2.Actions
 {
 
 	/**
-	 * Due to the Prototype build process, windows that are exclusive to ProBuilder cannot 
-	 * simply be #if def'ed out .
+	 * Deprecated as of 2.6.0.
+	 * This file remains only for backwards compatibility; you may
+	 * safely delete it.	 
 	 */
-	public class pb_ProBuilderMenuItems : Editor 
-	{
-	#if !PROTOTYPE
-		[MenuItem("Tools/ProBuilder/UV Editor Window", false, pb_Constant.MENU_WINDOW + 2)]
-		public static void OpenUVWindow()
-		{
-			pb_UV_Editor.MenuOpenUVEditor();
-		}
-
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Material Palette", false, pb_Constant.MENU_WINDOW + 3)]
-		public static void InitMaterialEditor()
-		{
-			pb_Material_Editor.MenuOpenMaterialEditor();
-		}
-		
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Vertex Color Painter", false, pb_Constant.MENU_WINDOW + 4)]
-		public static void InitVertexColorPainter()
-		{
-			pb_VertexColor_Editor.MenuOpenWindow();
-		}
-
-	#endif
-	}
+	public class pb_ProBuilderMenuItems : Editor {}
 }
 #endif

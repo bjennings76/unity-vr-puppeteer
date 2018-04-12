@@ -9,21 +9,10 @@ namespace ProBuilder2.Actions
 {
 	/**
 	 * Menu interface for 'Conform Normals' action.
+	 *
+	 * Deprecated as of 2.6.0.
+	 * This file remains only for backwards compatibility; you may
+	 * safely delete it.
 	 */
-	public class pb_ConformNormals : Editor
-	{
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Conform Normals", true,  pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_FACE + 2)]
-		public static bool MenuVerifyConformNormals()
-		{
-			return pb_Editor.instance != null && pb_Editor.instance.selection.Length > 0;
-		}
-
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Conform Normals", false,  pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_FACE + 2)]
-		public static void MenuConformNormals()
-		{
-			pb_Object[] selection = pbUtil.GetComponents<pb_Object>(Selection.transforms);
-			pb_Menu_Commands.MenuConformNormals(selection);
-
-		}
-	}
+	public class pb_ConformNormals : Editor {}
 }

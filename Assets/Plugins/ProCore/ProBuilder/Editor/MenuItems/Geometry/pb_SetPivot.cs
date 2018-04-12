@@ -11,18 +11,10 @@ using ProBuilder2.EditorCommon;
 
 namespace ProBuilder2.Actions
 {
-	public class pb_SetPivot : Editor
-	{
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Set Pivot _%j", true,  pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_USEINFERRED)]
-		public static bool VerifySetPivot()
-		{
-			return pb_Editor.instance != null && pbUtil.GetComponents<pb_Object>(Selection.transforms).Length > 0;
-		}
-
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Geometry/Set Pivot _%j", false,  pb_Constant.MENU_GEOMETRY + pb_Constant.MENU_GEOMETRY_USEINFERRED)]
-		static void init()
-		{
-			pb_Menu_Commands.MenuSetPivot(pbUtil.GetComponents<pb_Object>(Selection.transforms));
-		}
-	}
+	/**
+	 * Deprecated as of 2.6.0.
+	 * This file remains only for backwards compatibility; you may
+	 * safely delete it.
+	 */
+	public class pb_SetPivot : Editor {}
 }

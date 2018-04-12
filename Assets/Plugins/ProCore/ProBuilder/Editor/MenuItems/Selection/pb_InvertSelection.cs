@@ -12,20 +12,10 @@ namespace ProBuilder2.Actions
 {
 	/**
 	 * Menu interface for inverting the current element selection.
+	 *
+	 * Deprecated as of 2.6.0.
+	 * This file remains only for backwards compatibility; you may
+	 * safely delete it.
 	 */
-	public class pb_InvertSelection : Editor
-	{
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Selection/Invert Face Selection %#i", true, pb_Constant.MENU_SELECTION + 0)]
-		public static bool VerifySelectionAction()
-		{
-			return pb_Editor.instance && pb_Editor.instance.selectedVertexCount > 0;
-		}
-
-		[MenuItem("Tools/" + pb_Constant.PRODUCT_NAME + "/Selection/Invert Face Selection %#i", false, pb_Constant.MENU_SELECTION + 0)]
-		public static void InvertFaceSelection()
-		{
-			pb_Menu_Commands.MenuInvertSelection( pbUtil.GetComponents<pb_Object>(Selection.transforms) );
-			EditorWindow.FocusWindowIfItsOpen(typeof(SceneView));
-		}
-	}
+	public class pb_InvertSelection : Editor {}
 }
